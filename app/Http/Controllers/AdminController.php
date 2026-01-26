@@ -4,17 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        // Ambil user yang sudah upload bukti bayar tapi belum diverifikasi
         $pendingUsers = User::whereNotNull('payment_proof')
                             ->where('is_verified', false)
                             ->get();
 
-        return view('admin.dashboard', compact('pendingUsers'));
+        // Ambil status sertifikat dari database
+        $isCertReady = DB::table('settings')->where('key', 'is_certificate_ready')->value('value') == '1';
+
+        return view('admin.dashboard', compact('pendingUsers', 'isCertReady'));
+    }
+
+    public function toggleCertificate()
+    {
+        $currentStatus = DB::table('settings')->where('key', 'is_certificate_ready')->value('value');
+        $newStatus = ($currentStatus == '1') ? '0' : '1';
+
+        DB::table('settings')->where('key', 'is_certificate_ready')->update(['value' => $newStatus]);
+
+        $pesan = ($newStatus == '1') ? 'Sertifikat sekarang bisa didownload oleh user!' : 'Akses download sertifikat ditutup.';
+        
+        return back()->with('status', $pesan);
     }
 
     public function approve($id)

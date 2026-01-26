@@ -1,5 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
+        <div class="mb-6 p-4 bg-white rounded-xl shadow-sm border">
+            <h4 class="font-bold mb-2">Pengaturan Sertifikat</h4>
+            <form action="{{ route('admin.toggle-certificate') }}" method="POST">
+                @csrf
+                <button type="submit" class="px-4 py-2 rounded-lg text-white font-bold {{ $isCertReady ? 'bg-red-600' : 'bg-green-600' }}">
+                    {{ $isCertReady ? 'Matikan Download Sertifikat' : 'Aktifkan Download Sertifikat' }}
+                </button>
+            </form>
+        </div>
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Admin - Verifikasi Pembayaran') }}
         </h2>

@@ -20,6 +20,12 @@
         <div class="name">{{ $name }}</div>
         Atas partisipasinya dalam kegiatan <strong>Webinar Bersama Awardee Beasiswa LPDP</strong><br>
         Sebagai Peserta Paket <strong>{{ $package }}</strong>
+
+        @if($score)
+            <div style="margin-top: 20px; border: 1px solid #4F46E5; display: inline-block; padding: 10px 20px;">
+                HASIL SIMULASI TOEFL: <strong style="font-size: 24px;">{{ $score }}</strong>
+            </div>
+        @endif
     </div>
 
     <div class="footer">

@@ -109,16 +109,28 @@
                     @endif
                 </div>
 
-                @if(Auth::user()->package == 'reguler')
-                    <div class="mt-8 p-6 bg-indigo-50 rounded-2xl border border-indigo-100 flex items-center justify-between">
-                        <div>
-                            <h4 class="font-bold text-indigo-900">E-Sertifikat Sudah Tersedia!</h4>
-                            <p class="text-sm text-indigo-700">Terima kasih telah mengikuti webinar ini. Silakan unduh sertifikat resmi Anda.</p>
+                @if(Auth::user()->package == 'reguler' || Auth::user()->package == 'vip1' || Auth::user()->package == 'vip2')
+                    @php
+                        $isCertReady = DB::table('settings')->where('key', 'is_certificate_ready')->value('value');
+                    @endphp
+
+                    @if($isCertReady == '1')
+                        <div class="mt-8 p-6 bg-indigo-50 rounded-2xl border border-indigo-100 flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-indigo-900">E-Sertifikat Tersedia!</h4>
+                                <p class="text-sm text-indigo-700 font-medium">Silakan unduh sertifikat resmi Anda.</p>
+                            </div>
+                            <a href="{{ route('certificate.download') }}" class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg">
+                                Download PDF
+                            </a>
                         </div>
-                        <a href="{{ route('certificate.download') }}" class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 transition flex items-center gap-2 shadow-lg">
-                            <span>📥</span> Download PDF
-                        </a>
-                    </div>
+                    @else
+                        <div class="mt-8 p-6 bg-gray-50 rounded-2xl border border-gray-200">
+                            <p class="text-sm text-gray-500 italic text-center font-medium">
+                                🔒 Sertifikat dapat diunduh otomatis setelah rangkaian acara selesai.
+                            </p>
+                        </div>
+                    @endif
                 @endif
             @endif {{-- Penutup is_verified --}}
         @endif {{-- Penutup PENTING: Role Admin --}}
