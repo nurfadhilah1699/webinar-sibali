@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CertificateController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,6 +22,9 @@ Route::middleware('auth')->group(function () {
 
     // Route untuk upload bukti pembayaran
     Route::post('/payment/upload', [PaymentController::class, 'upload'])->name('payment.upload');
+
+    // Route untuk mengunduh sertifikat
+    Route::get('/certificate/download', [CertificateController::class, 'download'])->name('certificate.download');
 });
 
 // Admin routes

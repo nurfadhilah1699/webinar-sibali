@@ -110,8 +110,14 @@
                 </div>
 
                 @if(Auth::user()->package == 'reguler')
-                    <div class="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-xl text-sm text-blue-700">
-                        💡 Peserta Reguler: Sertifikat tersedia setelah acara.
+                    <div class="mt-8 p-6 bg-indigo-50 rounded-2xl border border-indigo-100 flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-indigo-900">E-Sertifikat Sudah Tersedia!</h4>
+                            <p class="text-sm text-indigo-700">Terima kasih telah mengikuti webinar ini. Silakan unduh sertifikat resmi Anda.</p>
+                        </div>
+                        <a href="{{ route('certificate.download') }}" class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 transition flex items-center gap-2 shadow-lg">
+                            <span>📥</span> Download PDF
+                        </a>
                     </div>
                 @endif
             @endif {{-- Penutup is_verified --}}
