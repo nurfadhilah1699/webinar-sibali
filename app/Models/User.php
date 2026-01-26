@@ -27,6 +27,8 @@ class User extends Authenticatable
         'user_category',
         'institution',
         'package',
+        'payment_proof',
+        'is_verified',
     ];
 
     /**
