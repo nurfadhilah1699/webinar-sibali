@@ -29,6 +29,7 @@ class User extends Authenticatable
         'package',
         'payment_proof',
         'is_verified',
+        'rejection_message',
     ];
 
     /**

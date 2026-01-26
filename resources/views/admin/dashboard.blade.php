@@ -37,11 +37,19 @@
                                         Lihat Gambar
                                     </a>
                                 </td>
-                                <td class="p-3 text-sm">
+                                <td class="p-3 text-sm flex gap-2">
                                     <form action="{{ route('admin.approve', $user->id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="bg-green-600 text-white px-4 py-1 rounded text-xs font-bold hover:bg-green-700">
+                                        <button type="submit" class="bg-green-600 text-white px-3 py-1 rounded text-xs font-bold hover:bg-green-700">
                                             APPROVE
+                                        </button>
+                                    </form>
+
+                                    <form action="{{ route('admin.reject', $user->id) }}" method="POST" class="flex gap-1">
+                                        @csrf
+                                        <input type="text" name="reason" placeholder="Alasan tolak..." class="text-xs border-gray-300 rounded p-1 w-32" required>
+                                        <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold hover:bg-red-700">
+                                            REJECT
                                         </button>
                                     </form>
                                 </td>

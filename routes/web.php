@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::post('/admin/approve/{id}', [AdminController::class, 'approve'])->name('admin.approve');
+    Route::post('/admin/reject/{id}', [AdminController::class, 'reject'])->name('admin.reject');
 });
 
 require __DIR__.'/auth.php';

@@ -33,6 +33,13 @@
 
             {{-- 2. KONDISI BELUM VERIFIKASI --}}
             @if(!Auth::user()->is_verified)
+                @if(Auth::user()->rejection_message)
+                    <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
+                        <p class="font-bold">❌ Pembayaran Ditolak</p>
+                        <p class="text-sm">Alasan: {{ Auth::user()->rejection_message }}</p>
+                        <p class="text-xs mt-1 italic">Silakan upload ulang bukti transfer yang valid.</p>
+                    </div>
+                @endif
                 <div class="bg-white border rounded-2xl shadow-sm overflow-hidden">
                     <div class="p-6 bg-amber-50 border-b border-amber-100">
                         <h4 class="font-bold text-amber-800">Selesaikan Pembayaran</h4>
