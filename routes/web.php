@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\ToeflController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,6 +26,10 @@ Route::middleware('auth')->group(function () {
 
     // Route untuk mengunduh sertifikat
     Route::get('/certificate/download', [CertificateController::class, 'download'])->name('certificate.download');
+
+    // Route untuk tes TOEFL (hanya untuk VIP 2)
+    Route::get('/toefl', [ToeflController::class, 'index'])->name('toefl.index');
+    Route::post('/toefl/submit', [ToeflController::class, 'submit'])->name('toefl.submit');
 });
 
 // Admin routes
