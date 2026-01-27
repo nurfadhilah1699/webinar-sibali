@@ -9,18 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
+    public function up(): void {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->string('category'); // listening, structure, reading
+            $table->enum('category', ['listening', 'structure', 'reading']);
             $table->text('question_text');
-            $table->string('audio_path')->nullable(); // khusus listening
-            $table->string('a');
-            $table->string('b');
-            $table->string('c');
-            $table->string('d');
-            $table->string('correct_answer'); // A, B, C, atau D
+            $table->string('audio_path')->nullable(); // Untuk menyimpan nama file mp3 listening
+            $table->string('option_a');
+            $table->string('option_b');
+            $table->string('option_c');
+            $table->string('option_d');
+            $table->char('correct_answer', 1); // Isinya: A, B, C, atau D
             $table->timestamps();
         });
     }

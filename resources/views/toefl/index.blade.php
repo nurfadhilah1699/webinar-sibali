@@ -19,41 +19,43 @@
                 <form id="toefl-form" action="{{ route('toefl.submit') }}" method="POST">
                     @csrf
                     
-                    {{-- SEKSI LISTENING --}}
-                    <div class="mb-10 p-6 bg-indigo-50 rounded-2xl border border-indigo-100">
-                        <h3 class="font-bold text-indigo-900 mb-4 flex items-center gap-2">
-                            <span>🎧</span> Section 1: Listening Comprehension
-                        </h3>
-                        <div class="mb-6 p-4 bg-white rounded-xl border">
-                            <p class="text-sm font-bold mb-3">Soal No. 1</p>
-                            <audio controls onended="this.classList.add('opacity-50')" class="w-full mb-4">
-                                {{-- Pastikan file ini ada di public/audio/soal-1.mp3 --}}
-                                <source src="{{ asset('audio/soal-1.mp3') }}" type="audio/mpeg">
-                                Browser tidak mendukung audio.
-                            </audio>
-                            <p class="font-medium mb-3">What does the man imply?</p>
-                            <div class="space-y-2 text-sm">
-                                <label class="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-50 rounded"><input type="radio" name="q1" value="A"> A. He is too tired to continue</label>
-                                <label class="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-50 rounded"><input type="radio" name="q1" value="B"> B. He wants to take a break</label>
-                                <label class="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-50 rounded"><input type="radio" name="q1" value="C"> C. He will finish it later</label>
+                    @foreach($questions as $index => $q)
+                        <div class="mb-10 p-6 bg-white rounded-2xl border shadow-sm">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-xs font-bold px-3 py-1 bg-indigo-100 text-indigo-600 rounded-full uppercase">
+                                    {{ $q->category }}
+                                </span>
+                                <span class="text-gray-400 text-sm">Soal No. {{ $index + 1 }}</span>
                             </div>
-                        </div>
-                    </div>
 
-                    {{-- SEKSI STRUCTURE --}}
-                    <div class="mb-10 p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
-                        <h3 class="font-bold text-emerald-900 mb-4 flex items-center gap-2">
-                            <span>📝</span> Section 2: Structure & Written Expression
-                        </h3>
-                        <div class="mb-6 p-4 bg-white rounded-xl border">
-                            <p class="font-medium mb-3">2. The water _______ at 100 degrees Celsius.</p>
-                            <div class="space-y-2 text-sm">
-                                <label class="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-50 rounded"><input type="radio" name="q2" value="A"> A. Boils</label>
-                                <label class="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-50 rounded"><input type="radio" name="q2" value="B"> B. Boiling</label>
-                                <label class="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-50 rounded"><input type="radio" name="q2" value="C"> C. Boiled</label>
+                            {{-- Jika ada audio (Listening) --}}
+                            @if($q->audio_path)
+                                <div class="mb-4 p-4 bg-gray-50 rounded-xl">
+                                    <audio controls class="w-full">
+                                        <source src="{{ asset('storage/' . $q->audio_path) }}" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                            @endif
+
+                            <p class="font-bold text-gray-800 mb-4">{{ $q->question_text }}</p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                <label class="flex items-center gap-2 p-3 border rounded-xl hover:bg-indigo-50 cursor-pointer transition">
+                                    <input type="radio" name="answers[{{ $q->id }}]" value="A" required> A. {{ $q->option_a }}
+                                </label>
+                                <label class="flex items-center gap-2 p-3 border rounded-xl hover:bg-indigo-50 cursor-pointer transition">
+                                    <input type="radio" name="answers[{{ $q->id }}]" value="B"> B. {{ $q->option_b }}
+                                </label>
+                                <label class="flex items-center gap-2 p-3 border rounded-xl hover:bg-indigo-50 cursor-pointer transition">
+                                    <input type="radio" name="answers[{{ $q->id }}]" value="C"> C. {{ $q->option_c }}
+                                </label>
+                                <label class="flex items-center gap-2 p-3 border rounded-xl hover:bg-indigo-50 cursor-pointer transition">
+                                    <input type="radio" name="answers[{{ $q->id }}]" value="D"> D. {{ $q->option_d }}
+                                </label>
                             </div>
                         </div>
-                    </div>
+                    @endforeach
 
                     <button type="submit" class="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold hover:bg-black transition shadow-lg">
                         Kirim Semua Jawaban

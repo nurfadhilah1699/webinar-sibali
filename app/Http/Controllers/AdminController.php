@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Question;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -60,5 +62,56 @@ class AdminController extends Controller
         ]);
 
         return back()->with('status', 'Pembayaran user ' . $user->name . ' ditolak.');
+    }
+
+    public function participants() {
+        $users = User::where('role', 'user')->get();
+        return view('admin.participants', compact('users'));
+    }
+
+    public function materials() {
+        // Nanti kita buat CRUD Materi di sini
+        return view('admin.materials');
+    }
+
+    public function questions() {
+        // Nanti kita buat CRUD Soal di sini
+        return view('admin.questions');
+    }
+
+    public function storeQuestion(Request $request) {
+        $request->validate([
+            'category' => 'required',
+            'question_text' => 'required',
+            'audio_file' => 'nullable|mimes:mp3,wav,ogg|max:20000', // max 20MB
+        ]);
+
+        $pathForDb = null; // Kita siapkan variabel penampung
+
+        if ($request->hasFile('audio_file')) {
+            // Simpan file ke storage/app/public/audios
+            $file = $request->file('audio_file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            
+            // Simpan file dan ambil path-nya
+            $file->storeAs('audios', $filename, 'public');
+            
+            // Isi variabel untuk disimpan ke database
+            $pathForDb = 'audios/' . $filename;
+        }
+
+        // SIMPAN KE DATABASE
+        Question::create([
+            'category' => $request->category,
+            'question_text' => $request->question_text,
+            'audio_path' => $pathForDb, // Pastikan ini sama dengan nama kolom di migration
+            'option_a' => $request->option_a,
+            'option_b' => $request->option_b,
+            'option_c' => $request->option_c,
+            'option_d' => $request->option_d,
+            'correct_answer' => $request->correct_answer,
+        ]);
+
+        return back()->with('status', 'Soal berhasil disimpan dengan audio!');
     }
 }

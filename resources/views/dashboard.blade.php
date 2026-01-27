@@ -101,7 +101,7 @@
                     @endif
 
                     @if(Auth::user()->package == 'vip2')
-                    <div class="bg-white p-6 rounded-2xl border shadow-sm ring-2 ring-indigo-600 ring-offset-2">
+                    <div class="bg-white p-6 rounded-2xl border shadow-sm">
                         <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-4">📝</div>
                         <h4 class="font-bold mb-1">Simulasi TOEFL</h4>
                         <a href="{{ route('toefl.index') }}" class="block text-center py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold shadow-md">

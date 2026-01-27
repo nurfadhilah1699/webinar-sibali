@@ -28,7 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/certificate/download', [CertificateController::class, 'download'])->name('certificate.download');
 
     // Route untuk tes TOEFL (hanya untuk VIP 2)
+    // Halaman simulasi TOEFL
     Route::get('/toefl', [ToeflController::class, 'index'])->name('toefl.index');
+    
+    // Proses hitung skor saat klik submit
     Route::post('/toefl/submit', [ToeflController::class, 'submit'])->name('toefl.submit');
 });
 
@@ -40,6 +43,20 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Route untuk mengaktifkan/mematikan fitur download sertifikat
     Route::post('/admin/toggle-certificate', [AdminController::class, 'toggleCertificate'])->name('admin.toggle-certificate');
+
+    // Route untuk mengelola bank soal TOEFL
+    // Dashboard Utama Admin
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+
+    // Menu-menu baru yang kita bahas
+    Route::get('/admin/participants', [AdminController::class, 'participants'])->name('admin.participants');
+
+    // Materi & Rekaman
+    Route::get('/admin/materials', [AdminController::class, 'materials'])->name('admin.materials');
+    
+    // Bank Soal
+    Route::get('/admin/questions', [AdminController::class, 'questions'])->name('admin.questions'); // Tampilan form
+    Route::post('/admin/questions', [AdminController::class, 'storeQuestion'])->name('admin.questions.store'); // Proses simpan
 });
 
 require __DIR__.'/auth.php';
