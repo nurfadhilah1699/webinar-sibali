@@ -13,7 +13,7 @@ Pastikan perangkat Anda sudah terpasang:
 
 1. **Clone Repositori**
    ```bash
-   git clone [https://github.com/nurfadhilah1699/webinar-sibali.git](https://github.com/nurfadhilah1699/webinar-sibali.git)
+   git clone https://github.com/nurfadhilah1699/webinar-sibali.git
    cd project-webinar
 2. **Install Composer**
     ```bash
