@@ -30,6 +30,8 @@ class User extends Authenticatable
         'payment_proof',
         'is_verified',
         'rejection_message',
+        'toefl_score',
+        'started_at',
     ];
 
     /**

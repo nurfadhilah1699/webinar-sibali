@@ -185,4 +185,14 @@
             @endif {{-- Penutup is_verified --}}
         @endif {{-- Penutup Role Admin --}}
     </div>
+
+    <script>
+        @if(session('error'))
+            alert("Peringatan: {{ session('error') }}");
+        @endif
+
+        @if(session('status'))
+            alert("Sukses: {{ session('status') }}");
+        @endif
+    </script>
 </x-app-layout>

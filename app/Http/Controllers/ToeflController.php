@@ -11,16 +11,34 @@ class ToeflController extends Controller
 {
     public function index()
     {
-        if (Auth::user()->package !== 'vip2' || !Auth::user()->is_verified) {
-            return redirect('/dashboard')->with('error', 'Akses khusus VIP 2.');
+        $user = Auth::user();
+
+        // 1. Proteksi Akses (VIP 2 & Verifikasi)
+        if ($user->package !== 'vip2' || !$user->is_verified) {
+            return redirect('/dashboard')->with('error', 'Akses khusus VIP 2 yang sudah terverifikasi.');
+        }
+
+        // 2. Proteksi 1x Tes (Jika sudah ada skor, tidak boleh masuk lagi). Aktifkan saat mau deploy
+        if ($user->toefl_score !== null) {
+            return redirect('/dashboard')->with('error', 'Anda sudah menyelesaikan tes ini.');
+        } 
+
+        // 3. Logika Persistence Timer (Catat waktu mulai jika belum ada)
+        if (!$user->started_at) {
+            // Simpan waktu sekarang sebagai awal mulai tes
+            $user->update([
+                'started_at' => now()
+            ]);
         }
 
         $questions = Question::orderBy('category', 'asc')->get();
-        return view('toefl.index', compact('questions'));
+        
+        return view('toefl.index', compact('questions', 'user'));
     }
 
     public function submit(Request $request)
     {
+
         $userAnswers = $request->input('answers');
 
         if (!$userAnswers) {

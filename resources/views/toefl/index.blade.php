@@ -93,13 +93,12 @@
         const steps = document.querySelectorAll('.question-step');
         const totalSteps = steps.length;
 
+        // --- FUNGSI UPDATE TAMPILAN SOAL ---
         function updateStep() {
-            // Update Soal yang tampil
             steps.forEach((step, index) => {
                 step.classList.toggle('hidden', index !== currentStep);
             });
 
-            // Update Style Grid Nomor
             for(let i = 0; i < totalSteps; i++) {
                 const btn = document.getElementById(`grid-btn-${i}`);
                 if (i === currentStep) {
@@ -109,15 +108,8 @@
                 }
             }
 
-            // Atur tombol nav
             document.getElementById('prev-btn').classList.toggle('hidden', currentStep === 0);
-            if (currentStep === totalSteps - 1) {
-                document.getElementById('next-btn').classList.add('hidden');
-                document.getElementById('submit-btn').classList.remove('hidden');
-            } else {
-                document.getElementById('next-btn').classList.remove('hidden');
-                document.getElementById('submit-btn').classList.add('hidden');
-            }
+            document.getElementById('next-btn').classList.toggle('hidden', currentStep === totalSteps - 1);
         }
 
         function jumpToStep(n) {
@@ -127,11 +119,99 @@
         }
 
         function markAsAnswered(index) {
-            // Beri warna hijau pada grid jika sudah dijawab
             const btn = document.getElementById(`grid-btn-${index}`);
             btn.classList.add('bg-green-500', 'text-white', 'border-green-500');
             btn.classList.remove('text-gray-400');
         }
+
+        // --- LOGIKA TIMER ANTI-LOMPAT ---
+        const startedAt = new Date("{{ $user->started_at }}").getTime();
+        const duration = 120 * 60 * 1000; 
+        const endTime = startedAt + duration;
+        const timerDisplay = document.getElementById('timer-display');
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = endTime - now;
+
+            if (distance < 0) {
+                timerDisplay.innerHTML = "00:00:00";
+                document.getElementById('toefl-form').submit();
+                return;
+            }
+
+            const hours = Math.floor((distance / (1000 * 60 * 60)));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Format agar selalu 2 digit (00:00:00)
+            const hDisplay = hours.toString().padStart(2, '0');
+            const mDisplay = minutes.toString().padStart(2, '0');
+            const sDisplay = seconds.toString().padStart(2, '0');
+
+            timerDisplay.innerHTML = `${hDisplay}:${mDisplay}:${sDisplay}`;
+            
+            // Bonus: Beri warna kuning jika < 10 menit, merah jika < 2 menit
+            if (distance < (2 * 60 * 1000)) {
+                timerDisplay.parentElement.classList.add('animate-pulse', 'bg-red-800');
+            }
+        }
+
+        // PANGGIL SEGERA SAAT LOAD (Agar tidak lompat dari 120:00)
+        updateTimer(); 
+        // Jalankan interval
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // --- LOGIKA FORM & LOCALSTORAGE ---
+        window.onload = () => {
+            updateStep(); // Pastikan step awal sinkron
+            let savedAnswers = JSON.parse(localStorage.getItem('toefl_answers'));
+            if (savedAnswers) {
+                Object.keys(savedAnswers).forEach(name => {
+                    let value = savedAnswers[name];
+                    let rb = document.querySelector(`input[name="${name}"][value="${value}"]`);
+                    if (rb) {
+                        rb.checked = true;
+                        // Ambil index dari nama input "answers[123]"
+                        const questionId = name.match(/\d+/)[0];
+                        // Cari tombol grid yang sesuai (jika perlu manual, tapi markAsAnswered dipanggil via onchange)
+                    }
+                });
+            }
+        };
+
+        document.querySelectorAll('input[type="radio"]').forEach(input => {
+            input.addEventListener('change', (e) => {
+                let answers = JSON.parse(localStorage.getItem('toefl_answers')) || {};
+                answers[e.target.name] = e.target.value;
+                localStorage.setItem('toefl_answers', JSON.stringify(answers));
+            });
+        });
+
+        function confirmSubmit() {
+            const answeredCount = document.querySelectorAll('input[type="radio"]:checked').length;
+            const totalCount = {{ count($questions) }};
+
+            Swal.fire({
+                title: 'Akhiri Tes Sekarang?',
+                text: `Terjawab: ${answeredCount} / ${totalCount} soal.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#4F46E5',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Submit!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('toefl-form').submit();
+                }
+            });
+        }
+
+        document.getElementById('toefl-form').onsubmit = () => {
+            localStorage.removeItem('toefl_answers');
+            clearInterval(timerInterval);
+        };
 
         document.getElementById('next-btn').addEventListener('click', () => {
             if (currentStep < totalSteps - 1) { currentStep++; updateStep(); }
@@ -140,38 +220,5 @@
         document.getElementById('prev-btn').addEventListener('click', () => {
             if (currentStep > 0) { currentStep--; updateStep(); }
         });
-
-        // TIMER LOGIC
-        let timeInMinutes = 120;
-        let currentTime = timeInMinutes * 60;
-        const timerDisplay = document.getElementById('timer-display');
-        setInterval(() => {
-            let min = Math.floor(currentTime / 60);
-            let sec = currentTime % 60;
-            timerDisplay.innerHTML = `${min}:${sec < 10 ? '0' : ''}${sec}`;
-            if (currentTime <= 0) document.getElementById('toefl-form').submit();
-            currentTime--;
-        }, 1000);
-
-        function confirmSubmit() {
-            // Menghitung berapa soal yang sudah diisi
-            const answeredCount = document.querySelectorAll('input[type="radio"]:checked').length;
-            const totalCount = {{ count($questions) }};
-
-            Swal.fire({
-                title: 'Yakin ingin mengakhiri tes?',
-                text: `Kamu baru menjawab ${answeredCount} dari ${totalCount} soal. Soal yang tidak dijawab akan dianggap salah.`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#4F46E5', // Indigo-600
-                cancelButtonColor: '#EF4444', // Red-500
-                confirmButtonText: 'Ya, Kirim Sekarang!',
-                cancelButtonText: 'Belum, Lanjutkan Tes'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('toefl-form').submit();
-                }
-            })
-        }
     </script>
 </x-app-layout>

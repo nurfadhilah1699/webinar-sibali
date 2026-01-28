@@ -34,6 +34,23 @@ Route::middleware('auth')->group(function () {
     
     // Proses hitung skor saat klik submit
     Route::post('/toefl/submit', [ToeflController::class, 'submit'])->name('toefl.submit');
+    // Hapus ini kalau sudah mau launch!
+    Route::get('/dev-reset', function() {
+        // Reset data di database
+        Auth::user()->update([
+            'toefl_score' => null, 
+            'started_at' => null
+        ]);
+
+        // Beri pesan sukses pakai JavaScript agar otomatis hapus LocalStorage juga
+        return "
+            <script>
+                localStorage.clear(); 
+                alert('Database & LocalStorage berhasil dibersihkan! Silakan tes ulang.');
+                window.location.href = '/dashboard';
+            </script>
+        ";
+    });
 });
 
 // Admin routes
