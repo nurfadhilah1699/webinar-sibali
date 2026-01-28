@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-admin-layout>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-white p-6 rounded-3xl shadow-sm border h-fit">
             <h3 class="font-bold mb-4">Tambah Materi / Link</h3>
@@ -12,7 +12,7 @@
                     <label class="text-xs font-bold text-gray-400">Tipe</label>
                     <select name="type" class="w-full border-gray-200 rounded-xl">
                         <option value="link_zoom">Link Zoom</option>
-                        <option value="link_wa">Link WhatsApp</option>
+                        <option value="link_wa">Link Whatsadmin</option>
                         <option value="materi">PDF Materi (Drive)</option>
                         <option value="rekaman">Rekaman (YouTube)</option>
                     </select>
@@ -65,4 +65,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>

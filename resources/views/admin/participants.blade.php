@@ -1,5 +1,5 @@
 {{-- Ini hanya contoh konten untuk halaman list peserta --}}
-<x-app-layout>
+<x-admin-layout>
     <div class="p-6">
         <h2 class="text-2xl font-bold mb-6">Daftar Peserta Webinar</h2>
         <table class="w-full text-left">
@@ -26,4 +26,4 @@
                 @endforeach
             </tbody>
         </table>
-</x-app-layout>
+</x-admin-layout>

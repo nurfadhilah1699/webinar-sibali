@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-admin-layout>
     <div class="p-6 bg-white rounded-2xl shadow-sm border">
         <h3 class="text-xl font-bold mb-6">Tambah Soal TOEFL Baru</h3>
         
@@ -58,4 +58,4 @@
             </button>
         </form>
     </div>
-</x-app-layout>
+</x-admin-layout>

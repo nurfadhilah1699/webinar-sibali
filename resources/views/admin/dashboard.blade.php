@@ -1,15 +1,5 @@
-<x-app-layout>
+<x-admin-layout>
     <div class="flex min-h-screen bg-gray-100">
-        <div class="w-64 bg-gray-900 text-white min-h-screen p-6">
-            <h2 class="text-2xl font-black mb-8 text-indigo-400">ADMIN PANEL</h2>
-            <nav class="space-y-4">
-                <a href="{{ route('admin.dashboard') }}" class="block p-3 rounded-lg bg-indigo-600 font-bold">💳 Verifikasi Pembayaran</a>
-                <a href="{{ route('admin.participants') }}" class="block p-3 rounded-lg hover:bg-gray-800 transition">👥 List Semua Peserta</a>
-                <a href="{{ route('admin.materials') }}" class="block p-3 rounded-lg hover:bg-gray-800 transition">📚 Materi & Rekaman</a>
-                <a href="{{ route('admin.questions') }}" class="block p-3 rounded-lg hover:bg-gray-800 transition">✍️ Bank Soal TOEFL</a>
-            </nav>
-        </div>
-
         <div class="flex-1 p-10">
             {{-- Header Statis --}}
             <div class="mb-8 flex justify-between items-center">
@@ -91,4 +81,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>
