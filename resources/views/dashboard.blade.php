@@ -92,7 +92,7 @@
                 {{-- KONTEN UTAMA (Kanan) --}}
                 <div class="col-span-12 lg:col-span-8 space-y-6">
 
-                    {{-- 2. PERBAIKAN: Logika Pesan Rejection (Hanya muncul jika status BELUM verified & ADA pesan) --}}
+                    {{-- 2. PERBAIKAN: Logika Pesan Rejection --}}
                     @if(!Auth::user()->is_verified && Auth::user()->rejection_message)
                     <div class="bg-red-50 border-l-4 border-red-600 p-4 rounded-r-xl flex gap-3 animate-pulse">
                         <i data-lucide="alert-circle" class="w-5 h-5 text-red-600 shrink-0"></i>
@@ -105,7 +105,7 @@
                     @endif
 
                     @if(Auth::user()->role !== 'admin')
-                        {{-- AREA PEMBAYARAN (Belum Verifikasi) --}}
+                        {{-- AREA PEMBAYARAN --}}
                         @if(!Auth::user()->is_verified)
                             <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                                 <div class="p-6 bg-amber-50 border-b border-amber-100 flex items-center justify-between">
@@ -133,7 +133,6 @@
                                             </div>
                                         </div>
                                         <div class="flex flex-col justify-center">
-                                            {{-- Jika belum upload ATAU jika baru saja di-reject --}}
                                             @if(!Auth::user()->payment_proof || Auth::user()->rejection_message)
                                                 <form action="{{ route('payment.upload') }}" method="POST" enctype="multipart/form-data" class="space-y-3">
                                                     @csrf
@@ -144,7 +143,7 @@
                                                 </form>
                                             @else
                                                 <div class="text-center py-6 bg-blue-50 rounded-xl border border-blue-100">
-                                                    <i data-lucide="clock" class="w-8 h-8 text-blue-900 mx-auto mb-2 opacity-50 animate-spin-slow"></i>
+                                                    <i data-lucide="clock" class="w-8 h-8 text-blue-900 mx-auto mb-2 opacity-50"></i>
                                                     <p class="text-xs font-bold text-blue-900 uppercase">Sedang Diperiksa</p>
                                                     <p class="text-[10px] text-blue-700 mt-1 px-4 italic font-medium leading-relaxed">Admin akan memverifikasi bukti bayar kamu secepatnya.</p>
                                                 </div>
@@ -154,9 +153,8 @@
                                 </div>
                             </div>
 
-                        {{-- AREA MATERI (Sudah Verifikasi) --}}
+                        {{-- AREA MATERI --}}
                         @else
-                            {{-- Zoom Live --}}
                             @foreach($myContents->where('type', 'link_zoom') as $zoom)
                             <div class="bg-blue-900 rounded-xl p-6 text-white shadow-lg flex items-center justify-between">
                                 <div class="flex items-center gap-4">
@@ -172,7 +170,6 @@
                             </div>
                             @endforeach
 
-                            {{-- 3. PERBAIKAN: Grid WA & TOEFL (Logika Dinamis VIP 1) --}}
                             <div class="grid grid-cols-1 {{ Auth::user()->package == 'vip2' ? 'md:grid-cols-2' : '' }} gap-6">
                                 @foreach($myContents->where('type', 'link_wa') as $wa)
                                 <div class="bg-white rounded-xl border border-gray-200 p-6 flex flex-col justify-between hover:shadow-md transition">
@@ -182,14 +179,13 @@
                                         </div>
                                         <div>
                                             <h4 class="font-bold text-gray-900 text-sm uppercase tracking-tight">{{ $wa->title }}</h4>
-                                            <p class="text-[11px] text-gray-500 font-medium italic italic">Grup diskusi peserta</p>
+                                            <p class="text-[11px] text-gray-500 font-medium italic">Grup diskusi peserta</p>
                                         </div>
                                     </div>
                                     <a href="{{ $wa->link }}" target="_blank" class="block text-center py-2.5 bg-green-600 text-white rounded-xl text-xs font-bold hover:bg-green-700 transition">Gabung WhatsApp</a>
                                 </div>
                                 @endforeach
 
-                                {{-- Hanya Muncul jika VIP 2 --}}
                                 @if(Auth::user()->package == 'vip2')
                                 <div class="bg-white rounded-xl border border-gray-200 p-6 flex flex-col justify-between hover:shadow-md transition">
                                     <div class="flex items-center gap-4 mb-4">
@@ -208,7 +204,6 @@
                                 @endif
                             </div>
 
-                            {{-- Daftar Materi --}}
                             @if(Auth::user()->package != 'reguler')
                             <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mt-6">
                                 <div class="p-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
@@ -232,7 +227,6 @@
                             @endif
                         @endif
                     @else
-                        {{-- Pesan Khusus Admin yang Login ke Dashboard User --}}
                         <div class="bg-white p-12 rounded-3xl border-2 border-dashed border-gray-200 text-center">
                             <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <i data-lucide="layout-dashboard" class="w-10 h-10 text-gray-300"></i>
@@ -248,9 +242,46 @@
 
     <script>
         lucide.createIcons();
+
         document.addEventListener('DOMContentLoaded', function() {
+            // 1. Alert Berhasil
             @if(session('success') || session('status'))
-                Swal.fire({ icon: 'success', title: 'Berhasil!', text: "{{ session('success') ?? session('status') }}", confirmButtonColor: '#1e3a8a' });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: "{{ session('success') ?? session('status') }}",
+                    confirmButtonColor: '#1e3a8a',
+                });
+            @endif
+
+            // 2. Alert Info (Misal: Tes Sudah Diikuti)
+            @if(session('info'))
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Informasi',
+                    text: "{{ session('info') }}",
+                    confirmButtonColor: '#1e3a8a',
+                });
+            @endif
+
+            // 3. Alert Skor (Jika ada session score)
+            @if(session('score'))
+                Swal.fire({
+                    title: 'Hasil Tes Kamu',
+                    html: '<p class="text-sm">Skor Akhir:</p><h2 class="text-4xl font-black text-blue-900">{{ session("score") }}</h2>',
+                    icon: 'success',
+                    confirmButtonColor: '#1e3a8a',
+                });
+            @endif
+
+            // 4. Alert Error
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops!',
+                    text: "{{ session('error') }}",
+                    confirmButtonColor: '#ef4444',
+                });
             @endif
         });
     </script>
