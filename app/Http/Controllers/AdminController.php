@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Question;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Content;
 
 class AdminController extends Controller
 {
@@ -70,8 +71,26 @@ class AdminController extends Controller
     }
 
     public function materials() {
-        // Nanti kita buat CRUD Materi di sini
-        return view('admin.materials');
+        $contents = Content::orderBy('type', 'asc')->get();
+        return view('admin.materials', compact('contents'));
+    }
+
+    public function storeContent(Request $request) {
+        $request->validate([
+            'title' => 'required',
+            'type' => 'required',
+            'link' => 'required|url',
+            'package' => 'required'
+        ]);
+
+        Content::create($request->all());
+
+        return back()->with('status', 'Konten berhasil ditambahkan!');
+    }
+
+    public function deleteContent($id) {
+        Content::destroy($id);
+        return back()->with('status', 'Konten berhasil dihapus!');
     }
 
     public function questions() {

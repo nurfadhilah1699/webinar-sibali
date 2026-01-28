@@ -5,15 +5,16 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ToeflController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     // Profile routes
@@ -53,6 +54,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Materi & Rekaman
     Route::get('/admin/materials', [AdminController::class, 'materials'])->name('admin.materials');
+    Route::post('/admin/materials', [AdminController::class, 'storeContent'])->name('admin.materials.store');
+    Route::delete('/admin/materials/{id}', [AdminController::class, 'deleteContent'])->name('admin.materials.delete');
     
     // Bank Soal
     Route::get('/admin/questions', [AdminController::class, 'questions'])->name('admin.questions'); // Tampilan form
