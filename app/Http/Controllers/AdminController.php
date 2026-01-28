@@ -65,8 +65,19 @@ class AdminController extends Controller
         return back()->with('status', 'Pembayaran user ' . $user->name . ' ditolak.');
     }
 
-    public function participants() {
-        $users = User::where('role', 'user')->get();
+    public function participants(Request $request) {
+        // Ambil input filter dari URL (jika ada)
+        $packageFilter = $request->query('package');
+
+        $query = \App\Models\User::where('role', 'user');
+
+        // Jika filter dipilih, saring datanya
+        if ($packageFilter) {
+            $query->where('package', $packageFilter);
+        }
+
+        $users = $query->latest()->get();
+
         return view('admin.participants', compact('users'));
     }
 
