@@ -69,7 +69,7 @@ class AdminController extends Controller
         // Ambil input filter dari URL (jika ada)
         $packageFilter = $request->query('package');
 
-        $query = \App\Models\User::where('role', 'user');
+        $query = User::where('role', 'user');
 
         // Jika filter dipilih, saring datanya
         if ($packageFilter) {
