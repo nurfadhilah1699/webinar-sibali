@@ -3,203 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webinar Sibali</title>
+    <title>Webinar Beasiswa Unlocked - Sibali Event</title>
+    <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        .bg-pattern { background-image: radial-gradient(#e5e7eb 1px, transparent 1px); background-size: 20px 20px; }
+        .gradient-blue { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0px); } }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans antialiased">
+<body class="bg-white text-slate-900 antialiased">
 
-    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    {{-- NAVBAR --}}
+    <nav x-data="{ open: false }" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex-shrink-0 flex items-center">
-                    <span class="text-2xl font-bold text-indigo-600">Sibali<span class="text-red-800">Event</span></span>
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center gap-2">
+                    <img src="{{ asset('img/logo.png') }}" alt="Logo" class="h-10 w-auto">
+                    <span class="text-xl font-extrabold tracking-tighter text-blue-900">Sibali<span class="text-red-600">Event</span></span>
                 </div>
-                <div class="hidden space-x-8 sm:flex">
-                    <a href="#features" class="text-gray-600 hover:text-indigo-600">Fitur</a>
-                    <a href="#pricing" class="text-gray-600 hover:text-indigo-600">Paket</a>
+                
+                <div class="hidden md:flex space-x-10">
+                    <a href="#features" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Fitur</a>
+                    <a href="#about" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Tentang</a>
+                    <a href="#pricing" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Paket</a>
                 </div>
-                <div class="flex items-center space-x-4">
-                    @if (Route::has('login'))
-                        @auth
-                            <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 underline">Dashboard</a>
-                        @else
-                            <a href="{{ route('login') }}" class="text-sm text-gray-600 hover:text-indigo-600">Masuk</a>
-                            <a href="{{ route('register') }}" class="ml-4 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">Daftar</a>
-                        @endauth
-                    @endif
+
+                <div class="flex items-center gap-3">
+                    @auth
+                        <a href="{{ url('/dashboard') }}" class="text-sm font-bold text-blue-600 px-4 py-2 bg-blue-50 rounded-lg">Dashboard</a>
+                    @else
+                        <a href="{{ route('login') }}" class="hidden sm:block text-sm font-bold text-slate-600 hover:text-blue-600">Masuk</a>
+                        <a href="{{ route('register') }}" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-full transition-all shadow-lg shadow-blue-200">Daftar</a>
+                    @endauth
+                    
+                    <button @click="open = !open" class="md:hidden p-2 text-slate-600 transition-transform" :class="{'rotate-90': open}">
+                        <i data-lucide="menu" x-show="!open"></i>
+                        <i data-lucide="x" x-show="open"></i>
+                    </button>
                 </div>
             </div>
+        </div>
+        
+        {{-- Mobile Menu --}}
+        <div x-show="open" x-transition.opacity class="md:hidden bg-white border-b px-4 py-6 space-y-4 shadow-xl">
+            <a href="#features" @click="open = false" class="block font-bold text-slate-600">Fitur</a>
+            <a href="#about" @click="open = false" class="block font-bold text-slate-600">Tentang</a>
+            <a href="#pricing" @click="open = false" class="block font-bold text-slate-600">Paket</a>
+            <hr>
+            <a href="{{ route('login') }}" class="block font-bold text-blue-600">Masuk Peserta</a>
         </div>
     </nav>
 
-    <section class="relative bg-white py-20 overflow-hidden">
+    {{-- HERO SECTION --}}
+    <section class="relative pt-12 pb-24 overflow-hidden bg-pattern">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 mb-6 shadow-sm">
-                    🎓 Bersama Awardee Beasiswa LPDP
-                </span>
-                <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                    <span class="block text-red-800">Raih Beasiswa Impian di</span>
-                    <span class="block text-indigo-600">Dalam & Luar Negeri</span>
-                </h1>
-                <p class="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-                    Kupas tuntas strategi lolos Beasiswa LPDP Dalam dan Luar Negeri. Validasi kemampuan bahasa Inggrismu dengan simulasi TOEFL berstandar untuk lengkapi berkas pendaftaranmu!
-                </p>
-                <div class="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-                    <div class="rounded-md shadow">
-                        <a href="#pricing" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center text-center lg:text-left">
+                <div>
+                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-black bg-red-50 text-red-600 border border-red-100 mb-6 tracking-widest uppercase">
+                        🚀 Limited Slot - Beasiswa 2026
+                    </span>
+                    <h1 class="text-5xl lg:text-7xl font-extrabold text-blue-900 leading-[1.1] tracking-tight">
+                        Wujudkan <br>
+                        <span class="text-red-600">Mimpi Kampus</span> <br>
+                        <span class="underline decoration-blue-200">Impianmu</span>
+                    </h1>
+                    <p class="mt-6 text-lg text-slate-500 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium">
+                        Persiapkan dirimu menembus Beasiswa LPDP & Luar Negeri bersama mentor berpengalaman dan ukur kemampuanmu dengan simulasi TOEFL eksklusif.
+                    </p>
+                    <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="#pricing" class="px-8 py-4 gradient-blue text-white font-black rounded-2xl shadow-xl shadow-blue-200 hover:scale-105 transition-all text-center uppercase text-xs tracking-widest">
                             Pilih Paket Sekarang
+                        </a>
+                        <a href="#features" class="px-8 py-4 bg-white text-slate-600 font-black rounded-2xl border border-slate-200 hover:bg-slate-50 transition-all text-center uppercase text-xs tracking-widest">
+                            Lihat Fasilitas
                         </a>
                     </div>
                 </div>
+                <div class="relative">
+                    <div class="absolute inset-0 bg-blue-400/20 blur-[100px] rounded-full"></div>
+                    <img src="{{ asset('img/logo.png') }}" alt="Hero Image" class="relative z-10 w-full max-w-md mx-auto drop-shadow-2xl animate-float">
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="py-12 bg-indigo-900 text-white relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-32 h-32 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-        
+    {{-- FEATURES SECTION --}}
+    <section id="features" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-black text-blue-900">Kenapa Harus Ikut Webinar Ini?</h2>
+                <div class="h-1.5 w-20 bg-red-600 mx-auto mt-4 rounded-full"></div>
+            </div>
+            <div class="grid md:grid-cols-3 gap-10">
+                <div class="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 hover:shadow-2xl hover:shadow-blue-100 transition-all group">
+                    <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-blue-200 group-hover:rotate-6 transition-transform">
+                        <i data-lucide="graduation-cap" class="text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-slate-800 mb-3">Awardee Mentorship</h3>
+                    <p class="text-slate-500 leading-relaxed text-sm font-medium">Dapatkan insight langsung dari penerima beasiswa LPDP tentang cara membuat essay yang memikat reviewer.</p>
+                </div>
+                <div class="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 hover:shadow-2xl hover:shadow-blue-100 transition-all group">
+                    <div class="w-14 h-14 bg-red-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-red-200 group-hover:rotate-6 transition-transform">
+                        <i data-lucide="clipboard-check" class="text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-slate-800 mb-3">Real TOEFL Simulation</h3>
+                    <p class="text-slate-500 leading-relaxed text-sm font-medium">Uji skor TOEFL-mu dengan sistem computer-based test (CBT) yang dilengkapi timer dan hasil instan.</p>
+                </div>
+                <div class="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 hover:shadow-2xl hover:shadow-blue-100 transition-all group">
+                    <div class="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-200 group-hover:rotate-6 transition-transform">
+                        <i data-lucide="users" class="text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-slate-800 mb-3">Networking Group</h3>
+                    <p class="text-slate-500 leading-relaxed text-sm font-medium">Bergabung dengan komunitas pejuang beasiswa lainnya untuk saling berbagi informasi dan semangat.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- ABOUT SECTION --}}
+    <section id="about" class="py-24 bg-blue-900 relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-1/3 h-full bg-blue-800/30 -skew-x-12 translate-x-1/2"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-8">
-                
-                <div class="text-center md:text-left">
-                    <span class="bg-indigo-500 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Upcoming Event</span>
-                    <h2 class="text-3xl font-extrabold mt-2 italic">Save the Date!</h2>
-                    <p class="text-indigo-200 text-lg mt-1">Sabtu, 15 Februari 2026</p>
-                    <div class="flex items-center justify-center md:justify-start mt-2 text-sm space-x-4">
-                        <span class="flex items-center">🕒 09:00 - 12:00 WITA</span>
-                        <span class="flex items-center">📍 Via Zoom Meeting</span>
-                    </div>
+            <div class="flex flex-col lg:flex-row items-center gap-16 text-white">
+                <div class="lg:w-1/2">
+                    <h2 class="text-4xl font-black mb-8 leading-tight">Tentang Program <br> Webinar Unlocked</h2>
+                    <p class="text-blue-100 mb-6 leading-relaxed font-medium">
+                        Program ini diinisiasi oleh <span class="font-bold underline decoration-red-500">Sibali Event</span> untuk menjembatani kesenjangan informasi mengenai akses pendidikan tinggi. Kami percaya bahwa setiap anak bangsa berhak mendapatkan pendidikan terbaik.
+                    </p>
+                    <p class="text-blue-200 leading-relaxed font-medium">
+                        Hingga tahun 2026, kami telah membantu ribuan peserta untuk memetakan roadmap beasiswa mereka, meningkatkan skor bahasa Inggris, dan menghubungkan mereka dengan mentor-mentor berkualitas dari berbagai negara.
+                    </p>
                 </div>
-
-                <div class="flex space-x-3 sm:space-x-4 text-center" id="countdown">
-                    <div class="bg-white/10 backdrop-blur-md p-3 sm:p-4 rounded-xl border border-white/20 min-w-[70px] sm:min-w-[90px]">
-                        <span id="days" class="text-2xl sm:text-4xl font-bold block">00</span>
-                        <span class="text-[10px] sm:text-xs uppercase tracking-widest text-indigo-300">Hari</span>
+                <div class="lg:w-1/2 grid grid-cols-2 gap-4">
+                    <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 text-center">
+                        <span class="text-4xl font-black block mb-2">1500+</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-blue-300">Peserta Lulus</span>
                     </div>
-                    <div class="bg-white/10 backdrop-blur-md p-3 sm:p-4 rounded-xl border border-white/20 min-w-[70px] sm:min-w-[90px]">
-                        <span id="hours" class="text-2xl sm:text-4xl font-bold block">00</span>
-                        <span class="text-[10px] sm:text-xs uppercase tracking-widest text-indigo-300">Jam</span>
+                    <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 text-center">
+                        <span class="text-4xl font-black block mb-2">12+</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-blue-300">Awardee Mentor</span>
                     </div>
-                    <div class="bg-white/10 backdrop-blur-md p-3 sm:p-4 rounded-xl border border-white/20 min-w-[70px] sm:min-w-[90px]">
-                        <span id="minutes" class="text-2xl sm:text-4xl font-bold block">00</span>
-                        <span class="text-[10px] sm:text-xs uppercase tracking-widest text-indigo-300">Menit</span>
-                    </div>
-                    <div class="bg-white/10 backdrop-blur-md p-3 sm:p-4 rounded-xl border border-white/20 min-w-[70px] sm:min-w-[90px]">
-                        <span id="seconds" class="text-2xl sm:text-4xl font-bold block">00</span>
-                        <span class="text-[10px] sm:text-xs uppercase tracking-widest text-indigo-300">Detik</span>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-    </section>
-
-    <section id="features" class="py-16 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-bold text-gray-900">Apa yang Kamu Dapatkan?</h2>
-            <div class="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                    <div class="text-indigo-600 mb-4 text-3xl">🎯</div>
-                    <h3 class="text-xl font-bold mb-2">Strategy & Roadmap</h3>
-                    <p class="text-gray-600">Panduan lengkap langkah demi langkah lolos beasiswa LPDP dan universitas top dunia dari para Awardee.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                    <div class="text-indigo-600 mb-4 text-3xl">📝</div>
-                    <h3 class="text-xl font-bold mb-2">Simulasi TOEFL</h3>
-                    <p class="text-gray-600">Khusus VIP, uji kemampuan bahasa Inggrismu dengan sistem timer dan skor otomatis.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                    <div class="text-indigo-600 mb-4 text-3xl">🎓</div>
-                    <h3 class="text-xl font-bold mb-2">Sertifikat Digital</h3>
-                    <p class="text-gray-600">E-Sertifikat resmi yang mencantumkan skor TOEFL untuk memperkuat portofolio magang.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="pricing" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">Pilih Paket Webinar</h2>
-            <p class="text-gray-600 mb-12">Daftar sesuai kebutuhan pengembangan dirimu.</p>
+    {{-- PRICING --}}
+    <section id="pricing" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black text-blue-900 tracking-tight">Investasi Masa Depanmu</h2>
+                <p class="text-slate-500 mt-4 font-semibold italic">Daftar sekarang sebelum kuota penuh!</p>
+            </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="border rounded-2xl p-8 bg-white flex flex-col hover:shadow-xl transition">
-                    <h3 class="text-lg font-semibold text-gray-900">Reguler</h3>
-                    <p class="mt-4 text-4xl font-bold text-gray-900">Rp 20rb</p>
-                    <p class="mt-1 text-gray-500 text-sm">(Basic)</p>
-                    <ul class="mt-6 space-y-4 text-left text-sm text-gray-600">
-                        <li class="flex items-center">✅ Link Zoom Webinar</li>
-                        <li class="flex items-center">✅ E-Sertifikat Basic</li>
-                        <li class="flex items-center text-gray-300">❌ Materi & Rekaman</li>
-                        <li class="flex items-center text-gray-300">❌ Tes TOEFL & Skor</li>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+                {{-- Reguler --}}
+                <div class="bg-white p-10 rounded-[3rem] border border-slate-200 flex flex-col hover:-translate-y-2 transition-all">
+                    <h3 class="text-lg font-black text-slate-400 uppercase tracking-widest">Reguler</h3>
+                    <div class="my-6 flex items-baseline gap-1">
+                        <span class="text-4xl font-black text-blue-900">Rp 20rb</span>
+                    </div>
+                    <ul class="space-y-4 mb-10 flex-grow text-sm font-bold text-slate-600">
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> Link Zoom Webinar</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> WA Group Sharing</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> E-Sertifikat Basic</li>
+                        <li class="flex items-center gap-3 text-slate-300 italic"><i data-lucide="x-circle" class="w-5 h-5"></i> Materi & Rekaman</li>
+                        <li class="flex items-center gap-3 text-slate-300 italic"><i data-lucide="x-circle" class="w-5 h-5"></i> Tes TOEFL & Skor</li>
                     </ul>
-                    <a href="{{ route('register', ['package' => 'reguler']) }}" class="mt-8 block w-full bg-gray-100 text-gray-900 text-center py-2 rounded-lg font-semibold hover:bg-gray-200">Reguler</a>
+                    <a href="{{ route('register', ['package' => 'reguler']) }}" class="w-full py-4 rounded-2xl bg-slate-100 text-slate-800 font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-200 transition text-center">Daftar Reguler</a>
                 </div>
 
-                <div class="border-2 border-indigo-600 rounded-2xl p-8 bg-white flex flex-col shadow-lg relative transform md:-translate-y-4">
-                    <span class="absolute top-0 right-0 bg-indigo-600 text-white text-xs px-3 py-1 rounded-bl-lg rounded-tr-lg">Populer</span>
-                    <h3 class="text-lg font-semibold text-gray-900">VIP 1</h3>
-                    <p class="mt-4 text-4xl font-bold text-gray-900">Rp 50rb</p>
-                    <ul class="mt-6 space-y-4 text-left text-sm text-gray-600">
-                        <li class="flex items-center">✅ Link Zoom & WA Group</li>
-                        <li class="flex items-center">✅ E-Sertifikat Eksklusif</li>
-                        <li class="flex items-center">✅ Materi & Rekaman Sesi</li>
-                        <li class="flex items-center text-gray-300">❌ Tes TOEFL & Skor</li>
+                {{-- VIP (DB: vip1) --}}
+                <div class="bg-white p-10 rounded-[3rem] border-4 border-blue-600 flex flex-col shadow-2xl shadow-blue-100 relative transform md:-translate-y-8">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-red-600 text-white px-8 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] whitespace-nowrap shadow-lg">Most Recommended</div>
+                    <h3 class="text-lg font-black text-blue-600 uppercase tracking-widest">VIP</h3>
+                    <div class="my-6 text-center">
+                        <span class="text-5xl font-black text-blue-900">Rp 50rb</span>
+                    </div>
+                    <ul class="space-y-4 mb-10 flex-grow text-sm font-bold text-slate-700">
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600"></i> Semua Benefit Reguler</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600"></i> WA Group Exclusive</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600"></i> Materi PDF & Rekaman</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600"></i> E-Sertifikat Eksklusif</li>
+                        <li class="flex items-center gap-3 text-slate-300 italic"><i data-lucide="x-circle" class="w-5 h-5"></i> Tes TOEFL & Skor</li>
                     </ul>
-                    <a href="{{ route('register', parameters: ['package' => 'vip1']) }}" class="mt-8 block w-full bg-indigo-600 text-white text-center py-2 rounded-lg font-semibold hover:bg-indigo-700">Pilih VIP 1</a>
+                    <a href="{{ route('register', ['package' => 'vip1']) }}" class="w-full py-4 rounded-2xl gradient-blue text-white font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-blue-200 transition text-center hover:scale-105">Daftar VIP</a>
                 </div>
 
-                <div class="border rounded-2xl p-8 bg-white flex flex-col hover:shadow-xl transition">
-                    <h3 class="text-lg font-semibold text-gray-900">VIP 2</h3>
-                    <p class="mt-4 text-4xl font-bold text-gray-900">Rp 100rb</p>
-                    <ul class="mt-6 space-y-4 text-left text-sm text-gray-600">
-                        <li class="flex items-center">✅ Semua Fasilitas VIP 1</li>
-                        <li class="flex items-center font-bold text-indigo-600">✅ Tes TOEFL (Timer & Skor)</li>
-                        <li class="flex items-center">✅ Skor TOEFL di Sertifikat</li>
-                        <li class="flex items-center">✅ Konsultasi Karir</li>
+                {{-- VIP Plus+ (DB: vip2) --}}
+                <div class="bg-slate-900 p-10 rounded-[3rem] flex flex-col shadow-xl text-white">
+                    <h3 class="text-lg font-black text-blue-400 uppercase tracking-widest">VIP Plus+</h3>
+                    <div class="my-6">
+                        <span class="text-4xl font-black">Rp 100rb</span>
+                    </div>
+                    <ul class="space-y-4 mb-10 flex-grow text-sm font-bold">
+                        <li class="flex items-center gap-3 text-blue-200"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Semua Fasilitas VIP</li>
+                        <li class="flex items-center gap-3 text-blue-200"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Tes TOEFL (CBT & Timer)</li>
+                        <li class="flex items-center gap-3 text-blue-200"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Skor TOEFL di Sertifikat</li>
+                        <li class="flex items-center gap-3 text-blue-200"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Prioritas Sesi Q&A</li>
                     </ul>
-                    <a href="{{ route('register', ['package' => 'vip2']) }}" class="mt-8 block w-full bg-gray-900 text-white text-center py-2 rounded-lg font-semibold hover:bg-black">Pilih VIP 2</a>
+                    <a href="{{ route('register', ['package' => 'vip2']) }}" class="w-full py-4 rounded-2xl bg-white text-slate-900 font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-50 transition text-center">Daftar VIP Plus+</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-gray-900 py-12 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p>&copy; 2026 Sibali.Id</p>
+    {{-- FOOTER --}}
+    <footer class="bg-white py-16 border-t border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex items-center justify-center gap-2 mb-6">
+                <img src="{{ asset('img/logo.png') }}" class="h-8 w-auto">
+                <span class="text-xl font-black text-blue-900 tracking-tighter">Sibali<span class="text-red-600">Event</span></span>
+            </div>
+            <p class="text-slate-400 text-sm font-bold uppercase tracking-widest mb-2">&copy; 2026 Webinar Beasiswa Unlocked</p>
+            <p class="text-slate-300 text-[10px] font-medium">Bekerja sama dengan Awardee LPDP & English Test Center</p>
         </div>
     </footer>
 
     <script>
+        lucide.createIcons();
+
         function updateTimer() {
-            // Format: YYYY-MM-DDTHH:mm:ss+08:00 (Offset +08:00 adalah WITA)
             const targetDate = new Date("2026-02-15T09:00:00+08:00").getTime();
-            
-            const interval = setInterval(() => {
+            setInterval(() => {
                 const now = new Date().getTime();
                 const distance = targetDate - now;
-
-                if (distance < 0) {
-                    clearInterval(interval);
-                    document.getElementById("countdown").innerHTML = 
-                        "<div class='text-2xl font-bold px-6 py-3 bg-white/20 rounded-lg animate-pulse'>Sedang Berlangsung! 🚀</div>";
-                    return;
-                }
-
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                document.getElementById("days").innerText = days.toString().padStart(2, '0');
-                document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
-                document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
-                document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+                if (distance < 0) return;
+                document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+                document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+                document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                document.getElementById("seconds").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
             }, 1000);
         }
-
         updateTimer();
     </script>
 </body>
