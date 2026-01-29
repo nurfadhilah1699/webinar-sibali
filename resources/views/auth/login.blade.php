@@ -1,47 +1,49 @@
 <x-guest-layout>
-    <!-- Session Status -->
+    <div class="mb-8">
+        <h2 class="text-3xl font-black text-gray-900 tracking-tight">Selamat Datang</h2>
+    </div>
+
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
 
-        <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 ml-1">Email Address</label>
+            <x-text-input id="email" class="block w-full !rounded-2xl border-gray-100 bg-gray-50 focus:bg-white focus:ring-blue-900 focus:border-blue-900 transition-all py-3" type="email" name="email" :value="old('email')" required autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
+        <div>
+            <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 ml-1">Password</label>
+            <x-text-input id="password" class="block w-full !rounded-2xl border-gray-100 bg-gray-50 focus:bg-white focus:ring-blue-900 focus:border-blue-900 transition-all py-3" type="password" name="password" required />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
+        <div class="flex items-center justify-between">
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                <input id="remember_me" type="checkbox" class="rounded-lg border-gray-200 text-blue-900 shadow-sm focus:ring-blue-900 w-5 h-5" name="remember">
+                <span class="ms-2 text-[11px] font-black text-gray-500 uppercase tracking-widest">{{ __('Ingat Saya') }}</span>
             </label>
-        </div>
 
-        <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                <a class="text-[11px] font-black text-blue-900 hover:text-black transition-colors uppercase tracking-widest" href="{{ route('password.request') }}">
+                    {{ __('Lupa Password?') }}
                 </a>
             @endif
+        </div>
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+        <div class="pt-2">
+            <button type="submit" class="w-full bg-blue-900 hover:bg-black text-white font-black py-4 rounded-2xl shadow-xl shadow-blue-100 transition-all transform hover:scale-[1.01] active:scale-[0.98] uppercase tracking-widest text-xs">
+                {{ __('Masuk Sekarang') }}
+            </button>
+        </div>
+
+        <div class="text-center mt-6">
+            <p class="text-xs text-gray-500 font-bold uppercase tracking-widest">
+                Belum punya akun? 
+                <a href="{{ route('register') }}" class="text-blue-900 hover:underline">Daftar Akun</a>
+            </p>
         </div>
     </form>
 </x-guest-layout>

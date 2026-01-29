@@ -100,20 +100,65 @@
         const steps = document.querySelectorAll('.question-step');
         const totalSteps = steps.length;
         const form = document.getElementById('toefl-form');
+        let isSubmitting = false;
 
-        // --- 1. FUNGSI UPDATE TAMPILAN ---
+        // --- 1. LOGIKA TIMER ---
+        // Pastikan format date dari Laravel valid
+        const startedAt = new Date("{{ $user->started_at }}").getTime();
+        const duration = 120 * 60 * 1000; 
+        const endTime = startedAt + duration;
+        const timerDisplay = document.getElementById('timer-display');
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = endTime - now;
+
+            if (distance <= 0) {
+                clearInterval(timerInterval);
+                timerDisplay.innerHTML = "00:00:00";
+
+                if (isSubmitting) return; 
+                isSubmitting = true;
+
+                localStorage.removeItem('toefl_answers');
+                Swal.fire({
+                    title: 'Waktu Habis!',
+                    text: 'Jawaban kamu akan otomatis dikirim.',
+                    icon: 'warning',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                }).then(() => {
+                    form.submit();
+                });
+                return;
+            }
+
+            const hours = Math.floor(distance / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            timerDisplay.innerHTML = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // Jalankan timer tepat satu kali setiap detik
+        const timerInterval = setInterval(updateTimer, 1000);
+        updateTimer(); // Panggil langsung agar tidak menunggu 1 detik pertama
+
+        // --- 2. FUNGSI NAVIGASI ---
         function updateStep() {
             steps.forEach((step, index) => {
                 step.classList.toggle('hidden', index !== currentStep);
             });
 
-            // Update Grid Number Style
             for(let i = 0; i < totalSteps; i++) {
                 const btn = document.getElementById(`grid-btn-${i}`);
-                if (i === currentStep) {
-                    btn.classList.add('ring-2', 'ring-blue-900', 'ring-offset-2', 'border-blue-900');
-                } else {
-                    btn.classList.remove('ring-2', 'ring-blue-900', 'ring-offset-2', 'border-blue-900');
+                if (btn) {
+                    if (i === currentStep) {
+                        btn.classList.add('ring-2', 'ring-blue-900', 'ring-offset-2', 'border-blue-900');
+                    } else {
+                        btn.classList.remove('ring-2', 'ring-blue-900', 'ring-offset-2', 'border-blue-900');
+                    }
                 }
             }
 
@@ -129,8 +174,10 @@
 
         function markAsAnswered(index) {
             const btn = document.getElementById(`grid-btn-${index}`);
-            btn.classList.add('bg-green-600', 'text-white', 'border-green-600');
-            btn.classList.remove('text-gray-400');
+            if (btn) {
+                btn.classList.add('bg-green-600', 'text-white', 'border-green-600');
+                btn.classList.remove('text-gray-400');
+            }
             updateCompletionCounter();
         }
 
@@ -139,46 +186,7 @@
             document.getElementById('completion-status').innerText = `${answered}/${totalSteps} Terjawab`;
         }
 
-        // --- 2. LOGIKA TIMER ---
-        const startedAt = new Date("{{ $user->started_at }}").getTime();
-        const duration = 120 * 60 * 1000; 
-        const endTime = startedAt + duration;
-        const timerDisplay = document.getElementById('timer-display');
-
-        function updateTimer() {
-            const now = new Date().getTime();
-            const distance = endTime - now;
-
-            if (distance < 0) {
-                clearInterval(timerInterval);
-                timerDisplay.innerHTML = "00:00:00";
-                Swal.fire({
-                    title: 'Waktu Habis!',
-                    text: 'Jawaban kamu akan otomatis dikirim.',
-                    icon: 'warning',
-                    timer: 2000,
-                    showConfirmButton: false
-                }).then(() => {
-                    form.submit();
-                });
-                return;
-            }
-
-            const hours = Math.floor(distance / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            timerDisplay.innerHTML = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            
-            if (distance < (5 * 60 * 1000)) { // 5 Menit terakhir
-                timerDisplay.parentElement.classList.add('bg-red-700', 'animate-pulse');
-            }
-        }
-
-        const timerInterval = setInterval(updateTimer, 1000);
-        updateTimer();
-
-        // --- 3. LOGIKA LOCALSTORAGE (AUTO SAVE) ---
+        // --- 3. AUTO SAVE & LOAD ---
         window.addEventListener('DOMContentLoaded', () => {
             const savedAnswers = JSON.parse(localStorage.getItem('toefl_answers')) || {};
             
@@ -187,7 +195,6 @@
                 const radio = document.querySelector(`input[name="${inputName}"][value="${value}"]`);
                 if (radio) {
                     radio.checked = true;
-                    // Cari index soal berdasarkan ID atau urutan untuk mewarnai grid
                     const stepDiv = radio.closest('.question-step');
                     if (stepDiv) {
                         markAsAnswered(parseInt(stepDiv.dataset.step));
@@ -198,37 +205,37 @@
             updateCompletionCounter();
         });
 
-        // Simpan setiap klik radio ke localStorage
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
                 const savedAnswers = JSON.parse(localStorage.getItem('toefl_answers')) || {};
                 savedAnswers[e.target.name] = e.target.value;
                 localStorage.setItem('toefl_answers', JSON.stringify(savedAnswers));
+                
+                // Ambil index dari parent div
+                const stepIndex = e.target.closest('.question-step').dataset.step;
+                markAsAnswered(parseInt(stepIndex));
             });
         });
 
-        // --- 4. KONFIRMASI SUBMIT ---
+        // --- 4. SUBMIT LOGIC ---
         function confirmSubmit() {
-            const answeredCount = document.querySelectorAll('input[type="radio"]:checked').length;
-            
             Swal.fire({
                 title: 'Selesaikan Tes?',
-                text: `Kamu sudah menjawab ${answeredCount} dari ${totalSteps} soal. Pastikan semua sudah diperiksa!`,
+                text: "Pastikan semua jawaban sudah terisi.",
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#1e3a8a',
-                cancelButtonColor: '#ef4444',
-                confirmButtonText: 'Ya, Kirim Sekarang',
-                cancelButtonText: 'Cek Lagi'
+                confirmButtonText: 'Ya, Kirim',
+                cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    isSubmitting = true;
                     localStorage.removeItem('toefl_answers');
                     form.submit();
                 }
             });
         }
 
-        // Handle Tombol Next/Prev
         document.getElementById('next-btn').addEventListener('click', () => {
             if (currentStep < totalSteps - 1) { currentStep++; updateStep(); window.scrollTo({top: 0, behavior: 'smooth'}); }
         });

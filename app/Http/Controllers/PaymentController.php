@@ -18,9 +18,15 @@ class PaymentController extends Controller
         // Simpan file ke folder storage/app/public/payments
         if ($request->hasFile('payment_proof')) {
             $path = $request->file('payment_proof')->store('payments', 'public');
-            $user->update(['payment_proof' => $path]);
+            
+            // PERBAIKAN DI SINI:
+            // Kita update bukti bayar DAN menghapus pesan penolakan sebelumnya
+            $user->update([
+                'payment_proof' => $path,
+                'rejection_message' => null // Ini akan membuat dashboard kembali ke status "Sedang Diperiksa"
+            ]);
         }
-
-        return back()->with('status', 'Bukti pembayaran berhasil diunggah! Mohon tunggu verifikasi admin.');
+        
+        return back()->with('success', 'Bukti pembayaran berhasil diunggah! Mohon tunggu verifikasi admin.');
     }
 }

@@ -94,14 +94,14 @@
 
                     {{-- 2. PERBAIKAN: Logika Pesan Rejection --}}
                     @if(!Auth::user()->is_verified && Auth::user()->rejection_message)
-                    <div class="bg-red-50 border-l-4 border-red-600 p-4 rounded-r-xl flex gap-3 animate-pulse">
-                        <i data-lucide="alert-circle" class="w-5 h-5 text-red-600 shrink-0"></i>
-                        <div>
-                            <h4 class="text-sm font-bold text-red-800">Pembayaran Perlu Diperbaiki</h4>
-                            <p class="text-xs text-red-700 mt-1 italic">"{{ Auth::user()->rejection_message }}"</p>
-                            <p class="text-[10px] text-red-500 mt-2 font-bold uppercase tracking-tighter">* Silakan upload ulang bukti transfer yang valid di bawah.</p>
+                        <div class="bg-red-50 border-l-4 border-red-600 p-4 rounded-r-xl flex gap-3 animate-pulse">
+                            <i data-lucide="alert-circle" class="w-5 h-5 text-red-600 shrink-0"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-red-800">Pembayaran Perlu Diperbaiki</h4>
+                                <p class="text-xs text-red-700 mt-1 italic">"{{ Auth::user()->rejection_message }}"</p>
+                                <p class="text-[10px] text-red-500 mt-2 font-bold uppercase tracking-tighter">* Silakan upload ulang bukti transfer yang valid di bawah.</p>
+                            </div>
                         </div>
-                    </div>
                     @endif
 
                     @if(Auth::user()->role !== 'admin')
@@ -129,11 +129,12 @@
                                                 <p class="text-[9px] text-gray-400 font-bold uppercase mb-2">Transfer ke Rekening</p>
                                                 <p class="font-bold text-gray-700 uppercase">Bank Mandiri (008)</p>
                                                 <p class="text-lg font-black text-blue-900 font-mono">123-456-7890</p>
-                                                <p class="text-[10px] text-gray-500 font-medium mt-1 uppercase italic font-bold">A.N: Beasiswa Camy Official</p>
+                                                <p class="text-[10px] text-gray-500 font-medium mt-1 uppercase italic font-bold">A.N: Sibali.Id Official</p>
                                             </div>
                                         </div>
                                         <div class="flex flex-col justify-center">
-                                            @if(!Auth::user()->payment_proof || Auth::user()->rejection_message)
+                                            @if(!Auth::user()->payment_proof)
+                                                {{-- Kondisi 1: Belum pernah upload sama sekali --}}
                                                 <form action="{{ route('payment.upload') }}" method="POST" enctype="multipart/form-data" class="space-y-3">
                                                     @csrf
                                                     <div class="relative">
@@ -141,7 +142,19 @@
                                                     </div>
                                                     <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-blue-800 transition shadow-md uppercase tracking-widest">Kirim Konfirmasi</button>
                                                 </form>
+
+                                            @elseif(Auth::user()->payment_proof && Auth::user()->rejection_message)
+                                                {{-- Kondisi 2: Ada bukti tapi ditolak (Tampilkan Form Upload Lagi) --}}
+                                                <form action="{{ route('payment.upload') }}" method="POST" enctype="multipart/form-data" class="space-y-3">
+                                                    @csrf
+                                                    <div class="relative">
+                                                        <input type="file" name="payment_proof" class="block w-full text-xs text-gray-500 border border-gray-200 rounded-lg bg-gray-50 file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-blue-900 file:text-white hover:file:bg-black transition cursor-pointer" required>
+                                                    </div>
+                                                    <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-blue-800 transition shadow-md uppercase tracking-widest">Update Bukti Pembayaran</button>
+                                                </form>
+
                                             @else
+                                                {{-- Kondisi 3: Sudah upload dan rejection_message kosong --}}
                                                 <div class="text-center py-6 bg-blue-50 rounded-xl border border-blue-100">
                                                     <i data-lucide="clock" class="w-8 h-8 text-blue-900 mx-auto mb-2 opacity-50"></i>
                                                     <p class="text-xs font-bold text-blue-900 uppercase">Sedang Diperiksa</p>

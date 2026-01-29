@@ -38,11 +38,15 @@ class ToeflController extends Controller
 
     public function submit(Request $request)
     {
-
+        $user = Auth::user();
         $userAnswers = $request->input('answers');
 
+        // FIX 1: Jika waktu habis tapi jawaban kosong, jangan di-kembalikan (back).
+        // Langsung beri skor minimal agar user keluar dari halaman tes.
         if (!$userAnswers) {
-            return back()->with('error', 'Kamu belum menjawab soal apapun.');
+            $user->toefl_score = 310; // Skor minimal TOEFL
+            $user->save();
+            return redirect()->route('dashboard')->with('error', 'Waktu habis dan tidak ada jawaban yang tersimpan.');
         }
 
         $correctListening = 0;
@@ -59,16 +63,19 @@ class ToeflController extends Controller
             }
         }
 
-        // Memanggil fungsi konversi yang ada di bawah
         $scoreL = $this->convertListening($correctListening);
         $scoreS = $this->convertStructure($correctStructure);
         $scoreR = $this->convertReading($correctReading);
         
         $finalScore = round((($scoreL + $scoreS + $scoreR) * 10) / 3);
 
-        $user = User::find(Auth::id());
-        $user->toefl_score = $finalScore;
-        $user->save();
+        // FIX 2: Pastikan user yang diupdate adalah user yang sedang login
+        $user->update([
+            'toefl_score' => $finalScore
+        ]);
+
+        // Opsi tambahan: Hapus started_at jika ingin reset sesi secara bersih
+        // $user->update(['started_at' => null]); 
 
         return redirect()->route('dashboard')->with('status', 'Tes Selesai! Skor TOEFL Anda: ' . $finalScore);
     }

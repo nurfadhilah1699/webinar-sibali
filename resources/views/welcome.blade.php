@@ -98,7 +98,6 @@
                     </p>
                     <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start px-4 sm:px-0">
                         <a href="#pricing" class="px-8 py-4 gradient-blue text-white font-black rounded-2xl shadow-xl shadow-blue-200 text-center uppercase text-[10px] sm:text-xs tracking-widest">Pilih Paket Sekarang</a>
-                        <a href="#features" class="px-8 py-4 bg-white text-slate-600 font-black rounded-2xl shadow-xl shadow-blue-200 text-center uppercase text-[10px] sm:text-xs tracking-widest">Lihat Fasilitas</a>
                     </div>
                 </div>
                 <div class="relative hidden lg:block">
