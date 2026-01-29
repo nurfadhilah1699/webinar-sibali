@@ -15,31 +15,32 @@
         .gradient-blue { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
         .animate-float { animation: float 6s ease-in-out infinite; }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0px); } }
+        [x-cloak] { display: none !important; }
     </style>
 </head>
 <body class="bg-white text-slate-900 antialiased">
 
     {{-- NAVBAR --}}
-    <nav x-data="{ open: false }" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
+    <nav x-data="{ open: false }" class="bg-white/90 backdrop-blur-md sticky top-0 z-[100] border-b border-slate-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
                 <div class="flex items-center gap-2">
-                    <img src="{{ asset('img/logo.png') }}" alt="Logo" class="h-10 w-auto">
-                    <span class="text-xl font-extrabold tracking-tighter text-blue-900">Sibali<span class="text-red-600">Event</span></span>
+                    <img src="{{ asset('img/logo.png') }}" alt="Logo" class="h-8 sm:h-10 w-auto">
+                    <span class="text-lg sm:text-xl font-extrabold tracking-tighter text-blue-900">Sibali<span class="text-red-600">Event</span></span>
                 </div>
                 
-                <div class="hidden md:flex space-x-10">
+                <div class="hidden md:flex space-x-8">
                     <a href="#features" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Fitur</a>
                     <a href="#about" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Tentang</a>
                     <a href="#pricing" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Paket</a>
                 </div>
 
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 sm:gap-3">
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="text-sm font-bold text-blue-600 px-4 py-2 bg-blue-50 rounded-lg">Dashboard</a>
+                        <a href="{{ url('/dashboard') }}" class="text-xs sm:text-sm font-bold text-blue-600 px-3 py-2 bg-blue-50 rounded-lg">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}" class="hidden sm:block text-sm font-bold text-slate-600 hover:text-blue-600">Masuk</a>
-                        <a href="{{ route('register') }}" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-full transition-all shadow-lg shadow-blue-200">Daftar</a>
+                        <a href="{{ route('register') }}" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold rounded-full transition-all shadow-lg shadow-blue-200">Daftar</a>
                     @endauth
                     
                     <button @click="open = !open" class="md:hidden p-2 text-slate-600 transition-transform" :class="{'rotate-90': open}">
@@ -50,7 +51,7 @@
             </div>
         </div>
         
-        <div x-show="open" x-transition.opacity class="md:hidden bg-white border-b px-4 py-6 space-y-4 shadow-xl">
+        <div x-show="open" x-cloak x-transition class="md:hidden bg-white border-b px-4 py-6 space-y-4 shadow-xl">
             <a href="#features" @click="open = false" class="block font-bold text-slate-600">Fitur</a>
             <a href="#about" @click="open = false" class="block font-bold text-slate-600">Tentang</a>
             <a href="#pricing" @click="open = false" class="block font-bold text-slate-600">Paket</a>
@@ -60,220 +61,200 @@
     </nav>
 
     {{-- HERO SECTION --}}
-    <section class="relative pt-12 pb-24 overflow-hidden bg-pattern">
+    <section class="relative pt-8 sm:pt-12 pb-20 sm:pb-24 overflow-hidden bg-pattern">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-12 items-center text-center lg:text-left">
-                <div>
-                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-black bg-red-50 text-red-600 border border-red-100 mb-6 tracking-widest uppercase">
+            <div class="grid lg:grid-cols-2 gap-10 items-center text-center lg:text-left">
+                <div class="z-10">
+                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-black bg-red-50 text-red-600 border border-red-100 mb-6 tracking-widest uppercase">
                         🚀 Limited Slot - Beasiswa 2026
                     </span>
-                    <h1 class="text-5xl lg:text-7xl font-extrabold text-blue-900 leading-[1.1] tracking-tight">
-                        Wujudkan <br>
+                    <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-blue-900 leading-[1.1] tracking-tight">
+                        Wujudkan <br class="hidden sm:block">
                         <span class="text-red-600">Mimpi Kampus</span> <br>
                         <span class="underline decoration-blue-200">Impianmu</span>
                     </h1>
                     
-                    {{-- TIMER DISPLAY --}}
-                    <div class="mt-8 flex justify-center lg:justify-start gap-4">
+                    <div class="mt-8 flex justify-center lg:justify-start gap-2 sm:gap-4">
                         <div class="text-center">
-                            <div id="days" class="text-3xl font-black text-blue-900 bg-white shadow-sm border border-slate-100 w-16 h-16 flex items-center justify-center rounded-2xl">00</div>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Hari</span>
+                            <div id="days" class="text-xl sm:text-3xl font-black text-blue-900 bg-white shadow-sm border border-slate-100 w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded-xl sm:rounded-2xl">00</div>
+                            <span class="text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Hari</span>
                         </div>
                         <div class="text-center">
-                            <div id="hours" class="text-3xl font-black text-blue-900 bg-white shadow-sm border border-slate-100 w-16 h-16 flex items-center justify-center rounded-2xl">00</div>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Jam</span>
+                            <div id="hours" class="text-xl sm:text-3xl font-black text-blue-900 bg-white shadow-sm border border-slate-100 w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded-xl sm:rounded-2xl">00</div>
+                            <span class="text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Jam</span>
                         </div>
                         <div class="text-center">
-                            <div id="minutes" class="text-3xl font-black text-blue-900 bg-white shadow-sm border border-slate-100 w-16 h-16 flex items-center justify-center rounded-2xl">00</div>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Menit</span>
+                            <div id="minutes" class="text-xl sm:text-3xl font-black text-blue-900 bg-white shadow-sm border border-slate-100 w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded-xl sm:rounded-2xl">00</div>
+                            <span class="text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Menit</span>
                         </div>
                         <div class="text-center">
-                            <div id="seconds" class="text-3xl font-black text-red-600 bg-white shadow-sm border border-slate-100 w-16 h-16 flex items-center justify-center rounded-2xl">00</div>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Detik</span>
+                            <div id="seconds" class="text-xl sm:text-3xl font-black text-red-600 bg-white shadow-sm border border-slate-100 w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded-xl sm:rounded-2xl">00</div>
+                            <span class="text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Detik</span>
                         </div>
                     </div>
 
-                    <p class="mt-8 text-lg text-slate-500 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium">
-                        Persiapkan dirimu menembus Beasiswa LPDP & Luar Negeri bersama mentor berpengalaman dan ukur kemampuanmu dengan simulasi TOEFL eksklusif.
+                    <p class="mt-8 text-base sm:text-lg text-slate-500 max-w-xl mx-auto lg:mx-0 font-medium px-2">
+                        Persiapkan dirimu menembus Beasiswa LPDP & Luar Negeri bersama mentor berpengalaman.
                     </p>
-                    <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="#pricing" class="px-8 py-4 gradient-blue text-white font-black rounded-2xl shadow-xl shadow-blue-200 hover:scale-105 transition-all text-center uppercase text-xs tracking-widest">
-                            Pilih Paket Sekarang
-                        </a>
-                        <a href="#features" class="px-8 py-4 bg-white text-slate-600 font-black rounded-2xl border border-slate-200 hover:bg-slate-50 transition-all text-center uppercase text-xs tracking-widest">
-                            Lihat Fasilitas
-                        </a>
+                    <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start px-4 sm:px-0">
+                        <a href="#pricing" class="px-8 py-4 gradient-blue text-white font-black rounded-2xl shadow-xl shadow-blue-200 text-center uppercase text-[10px] sm:text-xs tracking-widest">Pilih Paket Sekarang</a>
+                        <a href="#features" class="px-8 py-4 bg-white text-slate-600 font-black rounded-2xl shadow-xl shadow-blue-200 text-center uppercase text-[10px] sm:text-xs tracking-widest">Lihat Fasilitas</a>
                     </div>
                 </div>
-                <div class="relative">
-                    <div class="absolute inset-0 bg-blue-400/20 blur-[100px] rounded-full"></div>
-                    <img src="{{ asset('img/logo.png') }}" alt="Hero Image" class="relative z-10 w-full max-w-md mx-auto drop-shadow-2xl animate-float">
+                <div class="relative hidden lg:block">
+                    <img src="{{ asset('img/logo.png') }}" class="relative z-10 w-full max-w-md mx-auto drop-shadow-2xl animate-float">
                 </div>
             </div>
         </div>
     </section>
 
     {{-- FEATURES SECTION --}}
-    <section id="features" class="py-24 bg-white">
+    <section id="features" class="py-16 sm:py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-black text-blue-900">Kenapa Harus Ikut Webinar Ini?</h2>
-                <div class="h-1.5 w-20 bg-red-600 mx-auto mt-4 rounded-full"></div>
+            <div class="text-center mb-12">
+                <h2 class="text-2xl sm:text-3xl font-black text-blue-900">Kenapa Harus Ikut?</h2>
+                <div class="h-1 w-16 bg-red-600 mx-auto mt-4 rounded-full"></div>
             </div>
-            <div class="grid md:grid-cols-3 gap-10">
-                <div class="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 hover:shadow-2xl hover:shadow-blue-100 transition-all group">
-                    <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-blue-200 group-hover:rotate-6 transition-transform">
-                        <i data-lucide="graduation-cap" class="text-white"></i>
+            <div class="grid md:grid-cols-3 gap-6 sm:gap-10">
+                <div class="p-8 rounded-[2rem] bg-slate-50 border border-slate-100">
+                    <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-6 text-white shadow-lg">
+                        <i data-lucide="graduation-cap"></i>
                     </div>
-                    <h3 class="text-xl font-black text-slate-800 mb-3">Awardee Mentorship</h3>
-                    <p class="text-slate-500 leading-relaxed text-sm font-medium">Dapatkan insight langsung dari penerima beasiswa LPDP tentang cara membuat essay yang memikat reviewer.</p>
+                    <h3 class="text-lg font-black text-slate-800 mb-2">Awardee Mentorship</h3>
+                    <p class="text-slate-500 text-sm font-medium">Insight langsung dari penerima beasiswa LPDP tentang cara membuat essay memikat.</p>
                 </div>
-                <div class="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 hover:shadow-2xl hover:shadow-blue-100 transition-all group">
-                    <div class="w-14 h-14 bg-red-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-red-200 group-hover:rotate-6 transition-transform">
-                        <i data-lucide="clipboard-check" class="text-white"></i>
+                <div class="p-8 rounded-[2rem] bg-slate-50 border border-slate-100">
+                    <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center mb-6 text-white shadow-lg">
+                        <i data-lucide="clipboard-check"></i>
                     </div>
-                    <h3 class="text-xl font-black text-slate-800 mb-3">Real TOEFL Simulation</h3>
-                    <p class="text-slate-500 leading-relaxed text-sm font-medium">Uji skor TOEFL-mu dengan sistem computer-based test (CBT) yang dilengkapi timer dan hasil instan.</p>
+                    <h3 class="text-lg font-black text-slate-800 mb-2">Real TOEFL Simulation</h3>
+                    <p class="text-slate-500 text-sm font-medium">Uji skor TOEFL-mu dengan sistem CBT yang dilengkapi timer dan hasil instan.</p>
                 </div>
-                <div class="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 hover:shadow-2xl hover:shadow-blue-100 transition-all group">
-                    <div class="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-200 group-hover:rotate-6 transition-transform">
-                        <i data-lucide="users" class="text-white"></i>
+                <div class="p-8 rounded-[2rem] bg-slate-50 border border-slate-100">
+                    <div class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center mb-6 text-white shadow-lg">
+                        <i data-lucide="users"></i>
                     </div>
-                    <h3 class="text-xl font-black text-slate-800 mb-3">Networking Group</h3>
-                    <p class="text-slate-500 leading-relaxed text-sm font-medium">Bergabung dengan komunitas pejuang beasiswa lainnya untuk saling berbagi informasi dan semangat.</p>
+                    <h3 class="text-lg font-black text-slate-800 mb-2">Networking Group</h3>
+                    <p class="text-slate-500 text-sm font-medium">Bergabung dengan komunitas pejuang beasiswa lainnya.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    {{-- ABOUT / ROADMAP SECTION --}}
-    <section id="about" class="py-24 bg-blue-900 relative overflow-hidden">
+    {{-- ABOUT / ROADMAP SECTION (KEMBALI HADIR & RESPONSIVE) --}}
+    <section id="about" class="py-16 sm:py-24 bg-blue-900 relative overflow-hidden">
         <div class="absolute right-0 top-0 w-1/2 h-full bg-blue-800/20 -skew-x-12 translate-x-1/4"></div>
-        <div class="absolute left-0 bottom-0 w-64 h-64 bg-red-600/10 blur-[100px] rounded-full"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="relative order-2 lg:order-1">
-                    <div class="bg-white/10 backdrop-blur-md p-8 rounded-[3rem] border border-white/20 shadow-2xl relative z-10">
-                        <h3 class="text-2xl font-black text-white mb-8 flex items-center gap-3">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                {{-- Text Content - Muncul di Atas pada Mobile --}}
+                <div class="text-white text-center lg:text-left">
+                    <span class="text-red-500 font-black uppercase tracking-[0.3em] text-[10px] sm:text-xs">Tentang Program</span>
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black mt-4 mb-6 leading-tight">Langkah Nyata Menuju Kampus Impian.</h2>
+                    <p class="text-blue-100 leading-relaxed mb-8 font-medium text-base sm:text-lg">Bukan sekadar webinar biasa. Kami memberikan roadmap terukur dari seleksi berkas hingga penguasaan bahasa asing.</p>
+                    <a href="#pricing" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-blue-900 font-black rounded-2xl hover:bg-red-600 hover:text-white transition-all uppercase text-[10px] tracking-widest mx-auto lg:mx-0">
+                        Amankan Slot Kamu <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                {{-- Curriculum Cards --}}
+                <div class="mt-10 lg:mt-0">
+                    <div class="bg-white/10 backdrop-blur-md p-6 sm:p-10 rounded-[2.5rem] border border-white/20 shadow-2xl">
+                        <h3 class="text-xl font-black text-white mb-8 flex items-center justify-center lg:justify-start gap-3">
                             <span class="w-8 h-1 bg-red-500 rounded-full"></span>
                             Kurikulum Webinar
                         </h3>
-                        <div class="space-y-8">
-                            <div class="flex gap-4 group">
-                                <div class="flex-shrink-0 w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center font-bold group-hover:scale-110 transition-transform">1</div>
+                        <div class="space-y-6 sm:space-y-8">
+                            <div class="flex gap-4">
+                                <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-red-600 text-white rounded-xl flex items-center justify-center font-bold">1</div>
                                 <div>
-                                    <h4 class="font-bold text-white text-lg">Mindset & Administratif</h4>
-                                    <p class="text-sm text-blue-100/70 mt-1">Mengenal apa yang sebenarnya dicari oleh reviewer beasiswa pada berkas pendaftaran.</p>
+                                    <h4 class="font-bold text-white text-base sm:text-lg text-left">Mindset & Administratif</h4>
+                                    <p class="text-xs sm:text-sm text-blue-100/70 mt-1 text-left">Mengenal kriteria yang dicari oleh reviewer pada berkas pendaftaran.</p>
                                 </div>
                             </div>
-                            <div class="flex gap-4 group">
-                                <div class="flex-shrink-0 w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center font-bold group-hover:scale-110 transition-transform">2</div>
+                            <div class="flex gap-4">
+                                <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-red-600 text-white rounded-xl flex items-center justify-center font-bold">2</div>
                                 <div>
-                                    <h4 class="font-bold text-white text-lg">Powerful Essay Writing</h4>
-                                    <p class="text-sm text-blue-100/70 mt-1">Bedah struktur essay yang mampu menceritakan profilmu secara impresif.</p>
+                                    <h4 class="font-bold text-white text-base sm:text-lg text-left">Powerful Essay Writing</h4>
+                                    <p class="text-xs sm:text-sm text-blue-100/70 mt-1 text-left">Bedah struktur essay agar mampu menceritakan profilmu secara impresif.</p>
                                 </div>
                             </div>
-                            <div class="flex gap-4 group">
-                                <div class="flex-shrink-0 w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center font-bold shadow-lg shadow-red-900/20 group-hover:scale-110 transition-transform">3</div>
+                            <div class="flex gap-4">
+                                <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-red-600 text-white rounded-xl flex items-center justify-center font-bold">3</div>
                                 <div>
-                                    <h4 class="font-bold text-white text-lg">Language Proficiency</h4>
-                                    <p class="text-sm text-blue-100/70 mt-1 leading-relaxed">Strategi menghadapi tes TOEFL/IELTS tanpa harus kursus jutaan rupiah.</p>
+                                    <h4 class="font-bold text-white text-base sm:text-lg text-left">Language Proficiency</h4>
+                                    <p class="text-xs sm:text-sm text-blue-100/70 mt-1 text-left">Strategi menghadapi tes TOEFL/IELTS tanpa kursus jutaan rupiah.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="order-1 lg:order-2 text-white">
-                    <span class="text-red-500 font-black uppercase tracking-[0.3em] text-xs">Tentang Program</span>
-                    <h2 class="text-4xl lg:text-5xl font-black mt-4 mb-8 leading-tight">Dirancang untuk Mempercepat Langkahmu.</h2>
-                    <p class="text-blue-100 leading-relaxed mb-6 font-medium">Bukan sekadar teori, tapi strategi praktis yang bisa diukur keberhasilannya.</p>
-                    <a href="#pricing" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-blue-900 font-black rounded-2xl hover:bg-red-600 hover:text-white transition-all uppercase text-xs tracking-widest">
-                        Amankan Slot Kamu <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </a>
                 </div>
             </div>
         </div>
     </section>
 
     {{-- PRICING --}}
-    <section id="pricing" class="py-24 bg-slate-50">
+    <section id="pricing" class="py-16 sm:py-24 bg-slate-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-black text-blue-900 tracking-tight">Investasi Masa Depanmu</h2>
+            <div class="text-center mb-12">
+                <h2 class="text-3xl sm:text-4xl font-black text-blue-900">Paket Belajar</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {{-- Reguler --}}
-                <div class="bg-white p-10 rounded-[3rem] border border-slate-200 flex flex-col hover:-translate-y-2 transition-all">
-                    <h3 class="text-lg font-black text-slate-400 uppercase tracking-widest">Reguler</h3>
-                    <div class="my-6 text-4xl font-black text-blue-900">Rp 20rb</div>
-                    <ul class="space-y-4 mb-10 flex-grow text-sm font-bold text-slate-600">
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> Link Zoom & WA Group</li>
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> E-Sertifikat</li>
-                        <li class="flex items-center gap-3 text-slate-300 italic"><i data-lucide="x-circle" class="w-5 h-5"></i> Materi & Rekaman</li>
-                        <li class="flex items-center gap-3 text-slate-300 italic"><i data-lucide="x-circle" class="w-5 h-5"></i> Tes TOEFL & Skor</li>
+                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 flex flex-col">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Reguler</h3>
+                    <div class="my-4 text-3xl font-black text-blue-900">Rp 20rb</div>
+                    <ul class="space-y-4 mb-8 flex-grow text-xs sm:text-sm font-bold text-slate-600">
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i> Link Zoom & WA Group</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i> E-Sertifikat</li>
                     </ul>
-                    <a href="{{ route('register', ['package' => 'reguler']) }}" class="w-full py-4 rounded-2xl bg-slate-100 text-center font-black text-xs uppercase tracking-widest">Daftar Reguler</a>
+                    <a href="#" class="w-full py-4 rounded-2xl bg-slate-100 text-center font-black text-[10px] uppercase tracking-widest">Pilih Reguler</a>
                 </div>
 
                 {{-- VIP --}}
-                <div class="bg-white p-10 rounded-[3rem] border-4 border-blue-600 flex flex-col shadow-2xl relative transform md:-translate-y-8">
-                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-red-600 text-white px-8 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">Most Recommended</div>
-                    <h3 class="text-lg font-black text-blue-600 uppercase tracking-widest">VIP</h3>
-                    <div class="my-6 text-5xl font-black text-blue-900">Rp 50rb</div>
-                    <ul class="space-y-4 mb-10 flex-grow text-sm font-bold text-slate-700">
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600"></i> Semua Benefit Reguler</li>
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600"></i> Materi & Rekaman</li>
-                        <li class="flex items-center gap-3 text-slate-300 italic"><i data-lucide="x-circle" class="w-5 h-5"></i> Tes TOEFL & Skor</li>
+                <div class="bg-white p-8 rounded-[2.5rem] border-4 border-blue-600 flex flex-col shadow-2xl relative md:-translate-y-6">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest">Most Popular</div>
+                    <h3 class="text-xs font-black text-blue-600 uppercase tracking-widest">VIP</h3>
+                    <div class="my-4 text-4xl font-black text-blue-900">Rp 50rb</div>
+                    <ul class="space-y-4 mb-8 flex-grow text-xs sm:text-sm font-bold text-slate-700">
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-600"></i> Benefit Reguler</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-600"></i> Materi PDF & Rekaman</li>
                     </ul>
-                    <a href="{{ route('register', ['package' => 'vip1']) }}" class="w-full py-4 rounded-2xl gradient-blue text-white text-center font-black text-xs uppercase tracking-widest shadow-xl">Daftar VIP</a>
+                    <a href="#" class="w-full py-4 rounded-2xl gradient-blue text-white text-center font-black text-[10px] uppercase tracking-widest">Pilih VIP</a>
                 </div>
 
                 {{-- VIP Plus+ --}}
-                <div class="bg-slate-900 p-10 rounded-[3rem] flex flex-col text-white hover:-translate-y-2 transition-all">
-                    <h3 class="text-lg font-black text-blue-400 uppercase tracking-widest">VIP Plus+</h3>
-                    <div class="my-6 text-4xl font-black">Rp 100rb</div>
-                    <ul class="space-y-4 mb-10 flex-grow text-sm font-bold">
-                        <li class="flex items-center gap-3"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Semua Benefit VIP</li>
-                        <li class="flex items-center gap-3"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Tes TOEFL & Skor</li>
-                        <li class="flex items-center gap-3"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Sertifikat Test TOEFL</li>
+                <div class="bg-slate-900 p-8 rounded-[2.5rem] flex flex-col text-white">
+                    <h3 class="text-xs font-black text-blue-400 uppercase tracking-widest">VIP Plus+</h3>
+                    <div class="my-4 text-3xl font-black">Rp 100rb</div>
+                    <ul class="space-y-4 mb-8 flex-grow text-xs sm:text-sm font-bold">
+                        <li class="flex items-center gap-3"><i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i> Tes TOEFL CBT</li>
+                        <li class="flex items-center gap-3"><i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i> Sertifikat TOEFL</li>
                     </ul>
-                    <a href="{{ route('register', ['package' => 'vip2']) }}" class="w-full py-4 rounded-2xl bg-white text-slate-900 text-center font-black text-xs uppercase tracking-widest">Daftar VIP Plus+</a>
+                    <a href="#" class="w-full py-4 rounded-2xl bg-white text-slate-900 text-center font-black text-[10px] uppercase tracking-widest">Pilih VIP Plus+</a>
                 </div>
             </div>
         </div>
     </section>
 
     {{-- FOOTER --}}
-    <footer class="bg-white py-16 border-t border-slate-100">
+    <footer class="bg-white py-12 border-t border-slate-100">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <div class="flex items-center justify-center gap-2 mb-6">
+            <div class="flex items-center justify-center gap-2 mb-4">
                 <img src="{{ asset('img/logo.png') }}" class="h-8 w-auto">
                 <span class="text-xl font-black text-blue-900">Sibali<span class="text-red-600">Event</span></span>
             </div>
-            <p class="text-slate-400 text-sm font-bold uppercase tracking-widest">&copy; 2026 Webinar Beasiswa Unlocked</p>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">&copy; 2026 Webinar Beasiswa Unlocked</p>
         </div>
     </footer>
 
     <script>
         lucide.createIcons();
-
         function updateTimer() {
-            // Target Tanggal: 15 Februari 2026 jam 09:00 pagi
             const targetDate = new Date("2026-02-15T09:00:00").getTime();
-            
-            const timerInterval = setInterval(() => {
+            setInterval(() => {
                 const now = new Date().getTime();
                 const distance = targetDate - now;
-
-                if (distance < 0) {
-                    clearInterval(timerInterval);
-                    document.getElementById("days").innerText = "00";
-                    document.getElementById("hours").innerText = "00";
-                    document.getElementById("minutes").innerText = "00";
-                    document.getElementById("seconds").innerText = "00";
-                    return;
-                }
-
+                if (distance < 0) return;
                 document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
                 document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
                 document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
