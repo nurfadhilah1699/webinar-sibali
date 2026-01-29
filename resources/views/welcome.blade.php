@@ -50,7 +50,6 @@
             </div>
         </div>
         
-        {{-- Mobile Menu --}}
         <div x-show="open" x-transition.opacity class="md:hidden bg-white border-b px-4 py-6 space-y-4 shadow-xl">
             <a href="#features" @click="open = false" class="block font-bold text-slate-600">Fitur</a>
             <a href="#about" @click="open = false" class="block font-bold text-slate-600">Tentang</a>
@@ -73,7 +72,28 @@
                         <span class="text-red-600">Mimpi Kampus</span> <br>
                         <span class="underline decoration-blue-200">Impianmu</span>
                     </h1>
-                    <p class="mt-6 text-lg text-slate-500 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium">
+                    
+                    {{-- TIMER DISPLAY --}}
+                    <div class="mt-8 flex justify-center lg:justify-start gap-4">
+                        <div class="text-center">
+                            <div id="days" class="text-3xl font-black text-blue-900 bg-white shadow-sm border border-slate-100 w-16 h-16 flex items-center justify-center rounded-2xl">00</div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Hari</span>
+                        </div>
+                        <div class="text-center">
+                            <div id="hours" class="text-3xl font-black text-blue-900 bg-white shadow-sm border border-slate-100 w-16 h-16 flex items-center justify-center rounded-2xl">00</div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Jam</span>
+                        </div>
+                        <div class="text-center">
+                            <div id="minutes" class="text-3xl font-black text-blue-900 bg-white shadow-sm border border-slate-100 w-16 h-16 flex items-center justify-center rounded-2xl">00</div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Menit</span>
+                        </div>
+                        <div class="text-center">
+                            <div id="seconds" class="text-3xl font-black text-red-600 bg-white shadow-sm border border-slate-100 w-16 h-16 flex items-center justify-center rounded-2xl">00</div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Detik</span>
+                        </div>
+                    </div>
+
+                    <p class="mt-8 text-lg text-slate-500 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium">
                         Persiapkan dirimu menembus Beasiswa LPDP & Luar Negeri bersama mentor berpengalaman dan ukur kemampuanmu dengan simulasi TOEFL eksklusif.
                     </p>
                     <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -128,37 +148,31 @@
 
     {{-- ABOUT / ROADMAP SECTION --}}
     <section id="about" class="py-24 bg-blue-900 relative overflow-hidden">
-        {{-- Dekorasi Background --}}
         <div class="absolute right-0 top-0 w-1/2 h-full bg-blue-800/20 -skew-x-12 translate-x-1/4"></div>
         <div class="absolute left-0 bottom-0 w-64 h-64 bg-red-600/10 blur-[100px] rounded-full"></div>
-
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid lg:grid-cols-2 gap-16 items-center">
-                
                 <div class="relative order-2 lg:order-1">
                     <div class="bg-white/10 backdrop-blur-md p-8 rounded-[3rem] border border-white/20 shadow-2xl relative z-10">
                         <h3 class="text-2xl font-black text-white mb-8 flex items-center gap-3">
                             <span class="w-8 h-1 bg-red-500 rounded-full"></span>
                             Kurikulum Webinar
                         </h3>
-                        
                         <div class="space-y-8">
                             <div class="flex gap-4 group">
-                                <div class="flex-shrink-0 w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center font-bold shadow-lg shadow-red-900/20 group-hover:scale-110 transition-transform">1</div>
+                                <div class="flex-shrink-0 w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center font-bold group-hover:scale-110 transition-transform">1</div>
                                 <div>
                                     <h4 class="font-bold text-white text-lg">Mindset & Administratif</h4>
-                                    <p class="text-sm text-blue-100/70 mt-1 leading-relaxed">Mengenal apa yang sebenarnya dicari oleh reviewer beasiswa pada berkas pendaftaran.</p>
+                                    <p class="text-sm text-blue-100/70 mt-1">Mengenal apa yang sebenarnya dicari oleh reviewer beasiswa pada berkas pendaftaran.</p>
                                 </div>
                             </div>
-                            
                             <div class="flex gap-4 group">
-                                <div class="flex-shrink-0 w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center font-bold shadow-lg shadow-red-900/20 group-hover:scale-110 transition-transform">2</div>
+                                <div class="flex-shrink-0 w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center font-bold group-hover:scale-110 transition-transform">2</div>
                                 <div>
                                     <h4 class="font-bold text-white text-lg">Powerful Essay Writing</h4>
-                                    <p class="text-sm text-blue-100/70 mt-1 leading-relaxed">Bedah struktur essay yang mampu menceritakan profilmu secara impresif.</p>
+                                    <p class="text-sm text-blue-100/70 mt-1">Bedah struktur essay yang mampu menceritakan profilmu secara impresif.</p>
                                 </div>
                             </div>
-                            
                             <div class="flex gap-4 group">
                                 <div class="flex-shrink-0 w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center font-bold shadow-lg shadow-red-900/20 group-hover:scale-110 transition-transform">3</div>
                                 <div>
@@ -169,27 +183,14 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="order-1 lg:order-2">
+                <div class="order-1 lg:order-2 text-white">
                     <span class="text-red-500 font-black uppercase tracking-[0.3em] text-xs">Tentang Program</span>
-                    <h2 class="text-4xl lg:text-5xl font-black text-white mt-4 mb-8 leading-tight">
-                        Dirancang untuk <br>
-                        <span class="text-blue-400">Mempercepat Langkah</span> <br>
-                        Persiapanmu.
-                    </h2>
-                    <p class="text-blue-100 leading-relaxed mb-6 font-medium opacity-90">
-                        Webinar **Beasiswa Unlocked** lahir dari keresahan banyaknya mahasiswa yang memiliki potensi besar namun tertahan oleh rumitnya birokrasi dan standar pendaftaran beasiswa.
-                    </p>
-                    <p class="text-blue-100 leading-relaxed font-medium opacity-90">
-                        Kami memberikan **peta jalan (roadmap)** nyata yang bisa kamu eksekusi segera. Bukan sekadar teori, tapi strategi praktis yang bisa diukur keberhasilannya.
-                    </p>
-                    <div class="mt-10">
-                        <a href="#pricing" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-blue-900 font-black rounded-2xl hover:bg-red-600 hover:text-white transition-all uppercase text-xs tracking-widest shadow-xl">
-                            Amankan Slot Kamu <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </a>
-                    </div>
+                    <h2 class="text-4xl lg:text-5xl font-black mt-4 mb-8 leading-tight">Dirancang untuk Mempercepat Langkahmu.</h2>
+                    <p class="text-blue-100 leading-relaxed mb-6 font-medium">Bukan sekadar teori, tapi strategi praktis yang bisa diukur keberhasilannya.</p>
+                    <a href="#pricing" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-blue-900 font-black rounded-2xl hover:bg-red-600 hover:text-white transition-all uppercase text-xs tracking-widest">
+                        Amankan Slot Kamu <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
                 </div>
-
             </div>
         </div>
     </section>
@@ -199,56 +200,44 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-black text-blue-900 tracking-tight">Investasi Masa Depanmu</h2>
-                <p class="text-slate-500 mt-4 font-semibold italic">Daftar sekarang sebelum kuota penuh!</p>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {{-- Reguler --}}
                 <div class="bg-white p-10 rounded-[3rem] border border-slate-200 flex flex-col hover:-translate-y-2 transition-all">
                     <h3 class="text-lg font-black text-slate-400 uppercase tracking-widest">Reguler</h3>
-                    <div class="my-6 flex items-baseline gap-1">
-                        <span class="text-4xl font-black text-blue-900">Rp 20rb</span>
-                    </div>
+                    <div class="my-6 text-4xl font-black text-blue-900">Rp 20rb</div>
                     <ul class="space-y-4 mb-10 flex-grow text-sm font-bold text-slate-600">
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> Link Zoom Webinar</li>
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> WA Group Sharing</li>
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> E-Sertifikat Basic</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> Link Zoom & WA Group</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> E-Sertifikat</li>
                         <li class="flex items-center gap-3 text-slate-300 italic"><i data-lucide="x-circle" class="w-5 h-5"></i> Materi & Rekaman</li>
                         <li class="flex items-center gap-3 text-slate-300 italic"><i data-lucide="x-circle" class="w-5 h-5"></i> Tes TOEFL & Skor</li>
                     </ul>
-                    <a href="{{ route('register', ['package' => 'reguler']) }}" class="w-full py-4 rounded-2xl bg-slate-100 text-slate-800 font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-200 transition text-center">Daftar Reguler</a>
+                    <a href="{{ route('register', ['package' => 'reguler']) }}" class="w-full py-4 rounded-2xl bg-slate-100 text-center font-black text-xs uppercase tracking-widest">Daftar Reguler</a>
                 </div>
 
-                {{-- VIP (DB: vip1) --}}
-                <div class="bg-white p-10 rounded-[3rem] border-4 border-blue-600 flex flex-col shadow-2xl shadow-blue-100 relative transform md:-translate-y-8">
-                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-red-600 text-white px-8 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] whitespace-nowrap shadow-lg">Most Recommended</div>
+                {{-- VIP --}}
+                <div class="bg-white p-10 rounded-[3rem] border-4 border-blue-600 flex flex-col shadow-2xl relative transform md:-translate-y-8">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-red-600 text-white px-8 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">Most Recommended</div>
                     <h3 class="text-lg font-black text-blue-600 uppercase tracking-widest">VIP</h3>
-                    <div class="my-6 text-center">
-                        <span class="text-5xl font-black text-blue-900">Rp 50rb</span>
-                    </div>
+                    <div class="my-6 text-5xl font-black text-blue-900">Rp 50rb</div>
                     <ul class="space-y-4 mb-10 flex-grow text-sm font-bold text-slate-700">
                         <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600"></i> Semua Benefit Reguler</li>
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600"></i> WA Group Exclusive</li>
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600"></i> Materi PDF & Rekaman</li>
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600"></i> E-Sertifikat Eksklusif</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600"></i> Materi & Rekaman</li>
                         <li class="flex items-center gap-3 text-slate-300 italic"><i data-lucide="x-circle" class="w-5 h-5"></i> Tes TOEFL & Skor</li>
                     </ul>
-                    <a href="{{ route('register', ['package' => 'vip1']) }}" class="w-full py-4 rounded-2xl gradient-blue text-white font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-blue-200 transition text-center hover:scale-105">Daftar VIP</a>
+                    <a href="{{ route('register', ['package' => 'vip1']) }}" class="w-full py-4 rounded-2xl gradient-blue text-white text-center font-black text-xs uppercase tracking-widest shadow-xl">Daftar VIP</a>
                 </div>
 
-                {{-- VIP Plus+ (DB: vip2) --}}
-                <div class="bg-slate-900 p-10 rounded-[3rem] flex flex-col shadow-xl text-white">
+                {{-- VIP Plus+ --}}
+                <div class="bg-slate-900 p-10 rounded-[3rem] flex flex-col text-white hover:-translate-y-2 transition-all">
                     <h3 class="text-lg font-black text-blue-400 uppercase tracking-widest">VIP Plus+</h3>
-                    <div class="my-6">
-                        <span class="text-4xl font-black">Rp 100rb</span>
-                    </div>
+                    <div class="my-6 text-4xl font-black">Rp 100rb</div>
                     <ul class="space-y-4 mb-10 flex-grow text-sm font-bold">
-                        <li class="flex items-center gap-3 text-blue-200"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Semua Fasilitas VIP</li>
-                        <li class="flex items-center gap-3 text-blue-200"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Tes TOEFL (CBT & Timer)</li>
-                        <li class="flex items-center gap-3 text-blue-200"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Skor TOEFL di Sertifikat</li>
-                        <li class="flex items-center gap-3 text-blue-200"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Prioritas Sesi Q&A</li>
+                        <li class="flex items-center gap-3"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Semua Benefit VIP</li>
+                        <li class="flex items-center gap-3"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Tes TOEFL & Skor</li>
+                        <li class="flex items-center gap-3"><i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i> Sertifikat Test TOEFL</li>
                     </ul>
-                    <a href="{{ route('register', ['package' => 'vip2']) }}" class="w-full py-4 rounded-2xl bg-white text-slate-900 font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-50 transition text-center">Daftar VIP Plus+</a>
+                    <a href="{{ route('register', ['package' => 'vip2']) }}" class="w-full py-4 rounded-2xl bg-white text-slate-900 text-center font-black text-xs uppercase tracking-widest">Daftar VIP Plus+</a>
                 </div>
             </div>
         </div>
@@ -259,10 +248,9 @@
         <div class="max-w-7xl mx-auto px-4 text-center">
             <div class="flex items-center justify-center gap-2 mb-6">
                 <img src="{{ asset('img/logo.png') }}" class="h-8 w-auto">
-                <span class="text-xl font-black text-blue-900 tracking-tighter">Sibali<span class="text-red-600">Event</span></span>
+                <span class="text-xl font-black text-blue-900">Sibali<span class="text-red-600">Event</span></span>
             </div>
-            <p class="text-slate-400 text-sm font-bold uppercase tracking-widest mb-2">&copy; 2026 Webinar Beasiswa Unlocked</p>
-            <p class="text-slate-300 text-[10px] font-medium">Bekerja sama dengan Awardee LPDP & English Test Center</p>
+            <p class="text-slate-400 text-sm font-bold uppercase tracking-widest">&copy; 2026 Webinar Beasiswa Unlocked</p>
         </div>
     </footer>
 
@@ -270,11 +258,22 @@
         lucide.createIcons();
 
         function updateTimer() {
-            const targetDate = new Date("2026-02-15T09:00:00+08:00").getTime();
-            setInterval(() => {
+            // Target Tanggal: 15 Februari 2026 jam 09:00 pagi
+            const targetDate = new Date("2026-02-15T09:00:00").getTime();
+            
+            const timerInterval = setInterval(() => {
                 const now = new Date().getTime();
                 const distance = targetDate - now;
-                if (distance < 0) return;
+
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById("days").innerText = "00";
+                    document.getElementById("hours").innerText = "00";
+                    document.getElementById("minutes").innerText = "00";
+                    document.getElementById("seconds").innerText = "00";
+                    return;
+                }
+
                 document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
                 document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
                 document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
