@@ -126,30 +126,70 @@
         </div>
     </section>
 
-    {{-- ABOUT SECTION --}}
+    {{-- ABOUT / ROADMAP SECTION --}}
     <section id="about" class="py-24 bg-blue-900 relative overflow-hidden">
-        <div class="absolute right-0 top-0 w-1/3 h-full bg-blue-800/30 -skew-x-12 translate-x-1/2"></div>
+        {{-- Dekorasi Background --}}
+        <div class="absolute right-0 top-0 w-1/2 h-full bg-blue-800/20 -skew-x-12 translate-x-1/4"></div>
+        <div class="absolute left-0 bottom-0 w-64 h-64 bg-red-600/10 blur-[100px] rounded-full"></div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="flex flex-col lg:flex-row items-center gap-16 text-white">
-                <div class="lg:w-1/2">
-                    <h2 class="text-4xl font-black mb-8 leading-tight">Tentang Program <br> Webinar Unlocked</h2>
-                    <p class="text-blue-100 mb-6 leading-relaxed font-medium">
-                        Program ini diinisiasi oleh <span class="font-bold underline decoration-red-500">Sibali Event</span> untuk menjembatani kesenjangan informasi mengenai akses pendidikan tinggi. Kami percaya bahwa setiap anak bangsa berhak mendapatkan pendidikan terbaik.
-                    </p>
-                    <p class="text-blue-200 leading-relaxed font-medium">
-                        Hingga tahun 2026, kami telah membantu ribuan peserta untuk memetakan roadmap beasiswa mereka, meningkatkan skor bahasa Inggris, dan menghubungkan mereka dengan mentor-mentor berkualitas dari berbagai negara.
-                    </p>
-                </div>
-                <div class="lg:w-1/2 grid grid-cols-2 gap-4">
-                    <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 text-center">
-                        <span class="text-4xl font-black block mb-2">1500+</span>
-                        <span class="text-xs font-bold uppercase tracking-widest text-blue-300">Peserta Lulus</span>
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                
+                <div class="relative order-2 lg:order-1">
+                    <div class="bg-white/10 backdrop-blur-md p-8 rounded-[3rem] border border-white/20 shadow-2xl relative z-10">
+                        <h3 class="text-2xl font-black text-white mb-8 flex items-center gap-3">
+                            <span class="w-8 h-1 bg-red-500 rounded-full"></span>
+                            Kurikulum Webinar
+                        </h3>
+                        
+                        <div class="space-y-8">
+                            <div class="flex gap-4 group">
+                                <div class="flex-shrink-0 w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center font-bold shadow-lg shadow-red-900/20 group-hover:scale-110 transition-transform">1</div>
+                                <div>
+                                    <h4 class="font-bold text-white text-lg">Mindset & Administratif</h4>
+                                    <p class="text-sm text-blue-100/70 mt-1 leading-relaxed">Mengenal apa yang sebenarnya dicari oleh reviewer beasiswa pada berkas pendaftaran.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-4 group">
+                                <div class="flex-shrink-0 w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center font-bold shadow-lg shadow-red-900/20 group-hover:scale-110 transition-transform">2</div>
+                                <div>
+                                    <h4 class="font-bold text-white text-lg">Powerful Essay Writing</h4>
+                                    <p class="text-sm text-blue-100/70 mt-1 leading-relaxed">Bedah struktur essay yang mampu menceritakan profilmu secara impresif.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-4 group">
+                                <div class="flex-shrink-0 w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center font-bold shadow-lg shadow-red-900/20 group-hover:scale-110 transition-transform">3</div>
+                                <div>
+                                    <h4 class="font-bold text-white text-lg">Language Proficiency</h4>
+                                    <p class="text-sm text-blue-100/70 mt-1 leading-relaxed">Strategi menghadapi tes TOEFL/IELTS tanpa harus kursus jutaan rupiah.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 text-center">
-                        <span class="text-4xl font-black block mb-2">12+</span>
-                        <span class="text-xs font-bold uppercase tracking-widest text-blue-300">Awardee Mentor</span>
+                </div>
+
+                <div class="order-1 lg:order-2">
+                    <span class="text-red-500 font-black uppercase tracking-[0.3em] text-xs">Tentang Program</span>
+                    <h2 class="text-4xl lg:text-5xl font-black text-white mt-4 mb-8 leading-tight">
+                        Dirancang untuk <br>
+                        <span class="text-blue-400">Mempercepat Langkah</span> <br>
+                        Persiapanmu.
+                    </h2>
+                    <p class="text-blue-100 leading-relaxed mb-6 font-medium opacity-90">
+                        Webinar **Beasiswa Unlocked** lahir dari keresahan banyaknya mahasiswa yang memiliki potensi besar namun tertahan oleh rumitnya birokrasi dan standar pendaftaran beasiswa.
+                    </p>
+                    <p class="text-blue-100 leading-relaxed font-medium opacity-90">
+                        Kami memberikan **peta jalan (roadmap)** nyata yang bisa kamu eksekusi segera. Bukan sekadar teori, tapi strategi praktis yang bisa diukur keberhasilannya.
+                    </p>
+                    <div class="mt-10">
+                        <a href="#pricing" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-blue-900 font-black rounded-2xl hover:bg-red-600 hover:text-white transition-all uppercase text-xs tracking-widest shadow-xl">
+                            Amankan Slot Kamu <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
