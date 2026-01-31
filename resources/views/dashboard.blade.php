@@ -210,9 +210,30 @@
                                             <p class="text-[11px] text-gray-500 font-medium">Simulasi skor resmi</p>
                                         </div>
                                     </div>
-                                    <a href="{{ route('toefl.index') }}" class="block text-center py-2.5 bg-blue-900 text-white rounded-xl text-xs font-bold hover:bg-blue-800 transition shadow-sm">
-                                        {{ Auth::user()->toefl_score ? 'Ulangi Tes' : 'Mulai Sekarang' }}
-                                    </a>
+
+                                    @php
+                                        $isTestOpen = DB::table('settings')->where('key', 'is_test_open')->value('value') == '1';
+                                    @endphp
+
+                                    <div class="w-full"> {{-- Pembungkus agar ukuran konsisten --}}
+                                        @if($isTestOpen)
+                                            <a href="{{ route('toefl.index') }}" 
+                                            class="block w-full text-center py-2.5 bg-blue-900 text-white rounded-xl text-xs font-bold hover:bg-blue-800 transition shadow-sm">
+                                                {{ Auth::user()->toefl_score ? 'Ulangi Tes' : 'Mulai Sekarang' }}
+                                            </a>
+                                        @else
+                                            <div class="flex flex-col gap-2">
+                                                <button type="button" disabled 
+                                                        class="w-full py-2.5 bg-slate-100 text-slate-400 rounded-xl text-xs font-bold cursor-not-allowed flex items-center justify-center gap-2 border border-slate-200">
+                                                    <i data-lucide="lock" class="w-3 h-3"></i>
+                                                    AKSES UJIAN DITUTUP
+                                                </button>
+                                                <p class="text-[10px] text-rose-500 text-center font-medium italic leading-tight">
+                                                    Tunggu instruksi admin untuk memulai
+                                                </p>
+                                            </div>
+                                        @endif
+                                    </div>
                                 </div>
                                 @endif
                             </div>

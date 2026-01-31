@@ -1,6 +1,6 @@
 <x-admin-layout>
     {{-- Header Section --}}
-    <div class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+    <div class="mb-10 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
         <div>
             <nav class="flex mb-2" aria-label="Breadcrumb">
                 <ol class="flex items-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">
@@ -13,21 +13,40 @@
             <p class="text-slate-500 text-sm mt-1">Kelola validasi bukti transfer peserta secara real-time.</p>
         </div>
 
-        {{-- Toggle Sertifikat --}}
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-5">
-            <div class="flex flex-col">
-                <span class="text-[10px] text-slate-400 uppercase font-black tracking-widest">Akses Sertifikat</span>
-                <span class="text-xs font-bold {{ $isCertReady ? 'text-emerald-600' : 'text-rose-500' }}">
-                    {{ $isCertReady ? '● SEDANG AKTIF' : '● NON-AKTIF' }}
-                </span>
+        <div class="flex flex-wrap gap-4 w-full xl:w-auto">
+            {{-- Toggle Sertifikat --}}
+            <div class="flex-1 xl:flex-none bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-5">
+                <div class="flex flex-col">
+                    <span class="text-[10px] text-slate-400 uppercase font-black tracking-widest">Akses Sertifikat</span>
+                    <span class="text-xs font-bold {{ $isCertReady ? 'text-emerald-600' : 'text-rose-500' }}">
+                        {{ $isCertReady ? '● AKTIF' : '● OFF' }}
+                    </span>
+                </div>
+                <form action="{{ route('admin.toggle-certificate') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="group flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black text-white transition-all {{ $isCertReady ? 'bg-rose-500 hover:bg-rose-600' : 'bg-emerald-600 hover:bg-emerald-700' }} shadow-lg">
+                        <i data-lucide="{{ $isCertReady ? 'shield-off' : 'shield-check' }}" class="w-4 h-4"></i>
+                        {{ $isCertReady ? 'MATIKAN' : 'AKTIFKAN' }}
+                    </button>
+                </form>
             </div>
-            <form action="{{ route('admin.toggle-certificate') }}" method="POST">
-                @csrf
-                <button type="submit" class="group flex items-center gap-2 px-5 py-2.5 rounded-xl text-[11px] font-black text-white transition-all duration-300 {{ $isCertReady ? 'bg-rose-500 hover:bg-rose-600 shadow-rose-200' : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200' }} shadow-lg">
-                    <i data-lucide="{{ $isCertReady ? 'shield-off' : 'shield-check' }}" class="w-4 h-4 transition-transform group-hover:scale-110"></i>
-                    {{ $isCertReady ? 'NONAKTIFKAN' : 'AKTIFKAN SEKARANG' }}
-                </button>
-            </form>
+
+            {{-- Toggle Ujian TOEFL (BARU) --}}
+            <div class="flex-1 xl:flex-none bg-slate-900 p-4 rounded-2xl shadow-sm border border-slate-800 flex items-center gap-5">
+                <div class="flex flex-col">
+                    <span class="text-[10px] text-slate-500 uppercase font-black tracking-widest italic">Akses Ujian</span>
+                    <span class="text-xs font-bold {{ $isTestOpen ? 'text-emerald-400' : 'text-amber-500' }}">
+                        {{ $isTestOpen ? '● TERBUKA' : '● TERKUNCI' }}
+                    </span>
+                </div>
+                <form action="{{ route('admin.test.toggle') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="group flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black text-white transition-all {{ $isTestOpen ? 'bg-rose-600 hover:bg-rose-700' : 'bg-indigo-600 hover:bg-indigo-700' }} shadow-lg">
+                        <i data-lucide="{{ $isTestOpen ? 'lock' : 'play' }}" class="w-4 h-4"></i>
+                        {{ $isTestOpen ? 'LOCK TEST' : 'OPEN TEST' }}
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 

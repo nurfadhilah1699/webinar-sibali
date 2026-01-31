@@ -61,6 +61,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Route untuk mengaktifkan/mematikan fitur download sertifikat
     Route::post('/admin/toggle-certificate', [AdminController::class, 'toggleCertificate'])->name('admin.toggle-certificate');
+    // Route untuk mengaktifkan/mematikan akses tes TOEFL
+    Route::post('/admin/toggle-test', [AdminController::class, 'toggleTest'])->name('admin.test.toggle');
 
     // Route untuk mengelola bank soal TOEFL
     // Dashboard Utama Admin

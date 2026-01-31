@@ -20,7 +20,10 @@ class AdminController extends Controller
         // Ambil status sertifikat dari database
         $isCertReady = DB::table('settings')->where('key', 'is_certificate_ready')->value('value') == '1';
 
-        return view('admin.dashboard', compact('pendingUsers', 'isCertReady'));
+        // Ambil status pembukaan tes dari database
+        $isTestOpen = DB::table('settings')->where('key', 'is_test_open')->value('value') == '1';
+
+        return view('admin.dashboard', compact('pendingUsers', 'isCertReady', 'isTestOpen'));
     }
 
     public function toggleCertificate()
@@ -31,6 +34,22 @@ class AdminController extends Controller
         DB::table('settings')->where('key', 'is_certificate_ready')->update(['value' => $newStatus]);
 
         $pesan = ($newStatus == '1') ? 'Sertifikat sekarang bisa didownload oleh user!' : 'Akses download sertifikat ditutup.';
+        
+        return back()->with('status', $pesan);
+    }
+
+    public function toggleTest()
+    {
+        // Mengambil status ujian saat ini
+        $currentStatus = DB::table('settings')->where('key', 'is_test_open')->value('value');
+        
+        // Switch status (0 jadi 1, 1 jadi 0)
+        $newStatus = ($currentStatus == '1') ? '0' : '1';
+
+        // Update hanya key is_test_open
+        DB::table('settings')->where('key', 'is_test_open')->update(['value' => $newStatus]);
+
+        $pesan = ($newStatus == '1') ? 'Akses Ujian TOEFL telah DIBUKA!' : 'Akses Ujian TOEFL telah DITUTUP!';
         
         return back()->with('status', $pesan);
     }

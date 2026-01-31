@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Question;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ToeflController extends Controller
 {
@@ -34,6 +35,22 @@ class ToeflController extends Controller
         $questions = Question::orderBy('category', 'asc')->get();
         
         return view('toefl.index', compact('questions', 'user'));
+    }
+
+    public function showTest()
+    {
+        // Cek apakah admin membuka ujian
+        $isTestOpen = DB::table('settings')->where('key', 'is_test_open')->value('value') == '1';
+
+        if (!$isTestOpen) {
+            return redirect()->route('dashboard')->with('error', 'Akses ujian sedang ditutup.');
+        }
+
+        // Kode kamu yang sudah ada (mengambil soal, dsb)
+        $questions = Question::all();
+        $user = auth()->user();
+        
+        return view('user.toefl.index', compact('questions', 'user'));
     }
 
     public function submit(Request $request)

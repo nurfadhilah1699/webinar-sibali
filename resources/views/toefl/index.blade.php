@@ -1,3 +1,13 @@
+@php
+    $isTestOpen = DB::table('settings')->where('key', 'is_test_open')->value('value') == '1';
+@endphp
+
+@if(!$isTestOpen)
+    <script>
+        window.location.href = "{{ route('dashboard') }}";
+    </script>
+@endif
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <x-app-layout>
