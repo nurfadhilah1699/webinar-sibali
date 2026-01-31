@@ -105,8 +105,15 @@ class AdminController extends Controller
     }
 
     public function questions() {
-        // Nanti kita buat CRUD Soal di sini
-        return view('admin.questions');
+        $counts = [
+            'listening' => Question::where('category', 'listening')->count(),
+            'structure' => Question::where('category', 'structure')->count(),
+            'reading'   => Question::where('category', 'reading')->count(),
+        ];
+
+        $questions = Question::latest()->paginate(10);
+
+        return view('admin.questions', compact('counts', 'questions'));
     }
 
     public function storeQuestion(Request $request) {
@@ -143,5 +150,19 @@ class AdminController extends Controller
         ]);
 
         return back()->with('status', 'Soal berhasil disimpan dengan audio!');
+    }
+
+    public function deleteQuestion($id)
+    {
+        $question = Question::findOrFail($id);
+
+        // Hapus file audio dari storage jika ada agar tidak jadi sampah
+        if ($question->audio_path) {
+            \Storage::disk('public')->delete($question->audio_path);
+        }
+
+        $question->delete();
+
+        return back()->with('status', 'Soal berhasil dihapus dari database!');
     }
 }

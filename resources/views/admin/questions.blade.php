@@ -4,6 +4,42 @@
         <p class="text-slate-500 text-sm mt-1">Tambahkan materi ujian baru untuk peserta webinar.</p>
     </div>
 
+    {{-- Statistik Soal --}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {{-- Listening Card --}}
+        <div class="bg-white p-5 rounded-[2rem] border border-slate-200 flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center">
+                <i data-lucide="headphones" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Listening</p>
+                <h4 class="text-xl font-black text-slate-800">{{ $counts['listening'] }} <span class="text-xs font-medium text-slate-400">/ 50</span></h4>
+            </div>
+        </div>
+
+        {{-- Structure Card --}}
+        <div class="bg-white p-5 rounded-[2rem] border border-slate-200 flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+                <i data-lucide="pencil-line" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Structure</p>
+                <h4 class="text-xl font-black text-slate-800">{{ $counts['structure'] }} <span class="text-xs font-medium text-slate-400">/ 40</span></h4>
+            </div>
+        </div>
+
+        {{-- Reading Card --}}
+        <div class="bg-white p-5 rounded-[2rem] border border-slate-200 flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center">
+                <i data-lucide="book-open" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Reading</p>
+                <h4 class="text-xl font-black text-slate-800">{{ $counts['reading'] }} <span class="text-xs font-medium text-slate-400">/ 50</span></h4>
+            </div>
+        </div>
+    </div>
+
     <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 overflow-hidden">
         {{-- Header Form --}}
         <div class="p-8 border-b border-slate-100 bg-slate-50/50 flex items-center gap-4">
@@ -89,5 +125,80 @@
                 </button>
             </div>
         </form>
+    </div>
+
+    {{-- DAFTAR SOAL TERINPUT --}}
+    <div class="mt-12 bg-white rounded-[2.5rem] shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-8 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="p-3 bg-slate-800 rounded-2xl shadow-lg">
+                    <i data-lucide="list" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-black text-slate-800">Daftar Soal Terkini</h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Manage Your Database</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50">
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Kategori</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Pertanyaan</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Kunci</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse($questions as $q)
+                    <tr class="hover:bg-slate-50/50 transition-colors group">
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter 
+                                {{ $q->category == 'listening' ? 'bg-indigo-100 text-indigo-600' : '' }}
+                                {{ $q->category == 'structure' ? 'bg-emerald-100 text-emerald-600' : '' }}
+                                {{ $q->category == 'reading' ? 'bg-amber-100 text-amber-600' : '' }}">
+                                {{ $q->category }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-sm text-slate-600 font-medium line-clamp-1 italic">"{{ Str::limit($q->question_text, 60) }}"</p>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="w-7 h-7 inline-flex items-center justify-center rounded-lg bg-slate-100 text-slate-800 font-black text-xs">
+                                {{ $q->correct_answer }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end gap-2">
+                                <form action="{{ route('admin.questions.delete', $q->id) }}" method="POST" onsubmit="return confirm('Hapus soal ini?')">
+                                    @csrf @method('DELETE')
+                                    <button class="p-2 text-slate-300 hover:text-red-600 transition-colors">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center gap-2 opacity-30">
+                                <i data-lucide="folder-search" class="w-12 h-12"></i>
+                                <p class="text-xs font-bold uppercase">Belum ada soal di database</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        
+        @if($questions->hasPages())
+        <div class="p-6 bg-slate-50 border-t border-slate-100">
+            {{ $questions->links() }}
+        </div>
+        @endif
     </div>
 </x-admin-layout>
