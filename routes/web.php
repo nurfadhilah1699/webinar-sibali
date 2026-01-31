@@ -78,6 +78,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/questions', [AdminController::class, 'questions'])->name('admin.questions'); // Tampilan form
     Route::post('/admin/questions', [AdminController::class, 'storeQuestion'])->name('admin.questions.store'); // Proses simpan
     Route::delete('/admin/questions/{id}', [AdminController::class, 'deleteQuestion'])->name('admin.questions.delete');
+    Route::put('/admin/questions/{id}/update', [AdminController::class, 'updateQuestion'])->name('admin.questions.update');
 });
 
 require __DIR__.'/auth.php';

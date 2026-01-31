@@ -129,7 +129,7 @@
 
     {{-- DAFTAR SOAL TERINPUT --}}
     <div class="mt-12 bg-white rounded-[2.5rem] shadow-sm border border-slate-200 overflow-hidden">
-        <div class="p-8 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+        <div class="p-8 border-b border-slate-100 bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
                 <div class="p-3 bg-slate-800 rounded-2xl shadow-lg">
                     <i data-lucide="list" class="w-6 h-6 text-white"></i>
@@ -139,6 +139,22 @@
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Manage Your Database</p>
                 </div>
             </div>
+
+            {{-- FORM FILTER --}}
+            <form action="{{ route('admin.questions') }}" method="GET" class="flex items-center gap-2">
+                <select name="category" onchange="this.form.submit()" class="text-[10px] font-black uppercase tracking-widest border-slate-200 rounded-xl bg-white focus:ring-indigo-500 focus:border-indigo-500 py-2.5 px-4 shadow-sm">
+                    <option value="">Semua Kategori</option>
+                    <option value="listening" {{ request('category') == 'listening' ? 'selected' : '' }}>🎧 Listening</option>
+                    <option value="structure" {{ request('category') == 'structure' ? 'selected' : '' }}>📝 Structure</option>
+                    <option value="reading" {{ request('category') == 'reading' ? 'selected' : '' }}>📖 Reading</option>
+                </select>
+                
+                @if(request('category'))
+                    <a href="{{ route('admin.questions') }}" class="p-2.5 text-slate-400 hover:text-red-500 bg-white border border-slate-200 rounded-xl transition-colors shadow-sm" title="Clear Filter">
+                        <i data-lucide="filter-x" class="w-4 h-4"></i>
+                    </a>
+                @endif
+            </form>
         </div>
 
         <div class="overflow-x-auto">
@@ -171,7 +187,22 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <div class="flex justify-end gap-2">
+                            <div class="flex justify-end gap-2" x-data="{}">
+                                {{-- Tombol Edit --}}
+                                <button @click="$dispatch('open-edit-modal', { 
+                                    id: '{{ $q->id }}', 
+                                    text: '{{ addslashes($q->question_text) }}',
+                                    cat: '{{ $q->category }}',
+                                    a: '{{ addslashes($q->option_a) }}',
+                                    b: '{{ addslashes($q->option_b) }}',
+                                    c: '{{ addslashes($q->option_c) }}',
+                                    d: '{{ addslashes($q->option_d) }}',
+                                    ans: '{{ $q->correct_answer }}'
+                                })" class="p-2 text-slate-300 hover:text-indigo-600 transition-colors">
+                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                </button>
+
+                                {{-- Form Hapus --}}
                                 <form action="{{ route('admin.questions.delete', $q->id) }}" method="POST" onsubmit="return confirm('Hapus soal ini?')">
                                     @csrf @method('DELETE')
                                     <button class="p-2 text-slate-300 hover:text-red-600 transition-colors">
@@ -197,8 +228,115 @@
         
         @if($questions->hasPages())
         <div class="p-6 bg-slate-50 border-t border-slate-100">
-            {{ $questions->links() }}
+            {{ $questions->appends(['category' => request('category')])->links() }}
         </div>
         @endif
+    </div>
+
+    {{-- MODAL EDIT SOAL --}}
+    <div x-data="{ 
+            show: false, 
+            id: '', text: '', cat: '', a: '', b: '', c: '', d: '', ans: '',
+            actionUrl: ''
+        }" 
+        x-show="show" 
+        @open-edit-modal.window="
+            show = true; 
+            id = $event.detail.id; 
+            text = $event.detail.text;
+            cat = $event.detail.cat;
+            a = $event.detail.a;
+            b = $event.detail.b;
+            c = $event.detail.c;
+            d = $event.detail.d;
+            ans = $event.detail.ans;
+            actionUrl = '/admin/questions/' + id + '/update';
+        "
+        class="fixed inset-0 z-50 overflow-y-auto" style="display: none;" x-cloak>
+        
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            {{-- Overlay --}}
+            <div class="fixed inset-0 transition-opacity" @click="show = false">
+                <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+            </div>
+
+            <div class="inline-block align-bottom bg-white rounded-[2.5rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                <form :action="actionUrl" method="POST" enctype="multipart/form-data">
+                    @csrf 
+                    @method('PUT')
+                    
+                    <div class="p-8">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-black text-slate-800 flex items-center gap-2">
+                                <i data-lucide="edit-3" class="w-5 h-5 text-indigo-600"></i> Edit Pertanyaan
+                            </h3>
+                            <button type="button" @click="show = false" class="text-slate-400 hover:text-slate-600">
+                                <i data-lucide="x" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        <div class="space-y-6">
+                            {{-- Kategori --}}
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Kategori Section</label>
+                                <select name="category" x-model="cat" class="w-full border-slate-200 rounded-xl text-sm p-3 bg-slate-50 font-semibold">
+                                    <option value="listening">Listening</option>
+                                    <option value="structure">Structure</option>
+                                    <option value="reading">Reading</option>
+                                </select>
+                            </div>
+
+                            {{-- Pertanyaan --}}
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Teks Pertanyaan</label>
+                                <textarea name="question_text" x-model="text" rows="4" class="w-full border-slate-200 rounded-xl text-sm p-4 bg-slate-50 font-medium" required></textarea>
+                            </div>
+
+                            {{-- Opsi Jawaban --}}
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Opsi A</label>
+                                    <input type="text" name="option_a" x-model="a" class="w-full border-slate-200 rounded-xl text-sm p-3 bg-slate-50" required>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Opsi B</label>
+                                    <input type="text" name="option_b" x-model="b" class="w-full border-slate-200 rounded-xl text-sm p-3 bg-slate-50" required>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Opsi C</label>
+                                    <input type="text" name="option_c" x-model="c" class="w-full border-slate-200 rounded-xl text-sm p-3 bg-slate-50" required>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Opsi D</label>
+                                    <input type="text" name="option_d" x-model="d" class="w-full border-slate-200 rounded-xl text-sm p-3 bg-slate-50" required>
+                                </div>
+                            </div>
+
+                            {{-- Kunci Jawaban --}}
+                            <div class="p-5 bg-emerald-50 rounded-2xl border border-emerald-100">
+                                <label class="block text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">Kunci Jawaban Benar</label>
+                                <div class="grid grid-cols-4 gap-2">
+                                    <template x-for="choice in ['A', 'B', 'C', 'D']">
+                                        <label class="cursor-pointer">
+                                            <input type="radio" name="correct_answer" :value="choice" x-model="ans" class="peer hidden">
+                                            <div class="p-2 text-center rounded-lg border-2 border-emerald-100 bg-white text-emerald-600 font-black text-xs peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:border-emerald-600 transition-all">
+                                                <span x-text="choice"></span>
+                                            </div>
+                                        </label>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+                        <button type="button" @click="show = false" class="px-6 py-3 text-xs font-black uppercase text-slate-400 tracking-widest hover:text-slate-600">Batal</button>
+                        <button type="submit" class="px-8 py-3 bg-indigo-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg shadow-indigo-200 active:scale-95">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </x-admin-layout>

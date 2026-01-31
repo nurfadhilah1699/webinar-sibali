@@ -104,14 +104,22 @@ class AdminController extends Controller
         return back()->with('status', 'Konten berhasil dihapus!');
     }
 
-    public function questions() {
+    public function questions(Request $request) {
+        $query = Question::query();
+
+        // Pastikan menggunakan 'category' sesuai dengan <select name="category">
+        if ($request->has('category') && $request->category != '') {
+            $query->where('category', $request->category);
+        }
+
+        $questions = $query->latest()->paginate(10);
+
+        // Hitung statistik (tetap tampilkan total semua soal)
         $counts = [
             'listening' => Question::where('category', 'listening')->count(),
             'structure' => Question::where('category', 'structure')->count(),
             'reading'   => Question::where('category', 'reading')->count(),
         ];
-
-        $questions = Question::latest()->paginate(10);
 
         return view('admin.questions', compact('counts', 'questions'));
     }
@@ -164,5 +172,33 @@ class AdminController extends Controller
         $question->delete();
 
         return back()->with('status', 'Soal berhasil dihapus dari database!');
+    }
+
+    public function updateQuestion(Request $request, $id)
+    {
+        $request->validate([
+            'category' => 'required',
+            'question_text' => 'required',
+            'audio_file' => 'nullable|mimes:mp3,wav,ogg|max:20000',
+        ]);
+
+        $question = Question::findOrFail($id);
+        
+        $data = $request->only(['category', 'question_text', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_answer']);
+
+        if ($request->hasFile('audio_file')) {
+            // Hapus audio lama jika ada audio baru
+            if ($question->audio_path) {
+                \Storage::disk('public')->delete($question->audio_path);
+            }
+            $file = $request->file('audio_file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('audios', $filename, 'public');
+            $data['audio_path'] = 'audios/' . $filename;
+        }
+
+        $question->update($data);
+
+        return back()->with('status', 'Soal berhasil diperbarui!');
     }
 }
