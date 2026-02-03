@@ -79,7 +79,7 @@
                         $userPackage = strtoupper(trim($user->package));
                         
                         // Tentukan apakah user berhak dapat sertifikat TOEFL (Contoh: VIP Plus atau VIP2)
-                        $isVipToefl = ($userPackage == 'VIP PLUS' || $userPackage == 'VIP2' || $userPackage == 'VIP 2');
+                        $isVipToefl = ($userPackage == 'vip2');
                     @endphp
 
                     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">

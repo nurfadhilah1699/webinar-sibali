@@ -59,7 +59,16 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         $user->update(['is_verified' => true]);
 
-        return back()->with('status', 'User ' . $user->name . ' berhasil diverifikasi!');
+        // Tambahkan notifikasi email otomatis
+        try {
+            \Mail::raw("Halo {$user->name}, Pembayaran Anda telah diverifikasi oleh Admin. Sekarang Anda dapat mengakses link Zoom dan Sertifikat di Dashboard.", function ($message) use ($user) {
+                $message->to($user->email)->subject('Pembayaran Terverifikasi - Sibali.id');
+            });
+        } catch (\Exception $e) {
+            // Abaikan jika gagal kirim email agar proses approve tidak terhenti
+        }
+
+        return back()->with('status', 'User ' . $user->name . ' berhasil diverifikasi dan email notifikasi terkirim!');
     }
 
     public function reject(Request $request, $id)

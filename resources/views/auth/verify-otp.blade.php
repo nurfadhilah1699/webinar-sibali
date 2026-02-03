@@ -16,4 +16,21 @@
             </x-primary-button>
         </div>
     </form>
+
+    <div class="mt-6 text-center">
+        <p class="text-xs text-gray-500 mb-2">Tidak menerima kode?</p>
+        <form method="POST" action="{{ route('otp.resend') }}">
+            @csrf
+            <button type="submit" class="text-sm text-indigo-600 font-bold hover:underline">
+                Kirim Ulang OTP
+            </button>
+        </form>
+    </div>
+
+    {{-- Tambahkan notifikasi jika sukses kirim ulang --}}
+    @if (session('status'))
+        <div class="mt-4 text-sm font-medium text-green-600 text-center">
+            {{ session('status') }}
+        </div>
+    @endif
 </x-guest-layout>
