@@ -206,7 +206,7 @@
                         <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i> Link Zoom & WA Group</li>
                         <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i> E-Sertifikat</li>
                     </ul>
-                    <a href="#" class="w-full py-4 rounded-2xl bg-slate-100 text-center font-black text-[10px] uppercase tracking-widest">Pilih Reguler</a>
+                    <a href="{{ route('register', ['package' => 'reguler']) }}" class="w-full py-4 rounded-2xl bg-slate-100 text-center font-black text-[10px] uppercase tracking-widest">Pilih Reguler</a>
                 </div>
 
                 {{-- VIP --}}
@@ -218,7 +218,7 @@
                         <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-600"></i> Benefit Reguler</li>
                         <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-600"></i> Materi PDF & Rekaman</li>
                     </ul>
-                    <a href="#" class="w-full py-4 rounded-2xl gradient-blue text-white text-center font-black text-[10px] uppercase tracking-widest">Pilih VIP</a>
+                    <a href="{{ route('register', ['package' => 'vip1']) }}" class="w-full py-4 rounded-2xl gradient-blue text-white text-center font-black text-[10px] uppercase tracking-widest">Pilih VIP</a>
                 </div>
 
                 {{-- VIP Plus+ --}}
@@ -226,10 +226,10 @@
                     <h3 class="text-xs font-black text-blue-400 uppercase tracking-widest">VIP Plus+</h3>
                     <div class="my-4 text-3xl font-black">Rp 100rb</div>
                     <ul class="space-y-4 mb-8 flex-grow text-xs sm:text-sm font-bold">
-                        <li class="flex items-center gap-3"><i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i> Tes TOEFL CBT</li>
-                        <li class="flex items-center gap-3"><i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i> Sertifikat TOEFL</li>
+                        <li class="flex items-center gap-3"><i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i> TOEFL Prediction Test</li>
+                        <li class="flex items-center gap-3"><i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i> Sertifikat TOEFL Prediction Test</li>
                     </ul>
-                    <a href="#" class="w-full py-4 rounded-2xl bg-white text-slate-900 text-center font-black text-[10px] uppercase tracking-widest">Pilih VIP Plus+</a>
+                    <a href="{{ route('register', ['package' => 'vip2']) }}" class="w-full py-4 rounded-2xl bg-white text-slate-900 text-center font-black text-[10px] uppercase tracking-widest">Pilih VIP Plus+</a>
                 </div>
             </div>
         </div>
