@@ -8,12 +8,22 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index() 
     {
-        // Ambil data konten
-        $myContents = Content::whereIn('package', [Auth::user()->package, 'all'])->get();
+        $user = \Auth::user();
 
-        // Tampilkan ke view dashboard
-        return view('dashboard', compact('myContents'));
+        // Mengambil semua setting sekaligus dan menyimpannya di Cache selama 10 menit
+        // Ini akan mengurangi beban database secara signifikan
+        $settings = \Cache::remember('site_settings', 600, function () {
+            return \DB::table('settings')->pluck('value', 'key');
+        });
+
+        $isCertReady = ($settings['is_certificate_ready'] ?? '0') === '1';
+        $isTestOpen = ($settings['is_test_open'] ?? '0') === '1';
+
+        // Ambil konten berdasarkan paket user
+        $myContents = Content::whereIn('package', [$user->package, 'all'])->get();
+
+        return view('dashboard', compact('myContents', 'isCertReady', 'isTestOpen'));
     }
 }

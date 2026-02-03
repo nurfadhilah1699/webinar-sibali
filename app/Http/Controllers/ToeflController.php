@@ -56,22 +56,22 @@ class ToeflController extends Controller
     public function submit(Request $request)
     {
         $user = Auth::user();
-        $userAnswers = $request->input('answers');
+        $userAnswers = $request->input('answers') ?? [];
 
-        // FIX 1: Jika waktu habis tapi jawaban kosong, jangan di-kembalikan (back).
-        // Langsung beri skor minimal agar user keluar dari halaman tes.
-        if (!$userAnswers) {
-            $user->toefl_score = 310; // Skor minimal TOEFL
-            $user->save();
-            return redirect()->route('dashboard')->with('error', 'Waktu habis dan tidak ada jawaban yang tersimpan.');
+        if (empty($userAnswers)) {
+            $user->update(['toefl_score' => 310]);
+            return redirect()->route('dashboard')->with('error', 'Waktu habis/jawaban kosong.');
         }
+
+        // AMBIL SEMUA SOAL SEKALIGUS (Hanya 1 Query!)
+        $questions = Question::whereIn('id', array_keys($userAnswers))->get()->keyBy('id');
 
         $correctListening = 0;
         $correctStructure = 0;
         $correctReading = 0;
 
         foreach ($userAnswers as $questionId => $answer) {
-            $question = Question::find($questionId);
+            $question = $questions->get($questionId); // Ambil dari koleksi di memori, bukan DB
             
             if ($question && $question->correct_answer === $answer) {
                 if ($question->category == 'listening') $correctListening++;
@@ -80,21 +80,15 @@ class ToeflController extends Controller
             }
         }
 
+        // ... sisa logika konversi kamu tetap sama ...
         $scoreL = $this->convertListening($correctListening);
         $scoreS = $this->convertStructure($correctStructure);
         $scoreR = $this->convertReading($correctReading);
-        
         $finalScore = round((($scoreL + $scoreS + $scoreR) * 10) / 3);
 
-        // FIX 2: Pastikan user yang diupdate adalah user yang sedang login
-        $user->update([
-            'toefl_score' => $finalScore
-        ]);
+        $user->update(['toefl_score' => $finalScore]);
 
-        // Opsi tambahan: Hapus started_at jika ingin reset sesi secara bersih
-        // $user->update(['started_at' => null]); 
-
-        return redirect()->route('dashboard')->with('status', 'Tes Selesai! Skor TOEFL Anda: ' . $finalScore);
+        return redirect()->route('dashboard')->with('status', 'Tes Selesai! Skor: ' . $finalScore);
     }
 
     // --- FUNGSI KONVERSI (WAJIB ADA DI DALAM CLASS) ---

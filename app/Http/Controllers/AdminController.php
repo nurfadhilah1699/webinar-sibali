@@ -28,29 +28,33 @@ class AdminController extends Controller
 
     public function toggleCertificate()
     {
+        // 1. Ambil status sekarang
         $currentStatus = DB::table('settings')->where('key', 'is_certificate_ready')->value('value');
+        
+        // 2. Balik statusnya
         $newStatus = ($currentStatus == '1') ? '0' : '1';
 
+        // 3. Update ke Database
         DB::table('settings')->where('key', 'is_certificate_ready')->update(['value' => $newStatus]);
 
-        $pesan = ($newStatus == '1') ? 'Sertifikat sekarang bisa didownload oleh user!' : 'Akses download sertifikat ditutup.';
-        
+        // 4. PENTING: Hapus cache agar Dashboard User langsung "sadar" ada perubahan
+        \Cache::forget('site_settings');
+
+        $pesan = ($newStatus == '1') ? 'Sertifikat AKTIF & bisa didownload!' : 'Akses sertifikat DITUTUP.';
         return back()->with('status', $pesan);
     }
 
     public function toggleTest()
     {
-        // Mengambil status ujian saat ini
         $currentStatus = DB::table('settings')->where('key', 'is_test_open')->value('value');
-        
-        // Switch status (0 jadi 1, 1 jadi 0)
         $newStatus = ($currentStatus == '1') ? '0' : '1';
 
-        // Update hanya key is_test_open
         DB::table('settings')->where('key', 'is_test_open')->update(['value' => $newStatus]);
 
-        $pesan = ($newStatus == '1') ? 'Akses Ujian TOEFL telah DIBUKA!' : 'Akses Ujian TOEFL telah DITUTUP!';
-        
+        // Hapus cache juga untuk status ujian
+        \Cache::forget('site_settings');
+
+        $pesan = ($newStatus == '1') ? 'Ujian TOEFL DIBUKA!' : 'Ujian TOEFL DITUTUP.';
         return back()->with('status', $pesan);
     }
 

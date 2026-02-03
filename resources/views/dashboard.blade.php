@@ -69,17 +69,10 @@
                     </div>
 
                     {{-- Certificate Card --}}
-                    {{-- Certificate Card --}}
-                    @php 
-                        // Mengambil status saklar dari database
-                        $isCertReady = DB::table('settings')->where('key', 'is_certificate_ready')->value('value') == '1'; 
-                        $user = Auth::user();
-                        
-                        // Normalisasi nama paket supaya tidak error kalau ada perbedaan spasi/huruf besar-kecil
-                        $userPackage = strtoupper(trim($user->package));
-                        
-                        // Tentukan apakah user berhak dapat sertifikat TOEFL (Contoh: VIP Plus atau VIP2)
-                        $isVipToefl = ($userPackage == 'vip2');
+                    @php
+                        // Normalisasi string paket agar tidak error karena perbedaan huruf besar/kecil
+                        $userPkg = strtolower(trim(Auth::user()->package));
+                        $hasToeflAccess = in_array($userPkg, ['vip2', 'vipplus']); // Tambahkan list paket VIP di sini
                     @endphp
 
                     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
@@ -90,31 +83,29 @@
                             <h4 class="font-bold text-sm text-gray-800 uppercase tracking-tight">E-Sertifikat</h4>
                         </div>
 
-                        @if($isCertReady && $user->is_verified)
+                        @if($isCertReady && Auth::user()->is_verified)
                             <div class="space-y-3">
-                                {{-- Tombol 1: Webinar (Muncul untuk SEMUA user yang sudah verifikasi) --}}
+                                {{-- Sertifikat Webinar (Untuk Semua) --}}
                                 <a href="{{ route('certificate.webinar') }}" class="block w-full text-center py-2.5 bg-red-600 text-white rounded-lg text-xs font-bold hover:bg-red-700 transition">
                                     Download Sertifikat Peserta
                                 </a>
 
-                                {{-- Tombol 2: TOEFL (Hanya muncul jika user VIP dan SUDAH ada nilai dari admin) --}}
-                                @if($isVipToefl)
-                                    @if($user->toefl_score)
-                                        <a href="{{ route('certificate.toefl') }}" class="block w-full text-center py-2.5 bg-indigo-900 text-white rounded-lg text-xs font-bold hover:bg-black transition border-t-2 border-white/20">
+                                {{-- Sertifikat TOEFL (Hanya VIP & Jika sudah ada skor) --}}
+                                @if($hasToeflAccess)
+                                    @if(Auth::user()->toefl_score)
+                                        <a href="{{ route('certificate.toefl') }}" class="block w-full text-center py-2.5 bg-indigo-900 text-white rounded-lg text-xs font-bold hover:bg-black transition">
                                             Download Sertifikat TOEFL
                                         </a>
                                     @else
-                                        {{-- Pesan jika dia VIP tapi admin belum input skor --}}
                                         <div class="p-2 bg-amber-50 border border-amber-100 rounded-lg text-center">
-                                            <p class="text-[9px] text-amber-600 font-bold uppercase">Sertifikat TOEFL: Skor Belum Tersedia</p>
+                                            <p class="text-[9px] text-amber-600 font-bold uppercase tracking-tighter">Sertifikat TOEFL: Skor Belum Diinput Admin</p>
                                         </div>
                                     @endif
                                 @endif
                             </div>
                         @else
-                            {{-- Tampilan jika saklar di Admin masih OFF atau user belum verifikasi --}}
                             <div class="p-3 bg-gray-50 rounded-lg border border-gray-100 text-center">
-                                <p class="text-[10px] text-gray-400 italic font-medium">Tersedia otomatis setelah program selesai.</p>
+                                <p class="text-[10px] text-gray-400 italic font-medium">Sertifikat tersedia otomatis setelah program selesai.</p>
                             </div>
                         @endif
                     </div>
