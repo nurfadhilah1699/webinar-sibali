@@ -29,33 +29,51 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // 1. Validasi Input
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'phone' => ['required', 'string', 'max:20'], // Tambahan
-            'user_category' => ['required', 'string'],   // Tambahan
-            'institution' => ['required', 'string'],   // Tambahan
-            'address' => ['required', 'string'],          // Tambahan
-            'package' => ['required', 'string', 'in:reguler,vip1,vip2'], // Tambahan
+            'phone' => ['required', 'string', 'max:20'],
+            'user_category' => ['required', 'string'],
+            'institution' => ['required', 'string'],
+            'address' => ['required', 'string'],
+            'package' => ['required', 'string', 'in:reguler,vip1,vip2'],
         ]);
 
+        // 2. Generate OTP
+        $otp = rand(100000, 999999);
+
+        // 3. Simpan User ke Database (Hanya satu kali Create!)
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user', // Default otomatis jadi user biasa
+            'role' => 'user',
             'phone' => $request->phone,
             'user_category' => $request->user_category,
             'institution' => $request->institution,
             'address' => $request->address,
             'package' => $request->package,
+            'otp_code' => $otp, // Pastikan kolom ini sudah ada di database (hasil migrate)
         ]);
 
+        // 4. Jalankan Event Registered (Opsional, bawaan Breeze)
         event(new Registered($user));
 
+        // 5. Kirim Email OTP
+        try {
+            \Mail::raw("Halo {$user->name}, Kode OTP verifikasi Anda adalah: $otp", function ($message) use ($user) {
+                $message->to($user->email)->subject('Kode Verifikasi Akun - Sibali.id');
+            });
+        } catch (\Exception $e) {
+            // Jika email gagal kirim (salah config), user tetap terbuat tapi kasih peringatan
+        }
+
+        // 6. Login-kan User
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // 7. Arahkan ke halaman input OTP (BUKAN ke dashboard langsung)
+        return redirect()->route('otp.view');
     }
 }

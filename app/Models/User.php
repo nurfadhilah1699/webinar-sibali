@@ -32,6 +32,7 @@ class User extends Authenticatable
         'rejection_message',
         'toefl_score',
         'started_at',
+        'otp_code',
     ];
 
     /**

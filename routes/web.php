@@ -7,6 +7,8 @@ use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ToeflController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,6 +17,34 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+    // --- Bagian Route OTP ---
+
+    // 1. Tampilan halaman input OTP
+    Route::get('verify-otp', function () {
+        return view('auth.verify-otp');
+    })->middleware('auth')->name('otp.view');
+
+    // 2. Proses pengecekan OTP yang diinput user
+    Route::post('verify-otp', function (Request $request) {
+        $request->validate([
+            'otp' => 'required|numeric',
+        ]);
+
+        $user = Auth::user();
+
+        // Cek apakah kode yang diinput sama dengan yang ada di database
+        if ($request->otp == $user->otp_code) {
+            $user->update([
+                'email_verified_at' => now(), // Tandai email sudah valid
+                'otp_code' => null,           // Hapus kode OTP agar tidak bisa dipakai lagi
+            ]);
+
+            return redirect()->route('dashboard')->with('status', 'Email berhasil diverifikasi!');
+        }
+
+        return back()->with('error', 'Kode OTP yang Anda masukkan salah.');
+    })->middleware('auth')->name('otp.verify');
 
 Route::middleware('auth')->group(function () {
     // Profile routes
@@ -26,7 +56,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/payment/upload', [PaymentController::class, 'upload'])->name('payment.upload');
 
     // Route untuk mengunduh sertifikat
-    // Route::get('/certificate/download', [CertificateController::class, 'download'])->name('certificate.download');
     Route::get('/certificate/webinar', [CertificateController::class, 'downloadWebinar'])->name('certificate.webinar');
     Route::get('/certificate/toefl', [CertificateController::class, 'downloadToefl'])->name('certificate.toefl');
 
