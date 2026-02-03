@@ -26,7 +26,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/payment/upload', [PaymentController::class, 'upload'])->name('payment.upload');
 
     // Route untuk mengunduh sertifikat
-    Route::get('/certificate/download', [CertificateController::class, 'download'])->name('certificate.download');
+    // Route::get('/certificate/download', [CertificateController::class, 'download'])->name('certificate.download');
+    Route::get('/certificate/webinar', [CertificateController::class, 'downloadWebinar'])->name('certificate.webinar');
+    Route::get('/certificate/toefl', [CertificateController::class, 'downloadToefl'])->name('certificate.toefl');
 
     // Route untuk tes TOEFL (hanya untuk VIP 2)
     // Halaman simulasi TOEFL

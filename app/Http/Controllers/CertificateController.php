@@ -9,36 +9,48 @@ use Illuminate\Support\Facades\DB;
 
 class CertificateController extends Controller
 {
-    public function download()
+    public function downloadWebinar()
+{
+    $user = Auth::user();
+    $isReady = DB::table('settings')->where('key', 'is_certificate_ready')->value('value');
+
+    if ($isReady !== '1' || !$user->is_verified) {
+        return back()->with('error', 'Sertifikat belum tersedia.');
+    }
+
+    $data = [
+        'name' => strtoupper($user->name),
+        'package' => strtoupper($user->package),
+        'id_sertifikat' => 'WEB/' . $user->id . '/' . date('Ymd'),
+        'score' => null 
+    ];
+
+    // Menggunakan template khusus webinar
+    return Pdf::loadView('certificate.template_webinar', $data)
+              ->setPaper('a4', 'landscape')
+              ->download('Sertifikat_Webinar_' . $user->name . '.pdf');
+    }
+
+    public function downloadToefl()
     {
         $user = Auth::user();
-        
-        // 1. Cek apakah admin sudah mengaktifkan sertifikat
         $isReady = DB::table('settings')->where('key', 'is_certificate_ready')->value('value');
-        if ($isReady !== '1') {
-            return back()->with('error', 'Sertifikat belum tersedia. Akan aktif setelah acara selesai.');
+
+        // Syarat: Admin buka akses, User Terverifikasi, Paket VIP Plus, & Sudah ada skor
+        if ($isReady !== '1' || !$user->is_verified || $user->package !== 'vip2' || !$user->toefl_score) {
+            return back()->with('error', 'Sertifikat TOEFL belum tersedia.');
         }
 
-        if (!$user->is_verified) {
-            return back()->with('error', 'Akun Anda belum terverifikasi.');
-        }
-
-        // 2. Siapkan data dasar
         $data = [
             'name' => strtoupper($user->name),
             'package' => strtoupper($user->package),
-            'date' => date('d F Y'),
-            'id_sertifikat' => 'CERT/' . $user->id . '/' . date('Ymd'),
-            'score' => null // Default kosong
+            'id_sertifikat' => 'TFL/' . $user->id . '/' . date('Ymd'),
+            'score' => $user->toefl_score 
         ];
 
-        // 3. Khusus VIP 2: Sertakan Skor TOEFL (Ambil dari kolom toefl_score di tabel users)
-        if ($user->package === 'vip2') {
-            // Asumsi kita nanti punya kolom 'toefl_score' di tabel users
-            $data['score'] = $user->toefl_score ?? 'Belum Tes'; 
-        }
-
-        $pdf = Pdf::loadView('certificate.template', $data)->setPaper('a4', 'landscape');
-        return $pdf->download('Sertifikat-' . $user->name . '.pdf');
+        // Menggunakan template khusus toefl
+        return Pdf::loadView('certificate.template_toefl', $data)
+                ->setPaper('a4', 'landscape')
+                ->download('Sertifikat_TOEFL_' . $user->name . '.pdf');
     }
 }
