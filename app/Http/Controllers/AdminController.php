@@ -66,7 +66,9 @@ class AdminController extends Controller
         // Tambahkan notifikasi email otomatis
         try {
             \Mail::raw("Halo {$user->name}, Pembayaran Anda telah diverifikasi oleh Admin. Sekarang Anda dapat mengakses link Zoom dan Sertifikat di Dashboard.", function ($message) use ($user) {
-                $message->to($user->email)->subject('Pembayaran Terverifikasi - Sibali.id');
+                $message->to($user->email)
+                        ->from(config('mail.from.address'), config('mail.from.name')) // TAMBAHKAN INI
+                        ->subject('Pembayaran Terverifikasi - Sibali.id');
             });
         } catch (\Exception $e) {
             // Abaikan jika gagal kirim email agar proses approve tidak terhenti
