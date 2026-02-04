@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'payment' => [
+        'penerima' => env('BANK_ACCOUNT_NAME'),
+        'norek' => env('BANK_ACCOUNT_NUMBER'),
+        'bank' => env('BANK_NAME'),
+        'code' => env('BANK_CODE'),
+    ],
+
 ];
