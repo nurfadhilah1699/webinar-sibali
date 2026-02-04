@@ -10,16 +10,37 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        User::create([
-            'name' => 'Super Admin',
-            'email' => 'admin@sibali.id', // Silakan ganti emailnya
-            'password' => Hash::make('sibali123'), // Silakan ganti passwordnya
-            'role' => 'admin',
-            'package' => 'vip2', // Admin kasih akses full saja
-            'phone' => '08123456789',
-            'address' => 'Kantor Pusat Sibali',
-            'user_category' => 'Umum',
-            'is_verified' => true,
-        ]);
+        // 1. Akun Lama di-update jadi Super Admin
+        User::updateOrCreate(
+            ['email' => 'admin@sibali.id'], 
+            [
+                'name' => 'Super Admin Sibali',
+                'password' => Hash::make('@dm!nS1b@l1Super'), // Ganti dengan password yang kamu inginkan
+                'role' => 'admin',
+                'is_verified' => true,
+            ]
+        );
+
+        // 2. Tambah Akun Finance
+        User::updateOrCreate(
+            ['email' => 'finance@sibali.id'],
+            [
+                'name' => 'Admin Finance',
+                'password' => Hash::make('F1n@nc3Pass'),
+                'role' => 'admin',
+                'is_verified' => true,
+            ]
+        );
+
+        // 3. Tambah Akun Teacher
+        User::updateOrCreate(
+            ['email' => 'teacher@sibali.id'],
+            [
+                'name' => 'Admin Teacher',
+                'password' => Hash::make('T3@ch3rP@ss'),
+                'role' => 'admin',
+                'is_verified' => true,
+            ]
+        );
     }
 }

@@ -58,7 +58,7 @@
                                     <p class="text-[10px] font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
                                         <span class="w-2 h-2 bg-red-500 rounded-full animate-ping"></span> Audio Listening
                                     </p>
-                                    <audio controls class="w-full h-10">
+                                    <audio controls class="w-full h-10" preload="none">
                                         <source src="{{ asset('storage/' . $q->audio_path) }}" type="audio/mpeg">
                                         Browser kamu tidak mendukung audio.
                                     </audio>
@@ -253,5 +253,16 @@
         document.getElementById('prev-btn').addEventListener('click', () => {
             if (currentStep > 0) { currentStep--; updateStep(); window.scrollTo({top: 0, behavior: 'smooth'}); }
         });
+
+        // Kirim ping ke server setiap 5 menit agar session tidak expired
+        setInterval(function() {
+            fetch('/ping'); // Buat route simple yang tidak melakukan apa-apa
+        }, 300000);
+
+        window.onbeforeunload = function() {
+            if (!isSubmitting) {
+                return "Apakah Anda yakin ingin meninggalkan ujian? Progress mungkin hilang.";
+            }
+        };
     </script>
 </x-app-layout>
