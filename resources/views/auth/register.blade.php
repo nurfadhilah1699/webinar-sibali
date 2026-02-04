@@ -54,8 +54,8 @@
                 <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 ml-1">Pilih Paket</label>
                 <select name="package" class="w-full !rounded-2xl border-gray-100 bg-gray-50 focus:ring-blue-900 focus:border-blue-900 py-3 text-sm font-bold shadow-sm">
                     <option value="reguler" {{ request('package') == 'reguler' ? 'selected' : '' }}>Reguler</option>
-                    <option value="vip1" {{ request('package') == 'vip1' ? 'selected' : '' }}>VIP 1</option>
-                    <option value="vip2" {{ request('package') == 'vip2' ? 'selected' : '' }}>VIP 2</option>
+                    <option value="vip1" {{ request('package') == 'vip1' ? 'selected' : '' }}>VIP</option>
+                    <option value="vip2" {{ request('package') == 'vip2' ? 'selected' : '' }}>VIP Plus+</option>
                 </select>
             </div>
         </div>
