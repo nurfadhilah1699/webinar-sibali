@@ -150,9 +150,9 @@
                                             </div>
                                             <div class="p-4 bg-gray-50 rounded-xl border border-gray-100 text-sm">
                                                 <p class="text-[9px] text-gray-400 font-bold uppercase mb-2">Transfer ke Rekening</p>
-                                                <p class="font-bold text-gray-700 uppercase">Bank Mandiri (008)</p>
-                                                <p class="text-lg font-black text-blue-900 font-mono">123-456-7890</p>
-                                                <p class="text-[10px] text-gray-500 font-medium mt-1 uppercase italic font-bold">A.N: Sibali.Id Official</p>
+                                                <p class="font-bold text-gray-700 uppercase">{{ env('BANK_NAME') }} ({{ env('BANK_CODE') }})</p>
+                                                <p class="text-lg font-black text-blue-900 font-mono">{{ env('BANK_ACCOUNT_NUMBER') }}</p>
+                                                <p class="text-[10px] text-gray-500 font-medium mt-1 uppercase italic font-bold">A.N: {{ env('BANK_ACCOUNT_NAME') }}</p>
                                             </div>
                                         </div>
                                         <div class="flex flex-col justify-center">
