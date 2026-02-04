@@ -57,4 +57,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Tambahkan di dalam class User di User.php
+    public function getPackageNameAttribute()
+    {
+        return [
+            'reguler' => 'Reguler',
+            'vip1'    => 'VIP',
+            'vip2'    => 'VIP Plus+',
+        ][$this->package] ?? ucfirst($this->package);
+    }
 }

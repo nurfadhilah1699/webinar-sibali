@@ -126,7 +126,7 @@
                     <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center mb-6 text-white shadow-lg">
                         <i data-lucide="clipboard-check"></i>
                     </div>
-                    <h3 class="text-lg font-black text-slate-800 mb-2">Real TOEFL Simulation</h3>
+                    <h3 class="text-lg font-black text-slate-800 mb-2">Real TOEFL Prediction Test</h3>
                     <p class="text-slate-500 text-sm font-medium">Uji skor TOEFL-mu dengan sistem CBT yang dilengkapi timer dan hasil instan.</p>
                 </div>
                 <div class="p-8 rounded-[2rem] bg-slate-50 border border-slate-100">

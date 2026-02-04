@@ -47,7 +47,7 @@
                                 </div>
                             </div>
                             <h3 class="font-bold text-gray-900">{{ Auth::user()->name }}</h3>
-                            <p class="text-[10px] text-blue-900 font-bold uppercase tracking-widest mt-1">{{ Auth::user()->package }} Member</p>
+                            <p class="text-[10px] text-blue-900 font-bold uppercase tracking-widest mt-1">{{ Auth::user()->package_name }} Member</p>
                             
                             <div class="mt-6 pt-6 border-t border-gray-100 space-y-3">
                                 <div class="flex justify-between items-center">
@@ -72,7 +72,7 @@
                     @php
                         // Normalisasi string paket agar tidak error karena perbedaan huruf besar/kecil
                         $userPkg = strtolower(trim(Auth::user()->package));
-                        $hasToeflAccess = in_array($userPkg, ['vip2', 'vipplus']); // Tambahkan list paket VIP di sini
+                        $hasToeflAccess = in_array($userPkg, ['vip1', 'vip2']); // Tambahkan list paket VIP di sini
                     @endphp
 
                     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
@@ -141,7 +141,7 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                                         <div class="space-y-4">
                                             <div>
-                                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Tagihan Kamu ({{ Auth::user()->package }})</p>
+                                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Tagihan Kamu ({{ Auth::user()->package_name }})</p>
                                                 <p class="text-3xl font-black text-gray-900 font-mono">
                                                     @if(Auth::user()->package == 'reguler') Rp 20.000
                                                     @elseif(Auth::user()->package == 'vip1') Rp 50.000
