@@ -65,7 +65,7 @@
                                 </div>
                             @endif
 
-                            <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-8 leading-relaxed">{{ $q->question_text }}</h3>
+                            <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-8 leading-relaxed whitespace-pre-line text-justify">{{ $q->question_text }}</h3>
 
                             <div class="grid grid-cols-1 gap-4">
                                 @foreach(['A', 'B', 'C', 'D'] as $opt)
