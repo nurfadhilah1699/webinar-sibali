@@ -115,6 +115,42 @@ class AdminController extends Controller
         return view('admin.participants', compact('users'));
     }
 
+    // FUNGSI EXCEL (CSV)
+    public function exportExcel() {
+        $fileName = 'daftar_peserta_' . date('Y-m-d') . '.csv';
+        $users = User::where('role', 'user')->get();
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['Nama', 'Email', 'No Telp', 'Paket','Pembayaran', 'Skor TOEFL', 'Status'];
+
+        $callback = function() use($users, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($users as $user) {
+                fputcsv($file, [
+                    $user->name,
+                    $user->email,
+                    $user->phone,
+                    $user->package,
+                    $user->payment_proof,
+                    $user->toefl_score ?? 'N/A',
+                    $user->is_verified ? 'Verified' : 'Pending'
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function materials() {
         $contents = Content::orderBy('type', 'asc')->get();
         return view('admin.materials', compact('contents'));

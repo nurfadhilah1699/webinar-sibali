@@ -104,21 +104,21 @@
                             <td class="p-6">
                                 <div class="flex justify-center gap-3">
                                     {{-- Tombol Approve --}}
-                                    <form action="{{ route('admin.approve', $user->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="bg-emerald-50 text-emerald-600 px-4 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-all shadow-sm hover:shadow-emerald-200 active:scale-95">
-                                            Approve
-                                        </button>
-                                    </form>
+                                    <button type="button" 
+                                        onclick="triggerApprove({{ $user->id }}, '{{ $user->name }}')"
+                                        class="bg-emerald-50 text-emerald-600 px-4 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-all shadow-sm active:scale-95">
+                                        Approve
+                                    </button>
 
-                                    {{-- Form Reject --}}
-                                    <form action="{{ route('admin.reject', $user->id) }}" method="POST" class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100 focus-within:border-rose-300 transition-all">
-                                        @csrf
-                                        <input type="text" name="reason" placeholder="Alasan..." class="text-[11px] bg-transparent border-none focus:ring-0 p-1 w-24 sm:w-32 placeholder:text-slate-400 font-medium" required>
-                                        <button type="submit" class="bg-rose-50 text-rose-600 px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all active:scale-95">
+                                    {{-- Form Reject (Input Alasan Tetap Ada) --}}
+                                    <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100 focus-within:border-rose-300 transition-all">
+                                        <input type="text" id="reject-reason-{{ $user->id }}" placeholder="Alasan..." class="text-[11px] bg-transparent border-none focus:ring-0 p-1 w-24 sm:w-32 placeholder:text-slate-400 font-medium">
+                                        <button type="button" 
+                                            onclick="triggerReject({{ $user->id }}, '{{ $user->name }}')"
+                                            class="bg-rose-50 text-rose-600 px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all active:scale-95">
                                             Reject
                                         </button>
-                                    </form>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -139,4 +139,70 @@
             </table>
         </div>
     </div>
+
+    {{-- FORM HIDDEN (Taruh di luar tabel atau di bawah) --}}
+    <form id="global-verify-form" method="POST" class="hidden">
+        @csrf
+        <input type="hidden" name="reason" id="hidden-reason">
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const globalForm = document.getElementById('global-verify-form');
+        const hiddenReason = document.getElementById('hidden-reason');
+
+        // --- FUNGSI APPROVE ---
+        function triggerApprove(userId, userName) {
+            Swal.fire({
+                title: 'Verifikasi Pembayaran?',
+                text: `Setujui bukti transfer dari ${userName} dan aktifkan akun?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#059669', // Emerald 600
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Setujui',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    globalForm.action = `{{ url('/admin/approve') }}/${userId}`; // Sesuaikan dengan nama route kamu
+                    globalForm.submit();
+                }
+            });
+        }
+
+        // --- FUNGSI REJECT ---
+        function triggerReject(userId, userName) {
+            const reasonValue = document.getElementById(`reject-reason-${userId}`).value;
+
+            // Validasi alasan dulu
+            if (!reasonValue || reasonValue.trim() === "") {
+                Swal.fire({
+                    title: 'Alasan Kosong',
+                    text: 'Harap isi alasan penolakan terlebih dahulu.',
+                    icon: 'warning',
+                    confirmButtonColor: '#e11d48'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Tolak Pembayaran?',
+                text: `Yakin ingin menolak bukti dari ${userName} dengan alasan: "${reasonValue}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e11d48', // Rose 600
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Tolak',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    hiddenReason.value = reasonValue;
+                    globalForm.action = `{{ url('/admin/reject') }}/${userId}`; // Sesuaikan dengan nama route kamu
+                    globalForm.submit();
+                }
+            });
+        }
+    </script>
 </x-admin-layout>

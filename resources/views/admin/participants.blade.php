@@ -8,6 +8,7 @@
                 <span>Total <span class="font-bold text-slate-800">{{ count($users) }}</span> Peserta Terdaftar</span>
             </div>
         </div>
+        
 
         {{-- Filter Paket (Tab Style) --}}
         <div class="bg-slate-200/50 p-1.5 rounded-2xl flex flex-wrap gap-1">
@@ -27,6 +28,9 @@
                class="px-5 py-2 rounded-xl text-xs font-black transition-all {{ request('package') == 'vip2' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
                VIP 2
             </a>
+            <a href="{{ route('admin.participants.export') }}" class="bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-emerald-600 transition shadow-sm flex items-center gap-2">
+                <i data-lucide="download" class="w-4 h-4"></i> EXPORT CSV
+            </a>
         </div>
     </div>
 
@@ -38,6 +42,7 @@
                     <tr class="bg-slate-50/50 border-b border-slate-100">
                         <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Informasi Peserta</th>
                         <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Paket</th>
+                        <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Pembayaran</th>
                         <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Status</th>
                         <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Skor TOEFL</th>
                         <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-right">Join Date</th>
@@ -46,7 +51,7 @@
                 <tbody class="divide-y divide-slate-50">
                     @forelse($users as $user)
                     <tr class="group hover:bg-slate-50/50 transition-colors">
-                        {{-- Nama & Email --}}
+                        {{-- Nama, Email & Nomor Handphone --}}
                         <td class="px-8 py-5">
                             <div class="flex items-center gap-4">
                                 <div class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 font-black text-xs group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
@@ -55,6 +60,10 @@
                                 <div>
                                     <div class="font-bold text-slate-800 leading-tight group-hover:text-indigo-600 transition-colors">{{ $user->name }}</div>
                                     <div class="text-[11px] text-slate-400 font-medium mt-0.5">{{ $user->email }}</div>
+                                    <div class="text-[10px] text-emerald-600 font-bold mt-1 flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3"></i>
+                                        {{ $user->phone ?? '-' }}
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -71,6 +80,19 @@
                             <span class="px-3 py-1 rounded-lg border text-[10px] font-black uppercase tracking-tight {{ $pkgColor }}">
                                 {{ $user->package }}
                             </span>
+                        </td>
+
+                        {{-- Kolom Bukti Pembayaran (Baru) --}}
+                        <td class="px-8 py-5 text-center">
+                            @if($user->payment_proof)
+                                <a href="{{ asset('storage/' . $user->payment_proof) }}" target="_blank" 
+                                class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-black border border-slate-200 uppercase hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all">
+                                    <i data-lucide="external-link" class="w-3 h-3"></i>
+                                    Bukti
+                                </a>
+                            @else
+                                <span class="text-[10px] font-bold text-slate-300 uppercase italic">No File</span>
+                            @endif
                         </td>
 
                         {{-- Status Akun --}}

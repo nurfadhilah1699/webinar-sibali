@@ -72,6 +72,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Menu-menu baru yang kita bahas
     Route::get('/admin/participants', [AdminController::class, 'participants'])->name('admin.participants');
+    Route::get('/admin/participants/export', [AdminController::class, 'exportExcel'])->name('admin.participants.export');
 
     // Materi & Rekaman
     Route::get('/admin/materials', [AdminController::class, 'materials'])->name('admin.materials');
