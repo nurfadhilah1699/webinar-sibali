@@ -11,6 +11,13 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <x-app-layout>
+    <style>
+        [x-cloak] { display: none !important; }
+        .toefl-wrapper { display: inline-flex; flex-direction: column; align-items: center; vertical-align: bottom; margin: 0 2px; line-height: 1; }
+        .toefl-line { border-bottom: 2px solid #1e293b; padding: 0 4px; font-weight: 700; color: #1e293b; display: inline-block; }
+        .toefl-label { font-size: 10px; font-weight: 900; margin-top: 4px; color: black; text-transform: uppercase; }
+    </style>
+
     {{-- ELEMEN TIMER --}}
     <div class="fixed top-20 right-4 md:right-10 z-50">
         <div class="bg-red-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-2xl border-4 border-white flex flex-col items-center animate-fade-in">
@@ -65,7 +72,12 @@
                                 </div>
                             @endif
 
-                            <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-8 leading-relaxed whitespace-pre-line text-justify">{{ $q->question_text }}</h3>
+                            <div class="text-lg md:text-xl font-medium text-gray-800 mb-8 leading-relaxed text-justify">
+                                {!! nl2br(preg_replace('/\[([^:]+):([^\]]+)\]/', 
+                                    '<span class="inline-flex flex-col items-center mx-1"><span class="border-b-2 border-slate-900 font-bold px-1">$1</span><span class="font-black text-black mt-1">$2</span></span>', 
+                                    $q->question_text)) 
+                                !!}
+                            </div>
 
                             <div class="grid grid-cols-1 gap-4">
                                 @foreach(['A', 'B', 'C', 'D'] as $opt)

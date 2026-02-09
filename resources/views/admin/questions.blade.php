@@ -1,4 +1,12 @@
 <x-admin-layout>
+    {{-- CSS Tambahan: Untuk merender tampilan garis bawah khas TOEFL --}}
+    <style>
+        [x-cloak] { display: none !important; }
+        .toefl-wrapper { display: inline-flex; flex-direction: column; align-items: center; vertical-align: bottom; margin: 0 2px; line-height: 1; }
+        .toefl-line { border-bottom: 2px solid #1e293b; padding: 0 4px; font-weight: 700; color: #1e293b; display: inline-block; }
+        .toefl-label { font-size: 10px; font-weight: 900; margin-top: 4px; color: black; text-transform: uppercase; }
+    </style>
+
     <div class="mb-8">
         <h1 class="text-3xl font-black text-slate-800 tracking-tight">Bank Soal TOEFL</h1>
         <p class="text-slate-500 text-sm mt-1">Tambahkan materi ujian baru untuk peserta webinar.</p>
@@ -6,7 +14,6 @@
 
     {{-- Statistik Soal --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        {{-- Listening Card --}}
         <div class="bg-white p-5 rounded-[2rem] border border-slate-200 flex items-center gap-4 shadow-sm">
             <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center">
                 <i data-lucide="headphones" class="w-6 h-6"></i>
@@ -17,7 +24,6 @@
             </div>
         </div>
 
-        {{-- Structure Card --}}
         <div class="bg-white p-5 rounded-[2rem] border border-slate-200 flex items-center gap-4 shadow-sm">
             <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
                 <i data-lucide="pencil-line" class="w-6 h-6"></i>
@@ -28,7 +34,6 @@
             </div>
         </div>
 
-        {{-- Reading Card --}}
         <div class="bg-white p-5 rounded-[2rem] border border-slate-200 flex items-center gap-4 shadow-sm">
             <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center">
                 <i data-lucide="book-open" class="w-6 h-6"></i>
@@ -40,8 +45,24 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 overflow-hidden">
-        {{-- Header Form --}}
+    {{-- Form Tambah Soal (Ditambahkan Alpine.js x-data untuk Live Preview) --}}
+    <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200 overflow-hidden"
+         x-data="{ 
+            textInput: '',
+            parseTOEFL(input) {
+                if(!input) return '';
+
+                // Bersihkan HTML tag asli jika ada
+                let escaped = input.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+                // Render format TOEFL [kata:huruf]
+                let formatted = escaped.replace(/\[([^:]+):([^\]]+)\]/g, '<span class=&quot;toefl-wrapper&quot;><span class=&quot;toefl-line&quot;>$1</span><span class=&quot;toefl-label&quot;>$2</span></span>');
+                
+                // Ganti newlines dengan <br> untuk menjaga format paragraf
+                return formatted.replace(/\n/g, '<br>');
+            }
+         }">
+        
         <div class="p-8 border-b border-slate-100 bg-slate-50/50 flex items-center gap-4">
             <div class="p-3 bg-indigo-600 rounded-2xl shadow-lg shadow-indigo-200">
                 <i data-lucide="database-backup" class="w-6 h-6 text-white"></i>
@@ -55,8 +76,6 @@
         <form action="{{ route('admin.questions.store') }}" method="POST" enctype="multipart/form-data" class="p-8 lg:p-10">
             @csrf
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-12">
-                
-                {{-- Kolom Kiri: Konten Soal --}}
                 <div class="space-y-6">
                     <div class="group">
                         <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Kategori Section</label>
@@ -69,8 +88,7 @@
 
                     <div class="p-6 bg-indigo-50/50 rounded-[2rem] border border-indigo-100 border-dashed">
                         <label class="block text-[11px] font-black text-indigo-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                            <i data-lucide="mic-2" class="w-3 h-3"></i>
-                            File Audio (MP3)
+                            <i data-lucide="mic-2" class="w-3 h-3"></i> File Audio (MP3)
                         </label>
                         <input type="file" name="audio_file" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer">
                         <p class="text-[9px] text-indigo-400 mt-2 font-medium italic">*Wajib diisi jika memilih kategori Listening</p>
@@ -78,14 +96,18 @@
 
                     <div>
                         <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Teks Pertanyaan / Narasi</label>
-                        <textarea name="question_text" rows="6" class="w-full border-slate-200 rounded-[2rem] focus:ring-indigo-500 focus:border-indigo-500 text-sm p-6 bg-slate-50/50 placeholder:text-slate-300 font-medium" placeholder="Tuliskan teks pertanyaan atau passage di sini..." required></textarea>
+                        <textarea name="question_text" x-model="textInput" rows="6" class="w-full border-slate-200 rounded-[2rem] focus:ring-indigo-500 focus:border-indigo-500 text-sm p-6 bg-slate-50/50 placeholder:text-slate-300 font-medium" placeholder="Gunakan format [kata:huruf], contoh: The [sun:A] is [hot:B]..." required></textarea>
+                        
+                        {{-- Fitur Baru: Live Preview Box --}}
+                        <div class="mt-4 p-6 bg-slate-900 rounded-[2rem] shadow-xl" x-show="textInput.length > 0" x-cloak x-transition>
+                            <p class="text-[9px] font-black text-indigo-400 uppercase mb-3 tracking-widest">Live Preview Tampilan Soal:</p>
+                            <div class="text-white text-base leading-loose" x-html="parseTOEFL(textInput)"></div>
+                        </div>
                     </div>
                 </div>
 
-                {{-- Kolom Kanan: Pilihan Jawaban --}}
                 <div class="space-y-4">
                     <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4 ml-1">Pilihan Ganda & Kunci</p>
-                    
                     @foreach(['A', 'B', 'C', 'D'] as $opt)
                     <div class="relative group">
                         <span class="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-xs font-black text-slate-400 group-focus-within:border-indigo-500 group-focus-within:text-indigo-600 transition-all">
@@ -97,8 +119,7 @@
 
                     <div class="mt-8 p-6 bg-emerald-50 rounded-[2rem] border border-emerald-100">
                         <label class="block text-[11px] font-black text-emerald-600 uppercase tracking-widest mb-3 ml-1 flex items-center gap-2">
-                            <i data-lucide="check-circle" class="w-4 h-4"></i>
-                            Tentukan Jawaban Benar
+                            <i data-lucide="check-circle" class="w-4 h-4"></i> Tentukan Jawaban Benar
                         </label>
                         <div class="grid grid-cols-4 gap-3">
                             @foreach(['A', 'B', 'C', 'D'] as $ans)
@@ -114,14 +135,10 @@
                 </div>
             </div>
 
-            {{-- Footer Action --}}
             <div class="mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row justify-end items-center gap-4">
-                <button type="reset" class="text-slate-400 hover:text-slate-600 text-xs font-black uppercase tracking-widest px-6 transition-colors">
-                    Reset Form
-                </button>
+                <button type="reset" class="text-slate-400 hover:text-slate-600 text-xs font-black uppercase tracking-widest px-6 transition-colors">Reset Form</button>
                 <button type="submit" class="group relative flex items-center gap-3 bg-slate-900 text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-indigo-600 transition-all shadow-xl shadow-slate-200 active:scale-95">
-                    <i data-lucide="save" class="w-4 h-4 group-hover:animate-bounce"></i>
-                    Simpan ke Bank Soal
+                    <i data-lucide="save" class="w-4 h-4 group-hover:animate-bounce"></i> Simpan ke Bank Soal
                 </button>
             </div>
         </form>
@@ -140,7 +157,6 @@
                 </div>
             </div>
 
-            {{-- FORM FILTER --}}
             <form action="{{ route('admin.questions') }}" method="GET" class="flex items-center gap-2">
                 <select name="category" onchange="this.form.submit()" class="text-[10px] font-black uppercase tracking-widest border-slate-200 rounded-xl bg-white focus:ring-indigo-500 focus:border-indigo-500 py-2.5 px-4 shadow-sm">
                     <option value="">Semua Kategori</option>
@@ -148,11 +164,8 @@
                     <option value="structure" {{ request('category') == 'structure' ? 'selected' : '' }}>📝 Structure</option>
                     <option value="reading" {{ request('category') == 'reading' ? 'selected' : '' }}>📖 Reading</option>
                 </select>
-                
                 @if(request('category'))
-                    <a href="{{ route('admin.questions') }}" class="p-2.5 text-slate-400 hover:text-red-500 bg-white border border-slate-200 rounded-xl transition-colors shadow-sm" title="Clear Filter">
-                        <i data-lucide="filter-x" class="w-4 h-4"></i>
-                    </a>
+                    <a href="{{ route('admin.questions') }}" class="p-2.5 text-slate-400 hover:text-red-500 bg-white border border-slate-200 rounded-xl transition-colors shadow-sm"><i data-lucide="filter-x" class="w-4 h-4"></i></a>
                 @endif
             </form>
         </div>
@@ -162,7 +175,7 @@
                 <thead>
                     <tr class="bg-slate-50">
                         <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Kategori</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Pertanyaan</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Pertanyaan (TOEFL Preview)</th>
                         <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Kunci</th>
                         <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Aksi</th>
                     </tr>
@@ -179,7 +192,13 @@
                             </span>
                         </td>
                         <td class="px-6 py-4">
-                            <p class="text-sm text-slate-600 font-medium line-clamp-1 italic">"{{ Str::limit($q->question_text, 60) }}"</p>
+                            {{-- Modifikasi logic PHP untuk menampilkan preview TOEFL di tabel --}}
+                            <div class="text-sm text-slate-600 font-medium leading-loose">
+                                {!! nl2br(preg_replace('/\[([^:]+):([^\]]+)\]/', 
+                                    '<span class="inline-flex flex-col items-center mx-1"><span class="border-b-2 border-slate-900 font-bold px-1">$1</span><span class="font-black text-black mt-1">$2</span></span>', 
+                                    Str::limit($q->question_text, 150))) 
+                                !!}
+                            </div>
                         </td>
                         <td class="px-6 py-4 text-center">
                             <span class="w-7 h-7 inline-flex items-center justify-center rounded-lg bg-slate-100 text-slate-800 font-black text-xs">
@@ -188,26 +207,24 @@
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex justify-end gap-2" x-data="{}">
-                                {{-- Tombol Edit --}}
-                                <button @click="$dispatch('open-edit-modal', { 
-                                    id: '{{ $q->id }}', 
-                                    text: '{{ addslashes($q->question_text) }}',
-                                    cat: '{{ $q->category }}',
-                                    a: '{{ addslashes($q->option_a) }}',
-                                    b: '{{ addslashes($q->option_b) }}',
-                                    c: '{{ addslashes($q->option_c) }}',
-                                    d: '{{ addslashes($q->option_d) }}',
-                                    ans: '{{ $q->correct_answer }}'
-                                })" class="p-2 text-slate-300 hover:text-indigo-600 transition-colors">
+                                <button @click="$dispatch('open-edit-modal', {{ 
+                                    json_encode([
+                                        'id' => (string)$q->id,
+                                        'text' => $q->question_text,
+                                        'cat' => $q->category,
+                                        'a' => $q->option_a,
+                                        'b' => $q->option_b,
+                                        'c' => $q->option_c,
+                                        'd' => $q->option_d,
+                                        'ans' => $q->correct_answer
+                                    ]) 
+                                }})" class="p-2 text-slate-300 hover:text-indigo-600 transition-colors">
                                     <i data-lucide="edit-3" class="w-4 h-4"></i>
                                 </button>
 
-                                {{-- Form Hapus --}}
                                 <form action="{{ route('admin.questions.delete', $q->id) }}" method="POST" onsubmit="return confirm('Hapus soal ini?')">
                                     @csrf @method('DELETE')
-                                    <button class="p-2 text-slate-300 hover:text-red-600 transition-colors">
-                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                    </button>
+                                    <button class="p-2 text-slate-300 hover:text-red-600 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                                 </form>
                             </div>
                         </td>
@@ -233,48 +250,48 @@
         @endif
     </div>
 
-    {{-- MODAL EDIT SOAL --}}
+    {{-- MODAL EDIT (Juga ditambahkan fungsi Preview) --}}
     <div x-data="{ 
-            show: false, 
-            id: '', text: '', cat: '', a: '', b: '', c: '', d: '', ans: '',
-            actionUrl: ''
+            show: false, id: '', text: '', cat: '', a: '', b: '', c: '', d: '', ans: '', actionUrl: '',
+            parseTOEFL(input) {
+                if(!input) return '';
+
+                // Bersihkan HTML tag asli jika ada
+                let escaped = input.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+                // Render format TOEFL [kata:huruf]
+                let formatted = escaped.replace(/\[([^:]+):([^\]]+)\]/g, '<span class=&quot;toefl-wrapper&quot;><span class=&quot;toefl-line&quot;>$1</span><span class=&quot;toefl-label&quot;>$2</span></span>');
+                
+                // Ganti newlines dengan <br> untuk menjaga format paragraf
+                return formatted.replace(/\n/g, '<br>');
+            }
         }" 
         x-show="show" 
         @open-edit-modal.window="
             show = true; 
             id = $event.detail.id; 
-            text = $event.detail.text;
-            cat = $event.detail.cat;
-            a = $event.detail.a;
-            b = $event.detail.b;
-            c = $event.detail.c;
-            d = $event.detail.d;
-            ans = $event.detail.ans;
+            text = $event.detail.text; 
+            cat = $event.detail.cat; 
+            a = $event.detail.a; 
+            b = $event.detail.b; 
+            c = $event.detail.c; 
+            d = $event.detail.d; 
+            ans = $event.detail.ans; 
             actionUrl = '/admin/questions/' + id + '/update';
         "
         class="fixed inset-0 z-50 overflow-y-auto" style="display: none;" x-cloak>
         
-        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            {{-- Overlay --}}
-            <div class="fixed inset-0 transition-opacity" @click="show = false">
-                <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
-            </div>
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="show = false"></div>
 
-            <div class="inline-block align-bottom bg-white rounded-[2.5rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                <form :action="actionUrl" method="POST" enctype="multipart/form-data">
-                    @csrf 
-                    @method('PUT')
-                    
+            <div class="relative bg-white rounded-[2.5rem] shadow-2xl max-w-2xl w-full overflow-hidden transform transition-all">
+                <form :action="actionUrl" method="POST">
+                    @csrf @method('PUT')
                     <div class="p-8">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-xl font-black text-slate-800 flex items-center gap-2">
-                                <i data-lucide="edit-3" class="w-5 h-5 text-indigo-600"></i> Edit Pertanyaan
-                            </h3>
-                            <button type="button" @click="show = false" class="text-slate-400 hover:text-slate-600">
-                                <i data-lucide="x" class="w-5 h-5"></i>
-                            </button>
+                            <h3 class="text-xl font-black text-slate-800 flex items-center gap-2"><i data-lucide="edit-3" class="w-5 h-5 text-indigo-600"></i> Edit Pertanyaan</h3>
+                            <button type="button" @click="show = false" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
                         </div>
-
                         <div class="space-y-6">
                             {{-- Kategori --}}
                             <div>
@@ -286,49 +303,32 @@
                                 </select>
                             </div>
 
-                            {{-- Pertanyaan --}}
+                            {{-- Teks Pertanyaan dengan Live Preview --}}
                             <div>
                                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Teks Pertanyaan</label>
-                                <textarea name="question_text" x-model="text" rows="4" class="w-full border-slate-200 rounded-xl text-sm p-4 bg-slate-50 font-medium" required></textarea>
+                                <textarea name="question_text" x-model="text" rows="4" class="w-full border-slate-200 rounded-xl text-sm p-4 bg-slate-50 font-medium overflow-y-auto max-h-[300px]"></textarea>
+                                {{-- Preview di Modal --}}
+                                <div class="mt-3 p-4 bg-slate-900 rounded-xl text-white text-sm" x-html="parseTOEFL(text)"></div>
                             </div>
-
-                            {{-- Opsi Jawaban --}}
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Opsi A</label>
-                                    <input type="text" name="option_a" x-model="a" class="w-full border-slate-200 rounded-xl text-sm p-3 bg-slate-50" required>
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Opsi B</label>
-                                    <input type="text" name="option_b" x-model="b" class="w-full border-slate-200 rounded-xl text-sm p-3 bg-slate-50" required>
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Opsi C</label>
-                                    <input type="text" name="option_c" x-model="c" class="w-full border-slate-200 rounded-xl text-sm p-3 bg-slate-50" required>
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Opsi D</label>
-                                    <input type="text" name="option_d" x-model="d" class="w-full border-slate-200 rounded-xl text-sm p-3 bg-slate-50" required>
-                                </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <input type="text" name="option_a" x-model="a" class="border-slate-200 rounded-xl p-3 text-sm bg-slate-50">
+                                <input type="text" name="option_b" x-model="b" class="border-slate-200 rounded-xl p-3 text-sm bg-slate-50">
+                                <input type="text" name="option_c" x-model="c" class="border-slate-200 rounded-xl p-3 text-sm bg-slate-50">
+                                <input type="text" name="option_d" x-model="d" class="border-slate-200 rounded-xl p-3 text-sm bg-slate-50">
                             </div>
-
-                            {{-- Kunci Jawaban --}}
                             <div class="p-5 bg-emerald-50 rounded-2xl border border-emerald-100">
-                                <label class="block text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">Kunci Jawaban Benar</label>
+                                <label class="block text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">Kunci Jawaban</label>
                                 <div class="grid grid-cols-4 gap-2">
                                     <template x-for="choice in ['A', 'B', 'C', 'D']">
                                         <label class="cursor-pointer">
                                             <input type="radio" name="correct_answer" :value="choice" x-model="ans" class="peer hidden">
-                                            <div class="p-2 text-center rounded-lg border-2 border-emerald-100 bg-white text-emerald-600 font-black text-xs peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:border-emerald-600 transition-all">
-                                                <span x-text="choice"></span>
-                                            </div>
+                                            <div class="p-2 text-center rounded-lg border-2 border-emerald-100 bg-white text-emerald-600 font-black text-xs peer-checked:bg-emerald-600 peer-checked:text-white transition-all" x-text="choice"></div>
                                         </label>
                                     </template>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="p-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
                         <button type="button" @click="show = false" class="px-6 py-3 text-xs font-black uppercase text-slate-400 tracking-widest hover:text-slate-600">Batal</button>
                         <button type="submit" class="px-8 py-3 bg-indigo-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg shadow-indigo-200 active:scale-95">
