@@ -31,6 +31,9 @@ class User extends Authenticatable
         'is_verified',
         'rejection_message',
         'toefl_score',
+        'score_listening',
+        'score_structure',
+        'score_reading',
         'started_at',
         'otp_code',
     ];

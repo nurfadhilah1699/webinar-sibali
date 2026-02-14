@@ -59,8 +59,13 @@ class ToeflController extends Controller
         $userAnswers = $request->input('answers') ?? [];
 
         if (empty($userAnswers)) {
-            $user->update(['toefl_score' => 310]);
-            return redirect()->route('dashboard')->with('error', 'Waktu habis/jawaban kosong.');
+            $user->update([
+                'toefl_score' => 310,
+                'score_listening' => 31,
+                'score_structure' => 31,
+                'score_reading' => 31
+            ]);
+            return redirect()->route('dashboard')->with('error', 'Waktu habis/Jawaban kosong.');
         }
 
         // AMBIL SEMUA SOAL SEKALIGUS (Hanya 1 Query!)
@@ -86,7 +91,12 @@ class ToeflController extends Controller
         $scoreR = $this->convertReading($correctReading);
         $finalScore = round((($scoreL + $scoreS + $scoreR) * 10) / 3);
 
-        $user->update(['toefl_score' => $finalScore]);
+        $user->update([
+            'toefl_score' => $finalScore,
+            'score_listening' => $scoreL,
+            'score_structure' => $scoreS,
+            'score_reading' => $scoreR
+        ]);
 
         return redirect()->route('dashboard')->with('status', 'Tes Selesai! Skor: ' . $finalScore);
     }

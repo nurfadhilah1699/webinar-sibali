@@ -10,25 +10,24 @@ use Illuminate\Support\Facades\DB;
 class CertificateController extends Controller
 {
     public function downloadWebinar()
-{
-    $user = Auth::user();
-    $isReady = DB::table('settings')->where('key', 'is_certificate_ready')->value('value');
+    {
+        $user = Auth::user();
+        $isReady = DB::table('settings')->where('key', 'is_certificate_ready')->value('value');
 
-    if ($isReady !== '1' || !$user->is_verified) {
-        return back()->with('error', 'Sertifikat belum tersedia.');
-    }
+        if ($isReady !== '1' || !$user->is_verified) {
+            return back()->with('error', 'Sertifikat belum tersedia.');
+        }
 
-    $data = [
-        'name' => strtoupper($user->name),
-        'package' => strtoupper($user->package),
-        'id_sertifikat' => 'WEB/' . $user->id . '/' . date('Ymd'),
-        'score' => null 
-    ];
+        $data = [
+            'name' => strtoupper($user->name),
+            'package' => strtoupper($user->package),
 
-    // Menggunakan template khusus webinar
-    return Pdf::loadView('certificate.template_webinar', $data)
-              ->setPaper('a4', 'landscape')
-              ->download('Sertifikat_Webinar_' . $user->name . '.pdf');
+        ];
+
+        // Menggunakan template khusus webinar
+        return Pdf::loadView('certificate.template_webinar', $data)
+                ->setPaper('a4', 'landscape')
+                ->download('Sertifikat_Webinar_' . $user->name . '.pdf');
     }
 
     public function downloadToefl()
@@ -36,21 +35,27 @@ class CertificateController extends Controller
         $user = Auth::user();
         $isReady = DB::table('settings')->where('key', 'is_certificate_ready')->value('value');
 
-        // Syarat: Admin buka akses, User Terverifikasi, Paket VIP Plus, & Sudah ada skor
+        // Tetap pertahankan syarat ketatmu
         if ($isReady !== '1' || !$user->is_verified || $user->package !== 'vip2' || !$user->toefl_score) {
             return back()->with('error', 'Sertifikat TOEFL belum tersedia.');
         }
 
+        $nomorUrut = str_pad($user->id, 3, '0', STR_PAD_LEFT);
+        $bulanRomawi = "II"; // Karena sekarang Februari 2026
+        $tahun = "2026";
+        $id_sertifikat = $nomorUrut . "/TP-TOEFL/SBI/" . $bulanRomawi . "/" . $tahun;
+
         $data = [
-            'name' => strtoupper($user->name),
-            'package' => strtoupper($user->package),
-            'id_sertifikat' => 'TFL/' . $user->id . '/' . date('Ymd'),
-            'score' => $user->toefl_score 
+            'name'          => strtoupper($user->name),
+            'id_sertifikat' => $id_sertifikat,
+            'listening'     => $user->score_listening ?? '0',
+            'structure'     => $user->score_structure ?? '0',
+            'reading'       => $user->score_reading ?? '0',
+            'score'         => $user->toefl_score ?? '0',
         ];
 
-        // Menggunakan template khusus toefl
         return Pdf::loadView('certificate.template_toefl', $data)
-                ->setPaper('a4', 'landscape')
-                ->download('Sertifikat_TOEFL_' . $user->name . '.pdf');
+                    ->setPaper('a4', 'landscape')
+                    ->download('TOEFL_Certificate_' . $user->name . '.pdf');
     }
 }
