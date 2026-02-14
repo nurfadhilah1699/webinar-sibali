@@ -1,3 +1,5 @@
+<script src="https://unpkg.com/lucide@latest"></script>
+
 <x-admin-layout>
     {{-- CSS Tambahan: Untuk merender tampilan garis bawah khas TOEFL --}}
     <style>
@@ -86,38 +88,23 @@
                         </select>
                     </div>
 
-                    {{-- FITUR RE-UPLOAD AUDIO --}}
-    <input type="file" name="audio_file" 
-           @change="const file = $event.target.files[0]; if (file) { newAudioPreview = URL.createObjectURL(file) }"
-           class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-indigo-600 file:text-white">
+                    <div class="p-6 bg-indigo-50/50 rounded-[2rem] border border-indigo-100 border-dashed" x-data="{ audioPreview: null }"> {{-- Tambahkan x-data di sini --}}
+                        <label class="block text-[11px] font-black text-indigo-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                            <i data-lucide="mic-2" class="w-3 h-3"></i> File Audio (MP3)
+                        </label>
+                        {{-- Tambahkan @change untuk mendeteksi file baru --}}
+                        <input type="file" name="audio_file" 
+                            @change="const file = $event.target.files[0]; if (file) { audioPreview = URL.createObjectURL(file) }"
+                            class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer">
 
-    {{-- Preview untuk audio baru yang akan menggantikan audio lama --}}
-    <div x-show="newAudioPreview" class="mt-3 p-2 bg-white rounded-lg border border-indigo-200" x-cloak>
-        <p class="text-[8px] font-bold text-indigo-500 uppercase mb-1">Preview Audio Baru:</p>
-        <audio :src="newAudioPreview" controls class="h-7 w-full"></audio>
-    </div>
+                        {{-- Box Preview Audio yang akan muncul setelah file dipilih --}}
+                        <div x-show="audioPreview" class="mt-4 p-3 bg-white rounded-xl border border-indigo-100 shadow-sm" x-cloak>
+                            <p class="text-[9px] font-black text-indigo-400 uppercase mb-2 tracking-widest">Preview Audio Terpilih:</p>
+                            <audio :src="audioPreview" controls class="h-8 w-full"></audio>
+                        </div>
 
-    <p class="text-[9px] text-indigo-400 mt-2 font-medium italic">*Biarkan kosong jika tidak ingin mengganti audio lama.</p>
-</div>
-
-                    <div class="p-6 bg-indigo-50/50 rounded-[2rem] border border-indigo-100 border-dashed" 
-     x-data="{ audioPreview: null }"> {{-- Tambahkan x-data di sini --}}
-    <label class="block text-[11px] font-black text-indigo-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-        <i data-lucide="mic-2" class="w-3 h-3"></i> File Audio (MP3)
-    </label>
-    {{-- Tambahkan @change untuk mendeteksi file baru --}}
-    <input type="file" name="audio_file" 
-           @change="const file = $event.target.files[0]; if (file) { audioPreview = URL.createObjectURL(file) }"
-           class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer">
-
-    {{-- Box Preview Audio yang akan muncul setelah file dipilih --}}
-    <div x-show="audioPreview" class="mt-4 p-3 bg-white rounded-xl border border-indigo-100 shadow-sm" x-cloak>
-        <p class="text-[9px] font-black text-indigo-400 uppercase mb-2 tracking-widest">Preview Audio Terpilih:</p>
-        <audio :src="audioPreview" controls class="h-8 w-full"></audio>
-    </div>
-
-    <p class="text-[9px] text-indigo-400 mt-2 font-medium italic">*Wajib diisi jika memilih kategori Listening</p>
-</div>
+                        <p class="text-[9px] text-indigo-400 mt-2 font-medium italic">*Wajib diisi jika memilih kategori Listening</p>
+                    </div>
 
                     <div>
                         <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Teks Pertanyaan / Narasi</label>
@@ -189,34 +176,6 @@
                     <option value="structure" {{ request('category') == 'structure' ? 'selected' : '' }}>📝 Structure</option>
                     <option value="reading" {{ request('category') == 'reading' ? 'selected' : '' }}>📖 Reading</option>
                 </select>
-
-    {{-- Tampilkan Nama File Audio Lama --}}
-    <template x-if="audioPath">
-        <div class="flex items-center gap-3 p-3 bg-white rounded-xl border border-indigo-100 shadow-sm">
-            <div class="p-2 bg-indigo-600 rounded-lg">
-                <i data-lucide="music" class="w-4 h-4 text-white"></i>
-            </div>
-            <div class="overflow-hidden">
-                <p class="text-[9px] font-black text-slate-400 uppercase tracking-tight">File Saat Ini:</p>
-                <p class="text-[11px] font-bold text-indigo-600 truncate" x-text="audioPath.split('/').pop()"></p>
-            </div>
-        </div>
-    </template>
-
-    {{-- Input untuk Re-upload --}}
-    <div class="space-y-2">
-        <p class="text-[9px] font-bold text-slate-500 uppercase">Ganti Audio (Opsional):</p>
-        <input type="file" name="audio_file" 
-               @change="const file = $event.target.files[0]; if (file) { newPreview = URL.createObjectURL(file) }"
-               class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer">
-    </div>
-
-    {{-- Preview Audio Baru --}}
-    <div x-show="newPreview" class="p-3 bg-white rounded-xl border border-emerald-200" x-cloak>
-        <p class="text-[8px] font-black text-emerald-500 uppercase mb-2 tracking-widest">Pratinjau File Baru:</p>
-        <audio :src="newPreview" controls class="h-8 w-full"></audio>
-    </div>
-</div>
                 @if(request('category'))
                     <a href="{{ route('admin.questions') }}" class="p-2.5 text-slate-400 hover:text-red-500 bg-white border border-slate-200 rounded-xl transition-colors shadow-sm"><i data-lucide="filter-x" class="w-4 h-4"></i></a>
                 @endif
@@ -245,43 +204,43 @@
                             </span>
                         </td>
                         <td class="px-6 py-4">
-    <div class="text-sm text-slate-600 font-medium leading-loose">
-        {!! nl2br(preg_replace('/\[([^:]+):([^\]]+)\]/', 
-            '<span class="inline-flex flex-col items-center mx-1"><span class="border-b-2 border-slate-900 font-bold px-1">$1</span><span class="font-black text-black mt-1">$2</span></span>', 
-            Str::limit($q->question_text, 150))) 
-        !!}
-    </div>
-    {{-- Tampilan Nama File Audio (Hanya muncul jika kategori Listening) --}}
-    @if($q->category == 'listening')
-        <div class="flex flex-col gap-2 mt-2 w-full max-w-[240px]">
-            @if($q->audio_path)
-                {{-- Label Nama File (Di Atas) --}}
-                <div class="flex items-center gap-2 px-2.5 py-1.5 bg-indigo-50 border border-indigo-100 rounded-xl w-fit shadow-sm">
-                    <i data-lucide="music" class="w-3.5 h-3.5 text-indigo-600"></i>
-                    <span class="text-[10px] font-bold text-indigo-700 truncate max-w-[160px]">
-                        {{ basename($q->audio_path) }}
-                    </span>
-                    <span class="text-[8px] font-black text-emerald-500 uppercase tracking-tighter">Saved</span>
-                </div>
+                            {{-- Modifikasi logic PHP untuk menampilkan preview TOEFL di tabel --}}
+                            <div class="text-sm text-slate-600 font-medium leading-loose">
+                                {!! nl2br(preg_replace('/\[([^:]+):([^\]]+)\]/', 
+                                    '<span class="inline-flex flex-col items-center mx-1"><span class="border-b-2 border-slate-900 font-bold px-1">$1</span><span class="font-black text-black mt-1">$2</span></span>', 
+                                    Str::limit($q->question_text, 150))) 
+                                !!}
+                            </div>
+                            {{-- Tampilan Nama File Audio (Hanya muncul jika kategori Listening) --}}
+                            @if($q->category == 'listening')
+                                <div class="flex flex-col gap-2 mt-2 w-full max-w-[240px]">
+                                    @if($q->audio_path)
+                                        {{-- Label Nama File (Di Atas) --}}
+                                        <div class="flex items-center gap-2 px-2.5 py-1.5 bg-indigo-50 border border-indigo-100 rounded-xl w-fit shadow-sm">
+                                            <i data-lucide="music" class="w-3.5 h-3.5 text-indigo-600"></i>
+                                            <span class="text-[10px] font-bold text-indigo-700 truncate max-w-[160px]">
+                                                {{ basename($q->audio_path) }}
+                                            </span>
+                                            <span class="text-[8px] font-black text-emerald-500 uppercase tracking-tighter">Saved</span>
+                                        </div>
 
-                {{-- Audio Player (Tepat di Bawah Nama File) --}}
-                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden p-1">
-                    <audio controls class="h-8 w-full block">
-                        <source src="{{ asset('storage/' . $q->audio_path) }}" type="audio/mpeg">
-                        Browser tidak mendukung audio.
-                    </audio>
-                </div>
-            @else
-                {{-- Status Jika Audio Belum Diunggah --}}
-                <div class="flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-100 rounded-xl w-fit">
-                    <i data-lucide="alert-circle" class="w-4 h-4 text-red-500"></i>
-                    <span class="text-[10px] font-black text-red-600 uppercase tracking-widest">Audio Kosong</span>
-                </div>
-            @endif
-        </div>
-    @endif
-</td>
-
+                                        {{-- Audio Player (Tepat di Bawah Nama File) --}}
+                                        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden p-1">
+                                            <audio controls class="h-8 w-full block">
+                                                <source src="{{ asset('storage/' . $q->audio_path) }}" type="audio/mpeg">
+                                                Browser tidak mendukung audio.
+                                            </audio>
+                                        </div>
+                                    @else
+                                        {{-- Status Jika Audio Belum Diunggah --}}
+                                        <div class="flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-100 rounded-xl w-fit">
+                                            <i data-lucide="alert-circle" class="w-4 h-4 text-red-500"></i>
+                                            <span class="text-[10px] font-black text-red-600 uppercase tracking-widest">Audio Kosong</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 text-center">
                             <span class="w-7 h-7 inline-flex items-center justify-center rounded-lg bg-slate-100 text-slate-800 font-black text-xs">
                                 {{ $q->correct_answer }}
@@ -299,7 +258,7 @@
                                         'c' => $q->option_c,
                                         'd' => $q->option_d,
                                         'ans' => $q->correct_answer,
-                                        'audio_path' => $q ->audio_path
+                                        'audio_path' => $q->audio_path
                                     ]) 
                                 }})" class="p-2 text-slate-300 hover:text-indigo-600 transition-colors">
                                     <i data-lucide="edit-3" class="w-4 h-4"></i>
@@ -333,19 +292,25 @@
         @endif
     </div>
 
-    {{-- MODAL EDIT (Juga ditambahkan fungsi Preview) --}}
+    {{-- MODAL EDIT --}}
     <div x-data="{ 
-            show: false, id: '', text: '', cat: '', a: '', b: '', c: '', d: '', ans: '', actionUrl: '',
+            show: false, 
+            id: '', 
+            text: '', 
+            cat: '', 
+            a: '', 
+            b: '', 
+            c: '', 
+            d: '', 
+            ans: '', 
+            audioPath: '',
+            deleteAudio: false, 
+            newPreview: null, 
+            actionUrl: '',
             parseTOEFL(input) {
                 if(!input) return '';
-
-                // Bersihkan HTML tag asli jika ada
                 let escaped = input.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-                // Render format TOEFL [kata:huruf]
                 let formatted = escaped.replace(/\[([^:]+):([^\]]+)\]/g, '<span class=&quot;toefl-wrapper&quot;><span class=&quot;toefl-line&quot;>$1</span><span class=&quot;toefl-label&quot;>$2</span></span>');
-                
-                // Ganti newlines dengan <br> untuk menjaga format paragraf
                 return formatted.replace(/\n/g, '<br>');
             }
         }" 
@@ -360,6 +325,9 @@
             c = $event.detail.c; 
             d = $event.detail.d; 
             ans = $event.detail.ans; 
+            audioPath = $event.detail.audio_path || ''; // Ambil path audio lama
+            deleteAudio = false; 
+            newPreview = null; // Reset preview file baru tiap kali buka modal
             actionUrl = '/admin/questions/' + id + '/update';
         "
         class="fixed inset-0 z-50 overflow-y-auto" style="display: none;" x-cloak>
@@ -368,16 +336,16 @@
             <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="show = false"></div>
 
             <div class="relative bg-white rounded-[2.5rem] shadow-2xl max-w-2xl w-full overflow-hidden transform transition-all">
+                {{-- PENTING: Tambahkan enctype="multipart/form-data" --}}
                 <form :action="actionUrl" method="POST" enctype="multipart/form-data">
-    @csrf
-    @method('PUT') {{-- Pastikan ada method PUT untuk update --}}
-
-    </form>
+                    @csrf @method('PUT')
+                    
                     <div class="p-8">
                         <div class="flex items-center justify-between mb-6">
                             <h3 class="text-xl font-black text-slate-800 flex items-center gap-2"><i data-lucide="edit-3" class="w-5 h-5 text-indigo-600"></i> Edit Pertanyaan</h3>
                             <button type="button" @click="show = false" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
                         </div>
+
                         <div class="space-y-6">
                             {{-- Kategori --}}
                             <div>
@@ -389,49 +357,68 @@
                                 </select>
                             </div>
 
-                            
+                            {{-- Di dalam Form Modal, tambahkan input hidden untuk mengirim status hapus ke Controller --}}
+                            <input type="hidden" name="delete_audio" :value="deleteAudio ? '1' : '0'">
 
-    {{-- Menampilkan Nama File Audio yang Sudah Ada --}}
-    <template x-if="audioPath">
-        <div class="flex items-center gap-3 p-3 bg-white rounded-xl border border-indigo-100 shadow-sm">
-            <div class="p-2 bg-indigo-600 rounded-lg">
-                <i data-lucide="music" class="w-4 h-4 text-white"></i>
-            </div>
-            <div class="overflow-hidden">
-                <p class="text-[9px] font-black text-slate-400 uppercase tracking-tight">File Saat Ini:</p>
-                <p class="text-[11px] font-bold text-indigo-600 truncate" x-text="audioPath.split('/').pop()"></p>
-            </div>
-        </div>
-    </template>
+                            {{-- Update Bagian Preview Audio di Modal --}}
+                            <div x-show="cat === 'listening'" class="p-6 bg-indigo-50/50 rounded-[2rem] border border-indigo-100 border-dashed">
+                                
+                                {{-- Info Audio Lama --}}
+                                <template x-if="audioPath && !deleteAudio">
+                                    <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-indigo-100 shadow-sm mb-4">
+                                        <div class="flex items-center gap-3 overflow-hidden">
+                                            <div class="p-2 bg-indigo-600 rounded-lg shrink-0">
+                                                <i data-lucide="music" class="w-4 h-4 text-white"></i>
+                                            </div>
+                                            <div class="overflow-hidden">
+                                                <p class="text-[9px] font-black text-slate-400 uppercase">File Saat Ini:</p>
+                                                <p class="text-[11px] font-bold text-indigo-600 truncate" x-text="audioPath.split('/').pop()"></p>
+                                            </div>
+                                        </div>
+                                        
+                                        {{-- Tombol Hapus - Pastikan warna merahnya jelas --}}
+                                        <button type="button" 
+                                            @click="deleteAudio = true" 
+                                            class="ml-2 p-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-xl transition-all border border-red-100">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </template>
 
-    {{-- Input Re-upload --}}
-    <div class="space-y-2">
-        <p class="text-[9px] font-bold text-slate-500 uppercase">Ganti Audio (Opsional):</p>
-        <input type="file" name="audio_file" 
-               @change="const file = $event.target.files[0]; if (file) { newPreview = URL.createObjectURL(file) }"
-               class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer">
-    </div>
+                                {{-- Alert Hapus --}}
+                                <div x-show="deleteAudio" class="mb-4 p-4 bg-red-600 rounded-2xl flex items-center justify-between shadow-lg shadow-red-100" x-cloak>
+                                    <div class="flex items-center gap-3">
+                                        <i data-lucide="alert-circle" class="w-5 h-5 text-white"></i>
+                                        <p class="text-[10px] font-black text-white uppercase tracking-wider">Audio akan segera dihapus!</p>
+                                    </div>
+                                    <button type="button" @click="deleteAudio = false" class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg text-[9px] font-black text-white uppercase transition-colors">Batal</button>
+                                </div>
 
-    {{-- Preview Audio Baru sebelum disimpan --}}
-    <div x-show="newPreview" class="p-3 bg-white rounded-xl border border-emerald-200" x-cloak>
-        <p class="text-[8px] font-black text-emerald-500 uppercase mb-2 tracking-widest">Pratinjau File Baru:</p>
-        <audio :src="newPreview" controls class="h-8 w-full"></audio>
-    </div>
-</div>
+                                {{-- Input Upload (Sembunyikan jika sedang mode hapus agar tidak bingung) --}}
+                                <div class="space-y-2" x-show="!deleteAudio">
+                                    <p class="text-[9px] font-bold text-slate-500 uppercase">Ganti Audio (Opsional):</p>
+                                    <input type="file" name="audio_file" 
+                                        @change="const file = $event.target.files[0]; if (file) { newPreview = URL.createObjectURL(file); deleteAudio = false; }" 
+                                        class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer">
+                                </div>
+                            </div>
 
-                            {{-- Teks Pertanyaan dengan Live Preview --}}
+                            {{-- Teks Pertanyaan --}}
                             <div>
                                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Teks Pertanyaan</label>
-                                <textarea name="question_text" x-model="text" rows="4" class="w-full border-slate-200 rounded-xl text-sm p-4 bg-slate-50 font-medium overflow-y-auto max-h-[300px]"></textarea>
-                                {{-- Preview di Modal --}}
+                                <textarea name="question_text" x-model="text" rows="4" class="w-full border-slate-200 rounded-xl text-sm p-4 bg-slate-50 font-medium"></textarea>
                                 <div class="mt-3 p-4 bg-slate-900 rounded-xl text-white text-sm" x-html="parseTOEFL(text)"></div>
                             </div>
+
+                            {{-- Opsi Jawaban --}}
                             <div class="grid grid-cols-2 gap-4">
-                                <input type="text" name="option_a" x-model="a" class="border-slate-200 rounded-xl p-3 text-sm bg-slate-50">
-                                <input type="text" name="option_b" x-model="b" class="border-slate-200 rounded-xl p-3 text-sm bg-slate-50">
-                                <input type="text" name="option_c" x-model="c" class="border-slate-200 rounded-xl p-3 text-sm bg-slate-50">
-                                <input type="text" name="option_d" x-model="d" class="border-slate-200 rounded-xl p-3 text-sm bg-slate-50">
+                                <input type="text" name="option_a" x-model="a" class="border-slate-200 rounded-xl p-3 text-sm bg-slate-50" placeholder="Opsi A">
+                                <input type="text" name="option_b" x-model="b" class="border-slate-200 rounded-xl p-3 text-sm bg-slate-50" placeholder="Opsi B">
+                                <input type="text" name="option_c" x-model="c" class="border-slate-200 rounded-xl p-3 text-sm bg-slate-50" placeholder="Opsi C">
+                                <input type="text" name="option_d" x-model="d" class="border-slate-200 rounded-xl p-3 text-sm bg-slate-50" placeholder="Opsi D">
                             </div>
+
+                            {{-- Kunci Jawaban --}}
                             <div class="p-5 bg-emerald-50 rounded-2xl border border-emerald-100">
                                 <label class="block text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">Kunci Jawaban</label>
                                 <div class="grid grid-cols-4 gap-2">
@@ -445,9 +432,10 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="p-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
                         <button type="button" @click="show = false" class="px-6 py-3 text-xs font-black uppercase text-slate-400 tracking-widest hover:text-slate-600">Batal</button>
-                        <button type="submit" class="px-8 py-3 bg-indigo-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg shadow-indigo-200 active:scale-95">
+                        <button type="submit" class="px-8 py-3 bg-indigo-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg active:scale-95">
                             Simpan Perubahan
                         </button>
                     </div>
