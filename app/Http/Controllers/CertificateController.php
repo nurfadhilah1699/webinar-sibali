@@ -24,10 +24,15 @@ class CertificateController extends Controller
 
         ];
 
-        // Menggunakan template khusus webinar
-        return Pdf::loadView('certificate.template_webinar', $data)
-                ->setPaper('a4', 'landscape')
-                ->download('Sertifikat_Webinar_' . $user->name . '.pdf');
+        $pdf = Pdf::loadView('certificate.template_webinar', $data)
+                    ->setPaper('a4', 'landscape')
+                    ->setOption([
+                        'isRemoteEnabled' => true,
+                        'isHtml5ParserEnabled' => true,
+                        'chroot' => public_path(), // Penting: Mengizinkan DomPDF akses folder public
+                    ]);
+
+        return $pdf->download('Sertifikat_Webinar_' . $user->name . '.pdf');
     }
 
     public function downloadToefl()
@@ -54,8 +59,14 @@ class CertificateController extends Controller
             'score'         => $user->toefl_score ?? '0',
         ];
 
-        return Pdf::loadView('certificate.template_toefl', $data)
+        $pdf = Pdf::loadView('certificate.template_toefl', $data)
                     ->setPaper('a4', 'landscape')
-                    ->download('TOEFL_Certificate_' . $user->name . '.pdf');
+                    ->setOption([
+                        'isRemoteEnabled' => true,
+                        'isHtml5ParserEnabled' => true,
+                        'chroot' => public_path(), // Penting: Mengizinkan DomPDF akses folder public
+                    ]);
+
+        return $pdf->download('TOEFL_Certificate_' . $user->name . '.pdf');
     }
 }

@@ -1,7 +1,7 @@
 <style>
     @font-face {
         font-family: 'NameFont';
-        src: url("{{ public_path('fonts/EBGaramond.ttf') }}") format('truetype');
+        src: url("data:font/truetype;base64,{{ base64_encode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/fonts/EBGaramond.ttf')) }}") format('truetype');
         font-weight: medium;
         font-style: normal;
     }
@@ -38,12 +38,17 @@
 
 <body>
     @php
-        // Pastikan nama file di folder public/img/ adalah 'peserta.jpeg'
-        // Jika namanya 'peserta copy.jpg.jpeg', ganti di bawah sesuai nama aslinya
-        $path = public_path('img/peserta.jpeg');
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
-        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        /* PERBAIKAN 2: Path Gambar menggunakan DOCUMENT_ROOT */
+        $path = $_SERVER['DOCUMENT_ROOT'] . '/img/peserta.jpeg';
+        
+        if (file_exists($path)) {
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        } else {
+            // Fallback jika file tidak ditemukan agar tidak error 500
+            $base64 = '';
+        }
     @endphp
 
     <img src="{{ $base64 }}" class="background">
