@@ -15,7 +15,7 @@ class AdminSeeder extends Seeder
             ['email' => 'admin@sibali.id'], 
             [
                 'name' => 'Super Admin Sibali',
-                'password' => Hash::make('@dm!nS1b@l1Super'), // Ganti dengan password yang kamu inginkan
+                'password' => Hash::make('@dm!nS1b@l1'), // Ganti dengan password yang kamu inginkan
                 'role' => 'admin',
                 'is_verified' => true,
             ]
