@@ -6,6 +6,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ToeflController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WebinarController;
+use App\Http\Controllers\LccController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -66,6 +68,26 @@ Route::middleware('auth')->group(function () {
             </script>
         ";
     });
+
+    // ==========================================
+    // SIB-12: MULTI-EVENT ROUTES GROUPING
+    // ==========================================
+
+    // Rute untuk Webinar Karir (Series)
+    Route::prefix('webinar-karir')->name('webinar.')->group(function () {
+        Route::get('/', [WebinarController::class, 'index'])->name('index'); 
+        Route::get('/{slug}', [WebinarController::class, 'show'])->name('show');
+        Route::post('/register', [WebinarController::class, 'register'])->name('register');
+    });
+
+    // Rute untuk LCC (Lomba Cerdas Cermat)
+    Route::prefix('lcc')->name('lcc.')->group(function () {
+        Route::get('/', [LccController::class, 'index'])->name('index');
+        Route::get('/exam', [LccController::class, 'exam'])->name('exam');
+        Route::post('/submit', [LccController::class, 'submit'])->name('submit');
+    });
+
+    // ==========================================
 });
 
 // Admin routes

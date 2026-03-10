@@ -253,18 +253,25 @@ class AdminController extends Controller
         ]);
 
         $question = Question::findOrFail($id);
-        
-        $data = $request->only(['category', 'question_text', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_answer']);
+        $data = $request->except(['audio_file', 'delete_audio']);
 
+        // LOGIK HANDLING AUDIO
         if ($request->hasFile('audio_file')) {
-            // Hapus audio lama jika ada audio baru
+            // Hapus lama, simpan baru (Logika kamu yang tadi sudah benar)
             if ($question->audio_path) {
                 \Storage::disk('public')->delete($question->audio_path);
             }
             $file = $request->file('audio_file');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('audios', $filename, 'public');
-            $data['audio_path'] = 'audios/' . $filename;
+            $path = $file->storeAs('audios', $filename, 'public');
+            $data['audio_path'] = $path;
+
+        } elseif ($request->input('delete_audio') == '1' || $request->category !== 'listening') {
+            // Hapus audio jika tombol hapus diklik ATAU kategori diganti dari listening
+            if ($question->audio_path) {
+                \Storage::disk('public')->delete($question->audio_path);
+            }
+            $data['audio_path'] = null;
         }
 
         $question->update($data);
