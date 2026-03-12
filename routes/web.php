@@ -8,12 +8,11 @@ use App\Http\Controllers\ToeflController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WebinarController;
 use App\Http\Controllers\LccController;
+use App\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [LandingController::class, 'index'])->name('welcome');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'otp_verified'])

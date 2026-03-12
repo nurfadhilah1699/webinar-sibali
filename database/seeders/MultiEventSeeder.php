@@ -29,5 +29,12 @@ class MultiEventSeeder extends Seeder
             'start_time' => '2026-04-15 08:00:00',
             'duration' => 45,
         ]);
+
+        Event::create([
+            'title' => 'Webinar Beasiswa Unlocked: Road to LPDP',
+            'slug' => 'webinar-beasiswa-unlocked-road-to-lpdp',
+            'type' => 'webinar',
+            'start_time' => '2026-02-15 09:00:00', // Sesuaikan dengan tanggal aslinya
+        ]);
     }
 }
