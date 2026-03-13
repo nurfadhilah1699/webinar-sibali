@@ -14,4 +14,21 @@ class LandingController extends Controller
 
         return view('welcome', compact('events'));
     }
+
+    public function show($slug) {
+        $event = Event::where('slug', $slug)->firstOrFail();
+
+        if ($event->type == 'webinar') {
+            // Arahkan ke view khusus webinar
+            return view('webinar.show', compact('event'));
+        } 
+        
+        if ($event->type == 'lcc') {
+            // Arahkan ke view khusus LCC
+            return view('lcc.show', compact('event'));
+        }
+
+        // Default jika tipe tidak dikenal
+        return view('pages.events.default-detail', compact('event'));
+    }
 }

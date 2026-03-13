@@ -253,7 +253,7 @@
                             </div>
 
                             {{-- Button logic --}}
-                            <a href="{{ $event->is_active ? route('webinar.show', $event->slug) : '#' }}" 
+                            <a href="{{ $event->is_active ? route('events.show', $event->slug) : '#' }}" 
                             class="block w-full py-4 text-center rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all {{ $event->is_active ? 'gradient-blue text-white shadow-lg' : 'bg-slate-100 text-slate-400 cursor-not-allowed' }}">
                             {{ $event->is_active ? 'Lihat Detail' : 'Pendaftaran Ditutup' }}
                             </a>

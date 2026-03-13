@@ -14,12 +14,6 @@ class WebinarController extends Controller
         return view('webinar.index', compact('events'));
     }
 
-    public function show($slug)
-    {
-        $event = Event::where('slug', $slug)->firstOrFail();
-        return view('webinar.show', compact('event'));
-    }
-
     public function register(Request $request)
     {
         // Logika pendaftaran akan kita buat di sini nanti

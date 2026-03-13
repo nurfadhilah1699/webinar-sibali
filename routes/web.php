@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index'])->name('welcome');
+Route::get('/event/{slug}', [LandingController::class, 'show'])->name('events.show');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'otp_verified'])
@@ -75,7 +76,6 @@ Route::middleware('auth')->group(function () {
     // Rute untuk Webinar Karir (Series)
     Route::prefix('webinar-karir')->name('webinar.')->group(function () {
         Route::get('/', [WebinarController::class, 'index'])->name('index'); 
-        Route::get('/{slug}', [WebinarController::class, 'show'])->name('show');
         Route::post('/register', [WebinarController::class, 'register'])->name('register');
     });
 
