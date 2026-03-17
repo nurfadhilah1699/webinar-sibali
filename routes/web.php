@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WebinarController;
 use App\Http\Controllers\LccController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\RegistrationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -87,6 +88,10 @@ Route::middleware('auth')->group(function () {
     });
 
     // ==========================================
+
+    Route::post('/register-event', [RegistrationController::class, 'register'])->name('register.post');
+    Route::get('/payment/{registration}', [RegistrationController::class, 'payment'])->name('payment.index');
+    Route::post('/payment/confirm/{registration}', [RegistrationController::class, 'confirmPayment'])->name('payment.confirm');
 });
 
 // Admin routes

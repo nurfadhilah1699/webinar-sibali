@@ -73,7 +73,7 @@
             <div class="bg-white/5 p-6 rounded-[2rem] border border-white/10">
                 <h4 class="text-xs font-black text-white uppercase tracking-[0.2em] mb-4">Siap Belajar?</h4>
                 <p class="text-xs text-slate-400 leading-relaxed mb-6">Gabung dengan ribuan peserta lainnya dalam ekosistem belajar digital terbaik.</p>
-                <a href="{{ route('register') }}" class="block w-full py-3 bg-red-600 hover:bg-red-700 text-white text-[10px] font-black uppercase text-center tracking-widest rounded-xl transition-all shadow-lg shadow-red-900/20">
+                <a href="{{ route('login') }}" class="block w-full py-3 bg-red-600 hover:bg-red-700 text-white text-[10px] font-black uppercase text-center tracking-widest rounded-xl transition-all shadow-lg shadow-red-900/20">
                     Daftar Sekarang
                 </a>
             </div>

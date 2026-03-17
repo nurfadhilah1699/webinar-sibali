@@ -8,7 +8,8 @@ use App\Models\Event;
 class LandingController extends Controller
 {
     public function index() {
-        $events = Event::orderBy('is_active', 'desc')
+        $events = Event::whereNull('parent_id')
+                    ->orderBy('is_active', 'desc')
                     ->orderBy('start_time', 'desc')
                     ->get();
 
@@ -16,7 +17,7 @@ class LandingController extends Controller
     }
 
     public function show($slug) {
-        $event = Event::where('slug', $slug)->firstOrFail();
+        $event = Event::with('children')->where('slug', $slug)->firstOrFail();
 
         if ($event->type == 'webinar') {
             // Arahkan ke view khusus webinar

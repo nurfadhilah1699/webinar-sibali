@@ -161,9 +161,23 @@
                         </div>
                         
                         <div class="p-8">
-                            <span class="text-[10px] font-black text-red-600 uppercase tracking-widest">{{ $event->type }}</span>
+                            <div class="flex items-center gap-2 mb-2">
+                                {{-- Tipe Event --}}
+                                <span class="text-[10px] font-black text-red-600 uppercase tracking-widest">
+                                    {{ $event->type }}
+                                </span>
+
+                                {{-- Badge Episode (Hanya muncul jika ada children) --}}
+                                @if($event->children->count() > 0)
+                                    <span class="px-2 py-0.5 bg-blue-50 text-blue-600 text-[9px] font-bold rounded-md border border-blue-100 uppercase">
+                                        {{ $event->children->count() }} Episode Series
+                                    </span>
+                                @endif
+                            </div>
+
                             <h3 class="text-xl font-extrabold text-blue-900 mt-2 mb-4 h-14 overflow-hidden">{{ $event->title }}</h3>
                             
+
                             <div class="flex items-center gap-3 text-slate-500 text-sm mb-6 font-medium">
                                 <i data-lucide="calendar" class="w-4 h-4"></i>
                                 {{ \Carbon\Carbon::parse($event->start_time)->translatedFormat('d F Y') }}
