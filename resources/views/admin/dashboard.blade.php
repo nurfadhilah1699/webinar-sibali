@@ -67,56 +67,90 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-50/50 border-b border-slate-100">
-                        <th class="p-6 text-[11px] font-black text-slate-400 uppercase tracking-[0.15em]">Informasi Peserta</th>
-                        <th class="p-6 text-[11px] font-black text-slate-400 uppercase tracking-[0.15em]">Paket Dipilih</th>
-                        <th class="p-6 text-[11px] font-black text-slate-400 uppercase tracking-[0.15em]">Lampiran</th>
-                        <th class="p-6 text-[11px] font-black text-slate-400 uppercase tracking-[0.15em] text-center">Tindakan Cepat</th>
+                    <tr class="bg-slate-50/80 border-b border-slate-100">
+                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Informasi Peserta</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Event & Paket</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Pembayaran</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-center">Aksi Verifikasi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
-                    @forelse($pendingUsers as $user)
-                        <tr class="group hover:bg-slate-50/80 transition-colors">
-                            <td class="p-6">
+                    @forelse($pendingRegistrations as $reg)
+                        <tr class="group hover:bg-slate-50/50 transition-all duration-300">
+                            {{-- Profil Peserta --}}
+                            <td class="px-8 py-6">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-sm border border-slate-200 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
-                                        {{ substr($user->name, 0, 1) }}
+                                    <div class="relative">
+                                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-indigo-100 group-hover:scale-110 transition-transform duration-300">
+                                            {{ strtoupper(substr($reg->user->name, 0, 1)) }}
+                                        </div>
+                                        <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></div>
                                     </div>
                                     <div>
-                                        <div class="font-bold text-slate-800 leading-tight">{{ $user->name }}</div>
-                                        <div class="text-xs text-slate-400 mt-0.5">{{ $user->email }}</div>
+                                        <div class="font-black text-slate-800 leading-tight tracking-tight group-hover:text-indigo-600 transition-colors">{{ $reg->user->name }}</div>
+                                        <div class="text-[11px] text-slate-400 font-medium mt-1 flex items-center gap-1">
+                                            <i data-lucide="mail" class="w-3 h-3"></i>
+                                            {{ $reg->user->email }}
+                                        </div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="p-6">
-                                <span class="inline-flex items-center px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-black uppercase tracking-tight border border-indigo-100">
-                                    {{ $user->package }}
-                                </span>
-                            </td>
-                            <td class="p-6">
-                                <a href="{{ asset('storage/' . $user->payment_proof) }}" target="_blank" class="inline-flex items-center gap-2 text-indigo-500 font-bold text-xs hover:text-indigo-700 group/link transition-colors">
-                                    <span class="p-2 bg-indigo-50 rounded-lg group-hover/link:bg-indigo-100 transition-colors">
-                                        <i data-lucide="image" class="w-4 h-4"></i>
+
+                            {{-- Detail Event & Paket --}}
+                            <td class="px-6 py-6">
+                                <div class="flex flex-col gap-2">
+                                    <span class="text-[12px] font-bold text-slate-700 tracking-tight leading-tight">
+                                        {{ $reg->event->title ?? 'Webinar Legacy' }}
                                     </span>
-                                    <span>LIHAT BUKTI</span>
-                                </a>
+                                    <div class="flex items-center gap-2">
+                                        @php
+                                            $pkgColor = match($reg->package_type) {
+                                                'vip1' => 'bg-purple-50 text-purple-600 border-purple-100',
+                                                'vip2' => 'bg-blue-50 text-blue-600 border-blue-100',
+                                                default => 'bg-slate-50 text-slate-600 border-slate-100',
+                                            };
+                                        @endphp
+                                        <span class="px-2 py-0.5 rounded-md border text-[9px] font-black uppercase tracking-tighter {{ $pkgColor }}">
+                                            {{ $reg->package_type }}
+                                        </span>
+                                    </div>
+                                </div>
                             </td>
-                            <td class="p-6">
-                                <div class="flex justify-center gap-3">
-                                    {{-- Tombol Approve --}}
+
+                            {{-- Status Pembayaran --}}
+                            <td class="px-6 py-6">
+                                <div class="flex flex-col gap-1.5">
+                                    <div class="text-sm font-black text-slate-800 tracking-tighter">
+                                        Rp {{ number_format($reg->amount, 0, ',', '.') }}
+                                    </div>
+                                    <a href="{{ asset('storage/' . $reg->payment_proof) }}" target="_blank" 
+                                    class="inline-flex items-center gap-1.5 text-[10px] font-black text-indigo-600 hover:text-indigo-800 transition-colors uppercase tracking-widest">
+                                        <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                        Cek Lampiran
+                                    </a>
+                                </div>
+                            </td>
+
+                            {{-- Tombol Aksi --}}
+                            <td class="px-6 py-6">
+                                <div class="flex items-center justify-center gap-2">
+                                    {{-- Verified Button --}}
                                     <button type="button" 
-                                        onclick="triggerApprove({{ $user->id }}, '{{ $user->name }}')"
-                                        class="bg-emerald-50 text-emerald-600 px-4 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-all shadow-sm active:scale-95">
-                                        Approve
+                                        onclick="triggerVerified({{ $reg->id }}, '{{ $reg->user->name }}', {{ isset($reg->is_legacy) ? 'true' : 'false' }})"
+                                        class="group/btn h-10 px-5 rounded-xl bg-emerald-500 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-100 transition-all active:scale-95 flex items-center gap-2">
+                                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                        Verify
                                     </button>
 
-                                    {{-- Form Reject (Input Alasan Tetap Ada) --}}
-                                    <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100 focus-within:border-rose-300 transition-all">
-                                        <input type="text" id="reject-reason-{{ $user->id }}" placeholder="Alasan..." class="text-[11px] bg-transparent border-none focus:ring-0 p-1 w-24 sm:w-32 placeholder:text-slate-400 font-medium">
+                                    {{-- Reject Area --}}
+                                    <div class="flex items-center bg-white border border-slate-200 rounded-xl p-1 shadow-sm focus-within:ring-2 focus-within:ring-rose-100 focus-within:border-rose-300 transition-all duration-300">
+                                        <input type="text" id="reject-reason-{{ $reg->id }}" 
+                                            placeholder="Alasan ditolak..." 
+                                            class="text-[11px] bg-transparent border-none focus:ring-0 w-28 px-2 placeholder:text-slate-300 font-medium">
                                         <button type="button" 
-                                            onclick="triggerReject({{ $user->id }}, '{{ $user->name }}')"
-                                            class="bg-rose-50 text-rose-600 px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all active:scale-95">
-                                            Reject
+                                            onclick="triggerReject({{ $reg->id }}, '{{ $reg->user->name }}', {{ isset($reg->is_legacy) ? 'true' : 'false' }})"
+                                            class="w-8 h-8 flex items-center justify-center bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-600 hover:text-white transition-all">
+                                            <i data-lucide="x" class="w-4 h-4"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -124,13 +158,13 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="p-20 text-center">
-                                <div class="flex flex-col items-center">
-                                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-                                        <i data-lucide="party-popper" class="w-10 h-10 text-slate-300"></i>
+                            <td colspan="4" class="py-24">
+                                <div class="flex flex-col items-center justify-center text-center">
+                                    <div class="w-20 h-20 bg-indigo-50 rounded-[2.5rem] flex items-center justify-center mb-6 animate-bounce">
+                                        <i data-lucide="sparkles" class="w-10 h-10 text-indigo-500"></i>
                                     </div>
-                                    <h3 class="text-slate-800 font-bold">Semua Beres!</h3>
-                                    <p class="text-slate-400 text-sm mt-1">Tidak ada antrean pembayaran saat ini.</p>
+                                    <h3 class="text-xl font-black text-slate-800 tracking-tight">Semua Pendaftaran Bersih!</h3>
+                                    <p class="text-slate-400 text-sm mt-2 max-w-xs mx-auto font-medium">Belum ada pendaftaran baru yang perlu ditinjau hari ini.</p>
                                 </div>
                             </td>
                         </tr>
@@ -151,31 +185,35 @@
         const globalForm = document.getElementById('global-verify-form');
         const hiddenReason = document.getElementById('hidden-reason');
 
-        // --- FUNGSI APPROVE ---
-        function triggerApprove(userId, userName) {
+        // --- FUNGSI VERIFIED ---
+        function triggerVerified(id, userName, isLegacy) {
             Swal.fire({
                 title: 'Verifikasi Pembayaran?',
-                text: `Setujui bukti transfer dari ${userName} dan aktifkan akun?`,
+                text: `Setujui bukti transfer dari ${userName}?`,
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#059669', // Emerald 600
+                confirmButtonColor: '#059669',
                 cancelButtonColor: '#64748b',
                 confirmButtonText: 'Ya, Setujui',
                 cancelButtonText: 'Batal',
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    globalForm.action = `{{ url('/admin/approve') }}/${userId}`; // Sesuaikan dengan nama route kamu
+                    // LOGIKA PENENTUAN ROUTE
+                    let actionUrl = isLegacy 
+                        ? `{{ url('/admin/approve-legacy') }}/${id}` 
+                        : `{{ url('/admin/verified') }}/${id}`;
+                    
+                    globalForm.action = actionUrl;
                     globalForm.submit();
                 }
             });
         }
 
         // --- FUNGSI REJECT ---
-        function triggerReject(userId, userName) {
-            const reasonValue = document.getElementById(`reject-reason-${userId}`).value;
+        function triggerReject(id, userName, isLegacy) { 
+            const reasonValue = document.getElementById(`reject-reason-${id}`).value;
 
-            // Validasi alasan dulu
             if (!reasonValue || reasonValue.trim() === "") {
                 Swal.fire({
                     title: 'Alasan Kosong',
@@ -188,18 +226,23 @@
 
             Swal.fire({
                 title: 'Tolak Pembayaran?',
-                text: `Yakin ingin menolak bukti dari ${userName} dengan alasan: "${reasonValue}"?`,
+                text: `Yakin ingin menolak bukti dari ${userName}?`,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#e11d48', // Rose 600
+                confirmButtonColor: '#e11d48',
                 cancelButtonColor: '#64748b',
                 confirmButtonText: 'Ya, Tolak',
                 cancelButtonText: 'Batal',
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // LOGIKA PENENTUAN ROUTE
+                    let actionUrl = isLegacy 
+                        ? `{{ url('/admin/reject-legacy') }}/${id}` 
+                        : `{{ url('/admin/reject') }}/${id}`;
+                    
                     hiddenReason.value = reasonValue;
-                    globalForm.action = `{{ url('/admin/reject') }}/${userId}`; // Sesuaikan dengan nama route kamu
+                    globalForm.action = actionUrl;
                     globalForm.submit();
                 }
             });

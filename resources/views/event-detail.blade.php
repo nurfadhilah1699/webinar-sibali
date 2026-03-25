@@ -16,7 +16,7 @@
                     </div>
 
                     {{-- CASE 1: SUDAH DISETUJUI --}}
-                    @if($registration->status === 'approved')
+                    @if($registration->status === 'verified')
                         <div class="space-y-6">
                             <div class="p-6 bg-emerald-50 rounded-3xl border-2 border-emerald-100 flex items-center gap-4">
                                 <div class="bg-emerald-500 p-3 rounded-2xl text-white shadow-lg shadow-emerald-200">
@@ -83,7 +83,6 @@
                             <p class="text-xs text-slate-500 mt-3 font-bold uppercase leading-relaxed max-w-xs mx-auto">Admin sedang mengecek pembayaranmu. Mohon tunggu maksimal 1x24 jam.</p>
                         </div>
                     @endif
-
                 </div>
             </div>
         </div>

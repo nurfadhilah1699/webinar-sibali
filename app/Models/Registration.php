@@ -14,6 +14,7 @@ class Registration extends Model
         'details',
         'amount',
         'status',
+        'rejection_message',
         'payment_proof'
     ];
 

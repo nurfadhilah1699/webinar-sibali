@@ -57,23 +57,23 @@ Route::middleware('auth')->group(function () {
     
     // Proses hitung skor saat klik submit
     Route::post('/toefl/submit', [ToeflController::class, 'submit'])->name('toefl.submit');
-    // Hapus ini kalau sudah mau launch!
-    Route::get('/dev-reset', function() {
-        // Reset data di database
-        Auth::user()->update([
-            'toefl_score' => null, 
-            'started_at' => null
-        ]);
+    // Hapus/komentari ini kalau sudah launch!
+    // Route::get('/dev-reset', function() {
+    //     // Reset data di database
+    //     Auth::user()->update([
+    //         'toefl_score' => null, 
+    //         'started_at' => null
+    //     ]);
 
-        // Beri pesan sukses pakai JavaScript agar otomatis hapus LocalStorage juga
-        return "
-            <script>
-                localStorage.clear(); 
-                alert('Database & LocalStorage berhasil dibersihkan! Silakan tes ulang.');
-                window.location.href = '/dashboard';
-            </script>
-        ";
-    });
+    //     // Beri pesan sukses pakai JavaScript agar otomatis hapus LocalStorage juga
+    //     return "
+    //         <script>
+    //             localStorage.clear(); 
+    //             alert('Database & LocalStorage berhasil dibersihkan! Silakan tes ulang.');
+    //             window.location.href = '/dashboard';
+    //         </script>
+    //     ";
+    // });
 
     // ==========================================
     // SIB-12: MULTI-EVENT ROUTES GROUPING
@@ -105,8 +105,14 @@ Route::middleware('auth')->group(function () {
 // Admin routes
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::post('/admin/approve/{id}', [AdminController::class, 'approve'])->name('admin.approve');
+    Route::post('/admin/verified/{id}', [AdminController::class, 'verified'])->name('admin.verified');
     Route::post('/admin/reject/{id}', [AdminController::class, 'reject'])->name('admin.reject');
+
+    // Route untuk Legacy (Tabel Users) - SIB-29
+    Route::post('/admin/approve-legacy/{id}', [AdminController::class, 'approveLegacy'])->name('admin.approve.legacy');
+    Route::post('/admin/reject-legacy/{id}', [AdminController::class, 'rejectLegacy'])->name('admin.reject.legacy');
+
+    Route::post('/admin/events', [AdminController::class, 'storeEvent'])->name('admin.events.store');
 
     // Route untuk mengaktifkan/mematikan fitur download sertifikat
     Route::post('/admin/toggle-certificate', [AdminController::class, 'toggleCertificate'])->name('admin.toggle-certificate');

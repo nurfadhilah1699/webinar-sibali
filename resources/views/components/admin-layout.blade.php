@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Webinar Sibali</title>
     <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest"></script> 
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -124,8 +124,15 @@
         </main>
     </div>
 
+    <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
+
     <script>
-        lucide.createIcons();
+        document.addEventListener("DOMContentLoaded", function() {
+            // Semua kode yang berhubungan dengan ikon harus di dalam sini
+            lucide.createIcons();
+            
+            console.log("Lucide icons initialized successfully!");
+        });
     </script>
 </body>
 </html>

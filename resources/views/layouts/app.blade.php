@@ -40,8 +40,15 @@
             @include('layouts.partials.footer')
         </div>
 
+        <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
+
         <script>
-            lucide.createIcons();
+            document.addEventListener("DOMContentLoaded", function() {
+                // Semua kode yang berhubungan dengan ikon harus di dalam sini
+                lucide.createIcons();
+                
+                console.log("Lucide icons initialized successfully!");
+            });
         </script>
     </body>
 </html>
