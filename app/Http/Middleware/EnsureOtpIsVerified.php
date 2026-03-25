@@ -12,11 +12,20 @@ class EnsureOtpIsVerified
     {
         $user = Auth::user();
 
-        // JIKA user sudah login TAPI otp_code di database BELUM NULL (artinya belum verifikasi)
-        if ($user && $user->otp_code !== null) {
-            // Paksa tendang balik ke halaman input OTP
-            return redirect()->route('otp.view')
-                             ->with('error', 'Silakan masukkan kode OTP terlebih dahulu.');
+        // 1. Jika belum login, biarkan middleware 'auth' yang menangani
+        if (!$user) {
+            return $next($request);
+        }
+
+        // 2. CEK: Apakah user sedang mengakses route OTP atau sedang Logout?
+        // Ini kunci agar tidak "Layar Hitam"
+        if ($request->routeIs('otp.*') || $request->routeIs('logout')) {
+            return $next($request);
+        }
+
+        // 3. Jika otp_code masih ada (belum verifikasi), tendang ke halaman OTP
+        if ($user->otp_code !== null) {
+            return redirect()->route('otp.view');
         }
 
         return $next($request);

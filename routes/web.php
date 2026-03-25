@@ -16,9 +16,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LandingController::class, 'index'])->name('welcome');
 Route::get('/event/{slug}', [LandingController::class, 'show'])->name('events.show');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'otp_verified'])
-    ->name('dashboard');
+// Route::get('/dashboard', [DashboardController::class, 'index'])
+//     ->middleware(['auth', 'otp_verified'])
+//     ->name('dashboard');
+
+Route::middleware(['auth', 'otp_verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Route baru untuk detail event yang didaftar
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/storage/{filename}', function ($filename) {
@@ -40,7 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Route untuk upload bukti pembayaran
-    Route::post('/payment/upload', [PaymentController::class, 'upload'])->name('payment.upload');
+    // Route::post('/payment/upload', [PaymentController::class, 'upload'])->name('payment.upload');
 
     // Route untuk mengunduh sertifikat
     Route::get('/certificate/webinar', [CertificateController::class, 'downloadWebinar'])->name('certificate.webinar');
@@ -77,7 +82,6 @@ Route::middleware('auth')->group(function () {
     // Rute untuk Webinar Karir (Series)
     Route::prefix('webinar-karir')->name('webinar.')->group(function () {
         Route::get('/', [WebinarController::class, 'index'])->name('index'); 
-        Route::post('/register', [WebinarController::class, 'register'])->name('register');
     });
 
     // Rute untuk LCC (Lomba Cerdas Cermat)
@@ -89,9 +93,13 @@ Route::middleware('auth')->group(function () {
 
     // ==========================================
 
+    Route::get('/event/{slug}/register', [RegistrationController::class, 'showRegistrationForm'])->name('event.registration.form');
     Route::post('/register-event', [RegistrationController::class, 'register'])->name('register.post');
     Route::get('/payment/{registration}', [RegistrationController::class, 'payment'])->name('payment.index');
     Route::post('/payment/confirm/{registration}', [RegistrationController::class, 'confirmPayment'])->name('payment.confirm');
+
+    Route::get('/my-event/{registration_id}', [DashboardController::class, 'showMyEvent'])->name('my-event.detail');
+    Route::get('/legacy-event', [DashboardController::class, 'showLegacyEvent'])->name('legacy-event.detail');
 });
 
 // Admin routes

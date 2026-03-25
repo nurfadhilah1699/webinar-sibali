@@ -36,6 +36,12 @@
                     @yield('content')
                 @endif
             </main>
+
+            @include('layouts.partials.footer')
         </div>
+
+        <script>
+            lucide.createIcons();
+        </script>
     </body>
 </html>

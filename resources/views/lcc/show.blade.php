@@ -117,9 +117,9 @@
                                     </div>
                                 @endif
                             @else
-                                <button type="submit" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl transition-all shadow-lg shadow-blue-100 hover:scale-[1.02] active:scale-95 uppercase text-sm tracking-widest">
+                                <a href="{{ route('event.registration.form', $event->slug) }}" class="block w-full py-4 bg-blue-600 hover:bg-blue-700 text-white text-center font-black rounded-2xl transition-all shadow-lg shadow-blue-100 hover:scale-[1.02] active:scale-95 uppercase text-sm tracking-widest">
                                     Daftar Tim Sekarang
-                                </button>
+                                </a>
                             @endif
                         @else
                             <a href="{{ route('login') }}" class="block w-full py-4 bg-slate-900 text-white text-center font-black rounded-2xl shadow-lg hover:bg-slate-800 transition uppercase text-sm tracking-widest">

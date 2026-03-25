@@ -7,8 +7,11 @@
             
             <h1 class="text-3xl font-black text-slate-900 mb-2">Pendaftaran Berhasil!</h1>
             <p class="text-slate-500 mb-8">Satu langkah lagi untuk mengamankan slot kamu. Silakan lakukan pembayaran sesuai detail di bawah ini:</p>
-
             <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-left mb-8">
+                <div class="mb-4 pb-4 border-b border-dashed border-slate-200">
+                    <span class="text-[10px] font-black text-slate-400 uppercase">Event yang didaftar:</span>
+                    <h2 class="text-sm font-black text-slate-800">{{ $registration->event->title }}</h2>
+                </div>
                 <div class="flex justify-between mb-4">
                     <span class="text-slate-500 font-medium">Total Tagihan:</span>
                     <span class="text-xl font-black text-blue-600">Rp{{ number_format($registration->amount, 0, ',', '.') }}</span>

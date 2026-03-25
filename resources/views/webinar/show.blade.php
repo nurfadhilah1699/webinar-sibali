@@ -55,7 +55,7 @@
                 <div class="sticky top-24 bg-white p-8 rounded-[2.5rem] border-2 border-slate-900 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)]">
                     <h3 class="text-xl font-black text-slate-900 mb-6 uppercase tracking-tighter">Pilih Paket Webinar</h3>
                     
-                    <form action="{{ route('register.post') }}" method="POST" 
+                    <form action="{{ route('register.post') }}" method="POST"
                         x-data="{ 
                             mode: 'full', 
                             prices: { basic: 35000, full: 100000, premium: 150000 },
