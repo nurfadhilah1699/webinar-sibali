@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Question;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Content;
+use Illuminate\Support\Facades\Storage; // Pastikan ini ada
+use Illuminate\Support\Facades\Cache;   // TAMBAHKAN INI
+use Illuminate\Support\Facades\Mail;    // Tambahkan ini agar tidak perlu pakai \Mail
 
 class AdminController extends Controller
 {
@@ -38,7 +42,7 @@ class AdminController extends Controller
         DB::table('settings')->where('key', 'is_certificate_ready')->update(['value' => $newStatus]);
 
         // 4. PENTING: Hapus cache agar Dashboard User langsung "sadar" ada perubahan
-        \Cache::forget('site_settings');
+        Cache::forget('site_settings');
 
         $pesan = ($newStatus == '1') ? 'Sertifikat AKTIF & bisa didownload!' : 'Akses sertifikat DITUTUP.';
         return back()->with('status', $pesan);
@@ -52,7 +56,7 @@ class AdminController extends Controller
         DB::table('settings')->where('key', 'is_test_open')->update(['value' => $newStatus]);
 
         // Hapus cache juga untuk status ujian
-        \Cache::forget('site_settings');
+        Cache::forget('site_settings');
 
         $pesan = ($newStatus == '1') ? 'Ujian TOEFL DIBUKA!' : 'Ujian TOEFL DITUTUP.';
         return back()->with('status', $pesan);
@@ -65,7 +69,7 @@ class AdminController extends Controller
 
         // Tambahkan notifikasi email otomatis
         try {
-            \Mail::raw("Halo {$user->name}, Pembayaran Anda telah diverifikasi oleh Admin. Sekarang Anda dapat mengakses link Zoom dan Sertifikat di Dashboard.", function ($message) use ($user) {
+            Mail::raw("Halo {$user->name}, Pembayaran Anda telah diverifikasi oleh Admin. Sekarang Anda dapat mengakses link Zoom dan Sertifikat di Dashboard.", function ($message) use ($user) {
                 $message->to($user->email)
                         ->from(config('mail.from.address'), config('mail.from.name')) // TAMBAHKAN INI
                         ->subject('Pembayaran Terverifikasi - Sibali.id');
@@ -87,7 +91,7 @@ class AdminController extends Controller
         
         // Hapus foto lama agar storage tidak penuh (opsional)
         if ($user->payment_proof) {
-            \Storage::disk('public')->delete($user->payment_proof);
+            Storage::disk('public')->delete($user->payment_proof);
         }
 
         $user->update([
@@ -236,7 +240,7 @@ class AdminController extends Controller
 
         // Hapus file audio dari storage jika ada agar tidak jadi sampah
         if ($question->audio_path) {
-            \Storage::disk('public')->delete($question->audio_path);
+            Storage::disk('public')->delete($question->audio_path);
         }
 
         $question->delete();
@@ -259,7 +263,7 @@ class AdminController extends Controller
         if ($request->hasFile('audio_file')) {
             // Hapus lama, simpan baru (Logika kamu yang tadi sudah benar)
             if ($question->audio_path) {
-                \Storage::disk('public')->delete($question->audio_path);
+                Storage::disk('public')->delete($question->audio_path);
             }
             $file = $request->file('audio_file');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -269,7 +273,7 @@ class AdminController extends Controller
         } elseif ($request->input('delete_audio') == '1' || $request->category !== 'listening') {
             // Hapus audio jika tombol hapus diklik ATAU kategori diganti dari listening
             if ($question->audio_path) {
-                \Storage::disk('public')->delete($question->audio_path);
+                Storage::disk('public')->delete($question->audio_path);
             }
             $data['audio_path'] = null;
         }
