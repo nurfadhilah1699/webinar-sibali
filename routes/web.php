@@ -8,16 +8,22 @@ use App\Http\Controllers\ToeflController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WebinarController;
 use App\Http\Controllers\LccController;
+use App\Http\Controllers\LandingController;
+use App\Http\Controllers\RegistrationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [LandingController::class, 'index'])->name('welcome');
+Route::get('/event/{slug}', [LandingController::class, 'show'])->name('events.show');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'otp_verified'])
-    ->name('dashboard');
+// Route::get('/dashboard', [DashboardController::class, 'index'])
+//     ->middleware(['auth', 'otp_verified'])
+//     ->name('dashboard');
+
+Route::middleware(['auth', 'otp_verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Route baru untuk detail event yang didaftar
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/storage/{filename}', function ($filename) {
@@ -39,7 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Route untuk upload bukti pembayaran
-    Route::post('/payment/upload', [PaymentController::class, 'upload'])->name('payment.upload');
+    // Route::post('/payment/upload', [PaymentController::class, 'upload'])->name('payment.upload');
 
     // Route untuk mengunduh sertifikat
     Route::get('/certificate/webinar', [CertificateController::class, 'downloadWebinar'])->name('certificate.webinar');
@@ -51,23 +57,23 @@ Route::middleware('auth')->group(function () {
     
     // Proses hitung skor saat klik submit
     Route::post('/toefl/submit', [ToeflController::class, 'submit'])->name('toefl.submit');
-    // Hapus ini kalau sudah mau launch!
-    Route::get('/dev-reset', function() {
-        // Reset data di database
-        Auth::user()->update([
-            'toefl_score' => null, 
-            'started_at' => null
-        ]);
+    // Hapus/komentari ini kalau sudah launch!
+    // Route::get('/dev-reset', function() {
+    //     // Reset data di database
+    //     Auth::user()->update([
+    //         'toefl_score' => null, 
+    //         'started_at' => null
+    //     ]);
 
-        // Beri pesan sukses pakai JavaScript agar otomatis hapus LocalStorage juga
-        return "
-            <script>
-                localStorage.clear(); 
-                alert('Database & LocalStorage berhasil dibersihkan! Silakan tes ulang.');
-                window.location.href = '/dashboard';
-            </script>
-        ";
-    });
+    //     // Beri pesan sukses pakai JavaScript agar otomatis hapus LocalStorage juga
+    //     return "
+    //         <script>
+    //             localStorage.clear(); 
+    //             alert('Database & LocalStorage berhasil dibersihkan! Silakan tes ulang.');
+    //             window.location.href = '/dashboard';
+    //         </script>
+    //     ";
+    // });
 
     // ==========================================
     // SIB-12: MULTI-EVENT ROUTES GROUPING
@@ -76,8 +82,6 @@ Route::middleware('auth')->group(function () {
     // Rute untuk Webinar Karir (Series)
     Route::prefix('webinar-karir')->name('webinar.')->group(function () {
         Route::get('/', [WebinarController::class, 'index'])->name('index'); 
-        Route::get('/{slug}', [WebinarController::class, 'show'])->name('show');
-        Route::post('/register', [WebinarController::class, 'register'])->name('register');
     });
 
     // Rute untuk LCC (Lomba Cerdas Cermat)
@@ -88,13 +92,27 @@ Route::middleware('auth')->group(function () {
     });
 
     // ==========================================
+
+    Route::get('/event/{slug}/register', [RegistrationController::class, 'showRegistrationForm'])->name('event.registration.form');
+    Route::post('/register-event', [RegistrationController::class, 'register'])->name('register.post');
+    Route::get('/payment/{registration}', [RegistrationController::class, 'payment'])->name('payment.index');
+    Route::post('/payment/confirm/{registration}', [RegistrationController::class, 'confirmPayment'])->name('payment.confirm');
+
+    Route::get('/my-event/{registration_id}', [DashboardController::class, 'showMyEvent'])->name('my-event.detail');
+    Route::get('/legacy-event', [DashboardController::class, 'showLegacyEvent'])->name('legacy-event.detail');
 });
 
 // Admin routes
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::post('/admin/approve/{id}', [AdminController::class, 'approve'])->name('admin.approve');
+    Route::post('/admin/verified/{id}', [AdminController::class, 'verified'])->name('admin.verified');
     Route::post('/admin/reject/{id}', [AdminController::class, 'reject'])->name('admin.reject');
+
+    // Route untuk Legacy (Tabel Users) - SIB-29
+    Route::post('/admin/approve-legacy/{id}', [AdminController::class, 'approveLegacy'])->name('admin.approve.legacy');
+    Route::post('/admin/reject-legacy/{id}', [AdminController::class, 'rejectLegacy'])->name('admin.reject.legacy');
+
+    Route::post('/admin/events', [AdminController::class, 'storeEvent'])->name('admin.events.store');
 
     // Route untuk mengaktifkan/mematikan fitur download sertifikat
     Route::post('/admin/toggle-certificate', [AdminController::class, 'toggleCertificate'])->name('admin.toggle-certificate');

@@ -6,7 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
-        <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
+        <link rel="icon" type="image/png" href="{{ asset('img/logo-sibali.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -30,8 +30,25 @@
 
             <!-- Page Content -->
             <main>
-                {{ $slot }}
+                @if(isset($slot))
+                    {{ $slot }}
+                @else
+                    @yield('content')
+                @endif
             </main>
+
+            @include('layouts.partials.footer')
         </div>
+
+        <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Semua kode yang berhubungan dengan ikon harus di dalam sini
+                lucide.createIcons();
+                
+                console.log("Lucide icons initialized successfully!");
+            });
+        </script>
     </body>
 </html>

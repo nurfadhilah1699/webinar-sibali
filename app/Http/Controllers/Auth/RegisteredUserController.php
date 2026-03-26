@@ -38,7 +38,6 @@ class RegisteredUserController extends Controller
             'user_category' => ['required', 'string'],
             'institution' => ['required', 'string'],
             'address' => ['required', 'string'],
-            'package' => ['required', 'string', 'in:reguler,vip1,vip2'],
         ]);
 
         // 2. Generate OTP
@@ -54,7 +53,6 @@ class RegisteredUserController extends Controller
             'user_category' => $request->user_category,
             'institution' => $request->institution,
             'address' => $request->address,
-            'package' => $request->package,
             'otp_code' => $otp, // Pastikan kolom ini sudah ada di database (hasil migrate)
         ]);
 

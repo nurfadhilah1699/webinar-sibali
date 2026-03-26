@@ -42,6 +42,16 @@
         </form>
     </div>
 
+    <div class="mt-8 pt-6 border-t border-gray-100">
+        <p class="text-center text-xs text-gray-500 mb-4">Salah mendaftarkan email? Kamu bisa keluar dan daftar ulang.</p>
+        <form method="POST" action="{{ route('logout') }}" class="flex justify-center">
+            @csrf
+            <button type="submit" class="text-xs font-black text-rose-500 hover:text-rose-700 uppercase tracking-widest underline">
+                Log Out & Daftar Ulang
+            </button>
+        </form>
+    </div>
+
     {{-- Tambahkan notifikasi jika sukses kirim ulang --}}
     @if (session('status'))
         <div class="mt-4 text-sm font-medium text-green-600 text-center">

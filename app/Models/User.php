@@ -70,4 +70,8 @@ class User extends Authenticatable
             'vip2'    => 'VIP Plus+',
         ][$this->package] ?? ucfirst($this->package);
     }
+
+    public function registrations() {
+        return $this->hasMany(Registration::class);
+    }
 }
