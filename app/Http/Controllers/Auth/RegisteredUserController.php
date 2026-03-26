@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Mail;
 
 class RegisteredUserController extends Controller
 {
@@ -61,7 +62,7 @@ class RegisteredUserController extends Controller
 
         // 5. Kirim Email OTP
         try {
-            \Mail::raw("Halo {$user->name}, Kode OTP verifikasi Anda adalah: $otp", function ($message) use ($user) {
+            Mail::raw("Halo {$user->name}, Kode OTP verifikasi Anda adalah: $otp", function ($message) use ($user) {
                 $message->to($user->email)
                         ->from(config('mail.from.address'), config('mail.from.name')) // TAMBAHKAN INI
                         ->subject('Kode Verifikasi Akun - Sibali.id');
