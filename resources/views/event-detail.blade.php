@@ -10,7 +10,18 @@
                 <div class="p-8 md:p-12">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                         <div>
-                            <h1 class="text-3xl font-black text-slate-800 uppercase italic leading-tight">{{ $registration->event->title }}</h1>
+                            <h1 class="text-3xl font-black text-slate-800 uppercase italic leading-tight">
+                                @if($registration->event->parent) 
+                                    {{-- Jika ada parent (berarti ini Episode), tampilkan Nama Parent di atasnya --}}
+                                    <span class="block text-[10px] not-italic font-medium text-indigo-500 tracking-widest mb-1 opacity-80">
+                                        {{ $registration->event->parent->title }}
+                                    </span>
+                                    {{ $registration->event->title }}
+                                @else
+                                    {{-- Jika event mandiri (seperti LCC), langsung tampilkan judulnya --}}
+                                    {{ $registration->event->title }}
+                                @endif
+                            </h1>
                             <span class="inline-block mt-2 px-4 py-1 bg-indigo-600 text-white rounded-lg text-[10px] font-black italic uppercase">PAKET {{ $registration->package_type }}</span>
                         </div>
                     </div>

@@ -184,8 +184,10 @@
                             </div>
 
                             {{-- Button logic --}}
-                            <a href="{{ $event->is_active ? route('events.show', $event->slug) : '#' }}" 
-                            class="block w-full py-4 text-center rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all {{ $event->is_active ? 'gradient-blue text-white shadow-lg' : 'bg-slate-100 text-slate-400 cursor-not-allowed' }}">
+                            <a href="{{ $event->is_active ? route('events.show', $event->slug) : '/' }}" 
+                                class="block w-full py-4 text-center rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all 
+                                {{ $event->is_active ? 'bg-gradient-to-r from-blue-700 to-blue-500' 
+                                : 'bg-gradient-to-r from-gray-500 to-gray-400' }} text-white">
                             {{ $event->is_active ? 'Lihat Detail' : 'Pendaftaran Ditutup' }}
                             </a>
                         </div>

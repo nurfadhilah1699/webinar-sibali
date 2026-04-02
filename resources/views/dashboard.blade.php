@@ -47,17 +47,29 @@
                                     <div class="bg-white rounded-[2rem] border-2 border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition">
                                         <div class="p-6">
                                             <div class="flex justify-between items-start mb-4">
-                                                <span class="px-3 py-1 {{ $reg->status === 'verified' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600' }} rounded-full text-[10px] font-bold uppercase">
+                                                <span class="px-3 py-1 {{ in_array($reg->status, ['verified', 'approved']) ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600' }} rounded-full text-[10px] font-bold uppercase">
                                                     {{ $reg->status }}
                                                 </span>
                                             </div>
+
+                                            {{-- POIN 2: LOGIKA JUDUL EPISODE DI SINI --}}
                                             <h3 class="text-lg font-black text-slate-800 leading-tight mb-2 uppercase italic">
-                                                {{ $reg->event->title }}
+                                                @if($reg->event->parent) 
+                                                    {{-- Jika ada parent (berarti ini Episode), tampilkan Nama Parent di atasnya --}}
+                                                    <span class="block text-[10px] not-italic font-medium text-indigo-500 tracking-widest mb-1 opacity-80">
+                                                        {{ $reg->event->parent->title }}
+                                                    </span>
+                                                    {{ $reg->event->title }}
+                                                @else
+                                                    {{-- Jika event mandiri (seperti LCC), langsung tampilkan judulnya --}}
+                                                    {{ $reg->event->title }}
+                                                @endif
                                             </h3>
+
                                             <p class="text-xs text-slate-500 mb-6">Paket: <span class="font-bold text-indigo-600">{{ strtoupper($reg->package_type) }}</span></p>
 
                                             <a href="{{ route('my-event.detail', $reg->id) }}" class="flex items-center justify-center gap-2 w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-indigo-600 transition uppercase text-xs tracking-wider">
-                                                {{ $reg->status === 'verified' ? 'Masuk Event' : 'Cek Status' }}
+                                                {{ in_array($reg->status, ['verified', 'approved']) ? 'Masuk Event' : 'Cek Status' }}
                                                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
                                             </a>
                                         </div>

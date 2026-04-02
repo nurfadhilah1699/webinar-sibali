@@ -13,7 +13,7 @@ class RegistrationController extends Controller
 {
     public function register(Request $request)
     {
-        // 1. Validasi Tanpa payment_proof
+        // 1. Validasi Input
         $request->validate([
             'event_id'      => 'required|exists:events,id',
             'package_type'  => 'required|in:full,basic,premium,lcc_team',
@@ -26,9 +26,11 @@ class RegistrationController extends Controller
 
         $teamId = null;
         $details = null;
+        $finalEventId = $request->event_id; // Default awal menggunakan ID dari form (ID Parent)
 
-        // 2. Logika LCC
+        // 2. Logika Berdasarkan Tipe Paket
         if ($request->package_type === 'lcc_team') {
+            // Logika pendaftaran LCC (Team)
             $team = Team::create([
                 'team_name'   => $request->team_name,
                 'school_name' => $request->school_name,
@@ -37,23 +39,43 @@ class RegistrationController extends Controller
             $teamId = $team->id;
             $details = ['members' => $request->members];
         } else {
-            // Logika Webinar
-            $details = $request->has('episodes') ? json_decode($request->episodes) : null;
+            // Logika pendaftaran Webinar (Individu/Episode)
+            $episodes = $request->has('episodes') ? json_decode($request->episodes) : null;
+            $details = ['episodes' => $episodes];
+
+            // KHUSUS PAKET BASIC: Cari ID Episode agar data lebih spesifik
+            if ($request->package_type === 'basic' && !empty($episodes)) {
+                // Ambil nama episode pertama (karena basic hanya boleh pilih satu)
+                $episodeName = is_array($episodes) ? $episodes[0] : $episodes;
+
+                // Cari di database: event yang parent_id-nya adalah event_id dari form
+                // dan judulnya mengandung nama episode yang dipilih (misal: "Episode 1")
+                $episode = Event::where('parent_id', $request->event_id)
+                                ->where('title', 'like', '%' . $episodeName . '%')
+                                ->first();
+                
+                if ($episode) {
+                    $finalEventId = $episode->id; // Ganti ID Parent menjadi ID Episode
+                }
+            }
+            
+            // Catatan: Untuk paket FULL/PREMIUM, finalEventId tetap ID Parent 
+            // karena mereka mengakses semua episode di bawah parent tersebut.
         }
 
-        // 3. Simpan ke REGISTRATIONS (payment_proof dikosongkan dulu)
+        // 3. Simpan ke Tabel Registrations
         $registration = Registration::create([
             'user_id'       => auth()->id(),
-            'event_id'      => $request->event_id,
+            'event_id'      => $finalEventId, // ID yang sudah disesuaikan (Parent atau Child)
             'team_id'       => $teamId,
             'package_type'  => $request->package_type,
             'amount'        => $request->amount,
-            'payment_proof' => null, // PENTING: Kosongkan dulu
-            'details'       => $details,
+            'details'       => $details, // Menyimpan list episode pilihan sebagai cadangan
+            'payment_proof' => null, 
             'status'        => 'pending',
         ]);
 
-        // 4. Redirect ke halaman payment bawa ID pendaftaran tadi
+        // 4. Redirect ke halaman pembayaran
         return redirect()->route('payment.index', $registration->id);
     }
 

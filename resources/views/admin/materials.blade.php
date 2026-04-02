@@ -20,6 +20,17 @@
                 <form action="{{ route('admin.materials.store') }}" method="POST" class="space-y-5">
                     @csrf
                     <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Pilih Event / Episode</label>
+                        <select name="event_id" class="w-full border-slate-200 rounded-2xl text-sm p-3.5 bg-slate-50/50" required>
+                            <option value="">-- Pilih Target Event --</option>
+                            @foreach($events as $event)
+                                <option value="{{ $event->id }}">
+                                    {{ $event->parent_id ? ' [Episode] ' : '[Utama] ' }} {{ $event->title }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Judul Materi / Link</label>
                         <input type="text" name="title" class="w-full border-slate-200 rounded-2xl focus:ring-indigo-500 focus:border-indigo-500 text-sm p-3.5 bg-slate-50/50" placeholder="Contoh: Link Zoom Day 1" required>
                     </div>
@@ -38,9 +49,10 @@
                             <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Target</label>
                             <select name="package" class="w-full border-slate-200 rounded-2xl focus:ring-indigo-500 focus:border-indigo-500 text-sm p-3.5 bg-slate-50/50">
                                 <option value="all">Semua</option>
-                                <option value="reguler">Reguler</option>
-                                <option value="vip1">VIP 1</option>
-                                <option value="vip2">VIP 2</option>
+                                <option value="basic">Basic</option>
+                                <option value="full">Full</option>
+                                <option value="premium">Premium</option>
+                                <option value="lcc_team">LCC Team</option>
                             </select>
                         </div>
                     </div>

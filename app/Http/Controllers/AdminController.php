@@ -308,22 +308,28 @@ class AdminController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    public function materials() {
-        $contents = Content::orderBy('type', 'asc')->get();
-        return view('admin.materials', compact('contents'));
+    public function materials() 
+    {
+        // Ambil materi beserta data event-nya untuk ditampilkan di tabel
+        $contents = Content::with('event')->orderBy('created_at', 'desc')->get();
+        
+        // Ambil semua event untuk pilihan di dropdown form
+        $events = Event::orderBy('title', 'asc')->get();
+        
+        return view('admin.materials', compact('contents', 'events'));
     }
 
     public function storeContent(Request $request) {
         $request->validate([
-            'title' => 'required',
-            'type' => 'required',
-            'link' => 'required|url',
-            'package' => 'required'
+            'event_id' => 'required|exists:events,id', // Tambahkan validasi event_id
+            'title'    => 'required',
+            'type'     => 'required',
+            'link'     => 'required|url',
+            'package'  => 'required'
         ]);
 
         Content::create($request->all());
-
-        return back()->with('status', 'Konten berhasil ditambahkan!');
+        return back()->with('status', 'Konten berhasil diterbitkan!');
     }
 
     public function deleteContent($id) {

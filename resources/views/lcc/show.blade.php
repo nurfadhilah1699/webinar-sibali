@@ -107,8 +107,8 @@
 
                             @if($registration)
                                 @if($registration->status == 'verified')
-                                    <a href="{{ route('lcc.exam') }}" class="block w-full py-4 bg-emerald-500 text-white text-center font-black rounded-2xl shadow-lg hover:bg-emerald-600 transition">
-                                        MASUK HALAMAN UJIAN
+                                    <a href="{{ route('my-event.detail', $registration->id) }}" class="block w-full py-4 bg-emerald-500 text-white text-center font-black rounded-2xl shadow-lg hover:bg-emerald-600 transition">
+                                        MASUK HALAMAN EVENT
                                     </a>
                                 @else
                                     <div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-700 text-center">
@@ -135,4 +135,6 @@
             </div>
         </div>
     </div>
+
+    @include('layouts.partials.sponsor')
 @endsection

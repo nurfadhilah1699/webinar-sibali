@@ -18,7 +18,7 @@ class DashboardController extends Controller
 
         // 2. Ambil Semua Pendaftaran User (Approved & Pending)
         // Kita eager load 'event' dan 'team' untuk keperluan di Blade
-        $myRegistrations = Registration::with('event')
+        $myRegistrations = Registration::with('event.parent')
                         ->where('user_id', $user->id)
                         ->latest()
                         ->get();
@@ -46,14 +46,24 @@ class DashboardController extends Controller
 
     public function showMyEvent($id)
     {
-        // Cari pendaftaran berdasarkan ID dan pastikan milik user yang login
-        $registration = Registration::with('event')->where('user_id', Auth::id())->findOrFail($id);
+        // Eager load event dan children-nya
+        $registration = Registration::with(['event.children'])->where('user_id', Auth::id())->findOrFail($id);
         
-        // Ambil konten/materi jika statusnya sudah approved
         $contents = [];
-        if($registration->status === 'approved') {
-            // Logika ambil materi seperti di project lamamu
-            $contents = Content::whereIn('package', [$registration->package_type, 'all'])->get();
+        
+        // Syarat akses: status harus verified (atau approved sesuai standarisasimu)
+        if(in_array($registration->status, ['verified', 'approved'])) {
+            
+            if ($registration->package_type === 'full' || $registration->package_type === 'premium') {
+                // Jika PAKET FULL: Ambil semua konten milik Parent DAN semua Anak (Episode) dibawahnya
+                $childIds = $registration->event->children->pluck('id');
+                $contents = Content::whereIn('event_id', $childIds)
+                            ->orWhere('event_id', $registration->event_id)
+                            ->get();
+            } else {
+                // Jika PAKET BASIC/LCC: Hanya ambil konten yang event_id-nya cocok dengan pendaftaran
+                $contents = Content::where('event_id', $registration->event_id)->get();
+            }
         }
 
         return view('event-detail', compact('registration', 'contents'));
