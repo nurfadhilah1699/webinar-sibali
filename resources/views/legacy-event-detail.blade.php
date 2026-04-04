@@ -4,6 +4,15 @@
 <x-app-layout>
     <div class="min-h-screen bg-slate-50/50 py-12 px-6">
         <div class="max-w-4xl mx-auto">
+
+            {{-- Tombol Kembali - Glassmorphism Premium --}}
+            <a href="{{ route('dashboard') }}" 
+            class="inline-flex items-center gap-2 px-4 py-2 bg-white/40 backdrop-blur-md rounded-xl text-slate-600 border border-white/60 shadow-lg shadow-slate-200/50 hover:bg-white/60 hover:text-indigo-600 hover:border-indigo-300/50 transition-all duration-300 group mb-8">
+                
+                <i data-lucide="chevron-left" class="w-5 h-5 transition-transform group-hover:-translate-x-1"></i>
+                
+                <span class="text-sm font-medium">Kembali ke Dashboard</span>
+            </a>
             
             {{-- HEADER SECTION --}}
             <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">

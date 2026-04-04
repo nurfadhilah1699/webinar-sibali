@@ -17,12 +17,12 @@ class MultiEventSeeder extends Seeder
     {
         // 1. Buat Parent (Induk Webinar Series)
         $parent = Event::create([
-            'title'      => 'Kesiapan Digital, Ketajaman Karir',
-            'slug'       => Str::slug('Kesiapan Digital Ketajaman Karir'),
+            'title'      => 'Cakap Digital, Tangkas Berkarir',
+            'slug'       => Str::slug('Cakap Digital Tangkas Berkarir'),
             'type'       => 'webinar',
             'parent_id'  => null,
-            'start_time' => Carbon::parse('2026-04-16 08:30:00'), // Ambil tgl episode pertama
-            'duration'   => 270, // Contoh 120 menit
+            'start_time' => Carbon::parse('2026-04-18 08:30:00'), // Ambil tgl episode pertama
+            'duration'   => 275, // Contoh 275 menit
             'is_active'  => true,
         ]);
 
@@ -30,15 +30,15 @@ class MultiEventSeeder extends Seeder
         $episodes = [
             [
                 'title'      => 'Episode 1: Career Preparation for Freshgraduate & Workplace Culture (Startup vs Konvensional)',
-                'start_time' => '2026-04-16 08:30:00',
-            ],
-            [
-                'title'      => 'Episode 2: Human Resources (Recruitment & Payroll)',
                 'start_time' => '2026-04-18 08:30:00',
             ],
             [
+                'title'      => 'Episode 2: Human Resources (Recruitment & Payroll)',
+                'start_time' => '2026-04-19 08:30:00',
+            ],
+            [
                 'title'      => 'Episode 3: Operation (Business Operation Associate & Project Manager)',
-                'start_time' => '2026-04-23 08:30:00',
+                'start_time' => '2026-04-24 08:30:00',
             ],
             [
                 'title'      => 'Episode 4: Marketing (Marketing Communication Staff & Digital Marketing Specialist)',
@@ -46,7 +46,7 @@ class MultiEventSeeder extends Seeder
             ],
             [
                 'title'      => 'Episode 5: Finance (Financial Planner & Financial Reporting Associate)',
-                'start_time' => '2026-04-30 08:30:00',
+                'start_time' => '2026-04-26 08:30:00',
             ],
         ];
 
@@ -58,17 +58,17 @@ class MultiEventSeeder extends Seeder
                 'type'       => 'webinar',
                 'parent_id'  => $parent->id, // Menghubungkan ke ID Parent di atas
                 'start_time' => Carbon::parse($ep['start_time']),
-                'duration'   => 270, // Misal tiap episode 90 menit
+                'duration'   => 275, // Misal tiap episode 90 menit
                 'is_active'  => true,
             ]);
         }
 
         // Contoh LCC Online
         Event::create([
-            'title' => 'Lomba Cerdas Cermat 2026',
-            'slug' => Str::slug('Lomba Cerdas Cermat 2026'),
+            'title' => 'S-FEST (Sibali Science & Future Festival)',
+            'slug' => Str::slug('S-FEST (Sibali Science & Future Festival)'),
             'type' => 'lcc',
-            'start_time' => '2026-04-15 09:00:00',
+            'start_time' => '2026-05-17 09:00:00',
             'duration' => 360,
             'is_active' => true,
         ]);

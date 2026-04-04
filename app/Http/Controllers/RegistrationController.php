@@ -63,6 +63,22 @@ class RegistrationController extends Controller
             // karena mereka mengakses semua episode di bawah parent tersebut.
         }
 
+        // Cek apakah user sudah terdaftar di finalEventId ini
+        $isAlreadyRegistered = Registration::where('user_id', auth()->id())
+            ->where('event_id', $finalEventId)
+            ->first();
+
+        if ($isAlreadyRegistered) {
+            // Jika sudah ada tapi belum bayar (bukti kosong), arahkan ke halaman payment yang lama
+            if (!$isAlreadyRegistered->payment_proof) {
+                return redirect()->route('payment.index', $isAlreadyRegistered->id);
+            }
+            
+            // Jika sudah ada dan sudah upload bukti, balikkan ke halaman sebelumnya dengan pesan error
+            return redirect()->back()->with('error', 'Kamu sudah terdaftar di event/episode ini.');
+        }
+        // ------------------------------------------
+        
         // 3. Simpan ke Tabel Registrations
         $registration = Registration::create([
             'user_id'       => auth()->id(),

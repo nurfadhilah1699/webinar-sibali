@@ -4,15 +4,19 @@
     @include('layouts.partials.event-header', [
         'type' => 'Lomba Cerdas Cermat',
         'title' => $event->title,
-        'description' => 'Asah ketangkasan berpikir kritis dan kejujuran dalam kompetisi digital tingkat SMP se-Indonesia.',
+        'logo' => 'logo-lcc.png', // Ganti dengan nama file logo yang sesuai di folder public/img
+        'description' => 'Cerdas Digital, Tangkas Berpikir: Menuju Generasi Inovatif dan Kreatif 2026',
         'slug' => $event->slug,
         'buttons' => '
-            <a href="#daftar" class="px-8 py-4 bg-white text-slate-900 font-black rounded-2xl uppercase tracking-widest text-xs shadow-lg hover:bg-slate-100 transition">Daftar Tim</a>
-            <a href="#" class="px-8 py-4 border border-white/30 text-white font-black rounded-2xl uppercase tracking-widest text-xs inline-flex items-center gap-2 hover:bg-white/10 transition">
+            <a href="#daftar" class="px-8 py-4 bg-white text-slate-900 font-black rounded-2xl uppercase tracking-widest text-xs shadow-lg hover:bg-slate-100 transition">
+                Daftar Tim
+            </a>
+            
+            <a href="https://drive.google.com/uc?export=download&id=12uxjdKRwSdZUoWi2hu8UAfhQ10sKZQuP" class="px-8 py-4 border border-white/30 text-white font-black rounded-2xl uppercase tracking-widest text-xs inline-flex items-center gap-2 hover:bg-white/10 transition">
                 <i data-lucide="download" class="w-4 h-4"></i> Unduh Juknis
             </a>
-        '
-    ])
+            '
+        ])
 
     <div class="max-w-6xl mx-auto px-4 mt-20 mb-20">
         <div class="grid lg:grid-cols-3 gap-8">
@@ -26,14 +30,14 @@
                             <i data-lucide="trophy" class="w-5 h-5"></i>
                         </div>
                         <h4 class="font-bold text-slate-900">Total Hadiah</h4>
-                        <p class="text-xs text-slate-500 mt-1">Perebutkan piala, sertifikat juara, dan uang tunai untuk pemenang 1, 2, dan 3.</p>
+                        <p class="text-xs text-slate-500 mt-1">Perebutkan piala, sertifikat juara, dan dana pembinaan untuk pemenang 1, 2, dan 3.</p>
                     </div>
                     <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
                         <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
                             <i data-lucide="shield-check" class="w-5 h-5"></i>
                         </div>
                         <h4 class="font-bold text-slate-900">Sertifikat Peserta</h4>
-                        <p class="text-xs text-slate-500 mt-1">Seluruh anggota tim mendapatkan E-Sertifikat nasional resmi dari Sibali.id.</p>
+                        <p class="text-xs text-slate-500 mt-1">Seluruh anggota tim mendapatkan E-Sertifikat resmi dari Sibali.id.</p>
                     </div>
                 </div>
 
@@ -43,10 +47,10 @@
                     <div class="space-y-4">
                         @php
                             $timelines = [
-                                ['Pendaftaran Tim', '25 Maret - 12 April 2026', 'Upload berkas dan administrasi'],
-                                ['Technical Meeting', '14 April 2026', 'Penjelasan teknis via Zoom'],
-                                ['Babak Penyisihan', '15 April 2026', 'Ujian online serentak di website'],
-                                ['Grand Final', '16 April 2026', 'Live cerdas cermat via Zoom Meet']
+                                ['Pendaftaran Tim', '13 April - 14 Mei 2026', 'Pendaftaran nama tim dan daftar anggota melalui website'],
+                                ['Pelaksanaan Lomba', '17 Mei 2026', 'Ujian online serentak di website'],
+                                ['Pengumuman Pemenang', '17 Mei 2026', 'Pengumuman hasil lomba secara daring di website, media sosial, atau grup WhatsApp'],
+                                ['Distribusi E-Sertifikat', '17 Mei 2026', 'E-Sertifikat dapat diunduh melalui website setelah pengumuman pemenang'],
                             ];
                         @endphp
                         @foreach($timelines as $index => $time)
@@ -136,5 +140,5 @@
         </div>
     </div>
 
-    @include('layouts.partials.sponsor')
+    {{-- @include('layouts.partials.sponsor') --}}
 @endsection

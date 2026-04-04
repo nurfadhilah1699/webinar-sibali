@@ -4,6 +4,7 @@
     @include('layouts.partials.event-header', [
         'type' => $event->type ?? 'Webinar',
         'title' => $event->title,
+        'logo' => 'logo-webinar-karier.png', // Ganti dengan nama file logo yang sesuai di folder public/img
         'description' => 'Bangun citra profesional yang kuat untuk memenangkan persaingan kerja di tahun 2026.',
         'slug' => $event->slug
     ])
@@ -13,7 +14,7 @@
             
             {{-- KIRI: Deskripsi Kurikulum & Benefit --}}
             <div class="lg:col-span-2 space-y-8">
-                {{-- Benefit Cards Utama (Sesuai TOR) --}}
+                {{-- Benefit Cards Utama --}}
                 <div class="grid md:grid-cols-2 gap-4">
                     <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
                         <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4">
@@ -55,6 +56,13 @@
                 <div class="sticky top-24 bg-white p-8 rounded-[2.5rem] border-2 border-slate-900 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)]">
                     <h3 class="text-xl font-black text-slate-900 mb-6 uppercase tracking-tighter">Pilih Paket Webinar</h3>
                     
+                    @php
+                        $user = auth()->user();
+                        $userRegistrations = $user ? $user->registrations->pluck('event_id')->toArray() : [];
+                        // Cek pendaftaran untuk paket Full/Premium (ID Parent)
+                        $isRegisteredFull = in_array($event->id, $userRegistrations);
+                    @endphp
+
                     <form action="{{ route('register.post') }}" method="POST"
                         x-data="{ 
                             mode: 'full', 
@@ -73,7 +81,6 @@
 
                         {{-- Category Selector --}}
                         <div class="space-y-3 mb-8">
-                            {{-- BASIC --}}
                             <label class="relative block p-4 border-2 rounded-2xl cursor-pointer transition-all"
                                 :class="mode === 'basic' ? 'border-blue-600 bg-blue-50' : 'border-slate-100 hover:border-slate-300'">
                                 <input type="radio" name="cat" value="basic" x-model="mode" class="absolute top-4 right-4 text-blue-600">
@@ -81,7 +88,6 @@
                                 <span class="block text-lg font-black text-blue-700">Rp35.000<span class="text-[10px] text-slate-400 font-normal">/eps</span></span>
                             </label>
 
-                            {{-- FULL SERIES --}}
                             <label class="relative block p-4 border-2 rounded-2xl cursor-pointer transition-all"
                                 :class="mode === 'full' ? 'border-blue-600 bg-blue-50' : 'border-slate-100 hover:border-slate-300'">
                                 <div class="absolute -top-2 -left-2 bg-emerald-500 text-white text-[9px] font-black px-2 py-1 rounded-md rotate-[-5deg] shadow-sm uppercase">Best Value</div>
@@ -90,7 +96,6 @@
                                 <span class="block text-lg font-black text-blue-700">Rp100.000</span>
                             </label>
 
-                            {{-- PREMIUM --}}
                             <label class="relative block p-4 border-2 rounded-2xl cursor-pointer transition-all"
                                 :class="mode === 'premium' ? 'border-blue-600 bg-blue-50' : 'border-slate-100 hover:border-slate-300'">
                                 <input type="radio" name="cat" value="premium" x-model="mode" class="absolute top-4 right-4 text-blue-600">
@@ -106,11 +111,15 @@
                                 {{-- Basic Benefit --}}
                                 <li class="flex items-center gap-2 text-[11px] font-bold text-slate-600">
                                     <i data-lucide="check" class="w-3 h-3 text-blue-500"></i>
-                                    <span x-text="mode === 'basic' ? '1 Episode Pilihan' : 'Seluruh 5 Episode'"></span>
+                                    <span x-text="mode === 'basic' ? 'Akses 1 Episode' : 'Akses Seluruh 5 Episode'"></span>
                                 </li>
                                 <li class="flex items-center gap-2 text-[11px] font-bold text-slate-600">
                                     <i data-lucide="check" class="w-3 h-3 text-blue-500"></i> 
                                     <span x-text="mode === 'basic' ? 'E-Sertifikat per Episode' : (mode === 'premium' ? 'E-Sertifikat Premium' : 'E-Sertifikat Full Series')"></span>
+                                </li>
+                                <li class="flex items-center gap-2 text-[11px] font-bold text-slate-600">
+                                    <i data-lucide="check" class="w-3 h-3 text-blue-500"></i> 
+                                    <span x-text="mode === 'basic' ? 'Ringkasan Materi dan Poin Tindak Lanjut dari Narasumber' : 'Lembar refleksi dan Perencanaan Karir'"></span>
                                 </li>
                                 
                                 {{-- Full & Premium Only --}}
@@ -129,34 +138,74 @@
                             </ul>
                         </div>
 
-                        {{-- Episode Selector (Hanya muncul jika BASIC) --}}
-                        <div x-show="mode === 'basic'" class="mb-8 animate-fadeIn">
-                            <p class="text-[10px] font-black text-slate-400 uppercase mb-3">Pilih Episode Anda:</p>
+                        {{-- Episode Selector (Hanya muncul jika mode BASIC) --}}
+                        <div x-show="mode === 'basic'" class="mb-8 animate-fadeIn text-left">
+                            <p class="text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest">Pilih Satu Episode:</p>
                             <div class="grid grid-cols-1 gap-2">
-                                @foreach(range(1,5) as $i)
-                                <label class="flex items-center justify-between p-3 border border-slate-100 rounded-xl cursor-pointer hover:bg-white transition"
-                                    :class="selectedEpisodes.includes('Episode {{ $i }}') ? 'bg-blue-50 border-blue-200' : ''">
-                                    <span class="text-xs font-bold">Episode {{ $i }}</span>
-                                    <input type="checkbox" value="Episode {{ $i }}" x-model="selectedEpisodes" class="rounded text-blue-600">
-                                </label>
+                                @foreach($event->children as $episode)
+                                    @php $isRegisteredThisEps = in_array($episode->id, $userRegistrations); @endphp
+                                    
+                                    <label class="flex items-center justify-between p-3 border rounded-xl transition-all
+                                        {{ $isRegisteredThisEps ? 'bg-gray-50 opacity-60 cursor-not-allowed' : 'cursor-pointer hover:bg-white' }}"
+                                        :class="selectedEpisodes.includes('{{ $episode->title }}') ? 'border-blue-600 bg-blue-50/50' : 'border-slate-100'">
+                                        
+                                        <div class="flex flex-col">
+                                            <span class="text-[11px] font-black {{ $isRegisteredThisEps ? 'text-gray-400' : 'text-slate-900' }}">
+                                                {{ $episode->title }}
+                                            </span>
+                                            @if($isRegisteredThisEps)
+                                                <span class="text-[9px] font-black text-emerald-600 uppercase">Sudah Terdaftar</span>
+                                            @else
+                                                <span class="text-[9px] font-bold uppercase text-slate-500">{{ $episode->start_time->format('d M Y') }}</span>
+                                            @endif
+                                        </div>
+
+                                        @if(!$isRegisteredThisEps)
+                                        <input type="checkbox" 
+                                            value="{{ $episode->title }}" 
+                                            x-model="selectedEpisodes"
+                                            @click="selectedEpisodes = ['{{ $episode->title }}']" 
+                                            class="rounded-full text-blue-600">
+                                        @else
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i>
+                                        @endif
+                                    </label>
                                 @endforeach
                             </div>
                         </div>
 
+                        {{-- Total & Button --}}
                         <div class="pt-6 border-t border-slate-100 mb-6">
                             <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Total Bayar</p>
                             <p class="text-3xl font-black text-slate-900" x-text="'Rp' + total.toLocaleString('id-ID')"></p>
                         </div>
 
-                        <button type="submit" 
-                            class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl transition-all shadow-lg shadow-blue-100 hover:scale-[1.02] active:scale-95">
-                            DAFTAR SEKARANG
-                        </button>
+                        @auth
+                            @if($isRegisteredFull)
+                                <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl text-center">
+                                    <p class="text-xs font-black text-emerald-700 uppercase">Anda Sudah Terdaftar (Full Series / Premium)</p>
+                                    <a href="{{ route('dashboard') }}" class="text-[10px] font-bold text-blue-600 underline uppercase mt-1 inline-block">Buka Dashboard</a>
+                                </div>
+                            @else
+                                <button type="submit" 
+                                    x-show="mode !== 'basic' || (mode === 'basic' && selectedEpisodes.length > 0)"
+                                    class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl shadow-lg transition-all active:scale-95 uppercase text-sm tracking-widest">
+                                    DAFTAR SEKARANG
+                                </button>
+                                <p x-show="mode === 'basic' && selectedEpisodes.length === 0" class="text-[10px] text-center text-rose-500 font-bold uppercase">
+                                    Silakan pilih salah satu episode
+                                </p>
+                            @endif
+                        @else
+                            <a href="{{ route('login') }}" class="block w-full py-4 bg-slate-900 text-white text-center font-black rounded-2xl shadow-lg hover:bg-slate-800 transition uppercase text-sm tracking-widest">
+                                Login untuk Daftar
+                            </a>
+                        @endauth
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    @include('layouts.partials.sponsor')
+    {{-- @include('layouts.partials.sponsor') --}}
 @endsection
