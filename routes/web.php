@@ -12,6 +12,8 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\RegistrationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Response;
 
 Route::get('/', [LandingController::class, 'index'])->name('welcome');
 Route::get('/event/{slug}', [LandingController::class, 'show'])->name('events.show');
@@ -38,6 +40,34 @@ Route::middleware('auth')->group(function () {
 
         return Response::make($file, 200)->header("Content-Type", $type);
     })->where('filename', '.*');
+
+    // Untuk Update Database (WAJIB JALANKAN INI) dan comment route ini lagi setelah selesai update!
+    Route::get('/gas-update-db', function () {
+        try {
+            // 1. Jalankan Migrasi (Hanya tambah tabel/kolom baru)
+            Artisan::call('migrate', ['--force' => true]);
+            $migrateOutput = Artisan::output();
+
+            // 2. Jalankan Seeder Spesifik (Ganti 'NamaSeederKamu' sesuai file seeder-mu)
+            // Jika ingin menjalankan semua seeder, hapus ['--class' => ...]
+            Artisan::call('db:seed', [
+                '--class' => 'MultiEventSeeder', // Ganti dengan nama seeder yang ingin dijalankan
+                '--force' => true
+            ]);
+            $seedOutput = Artisan::output();
+
+            return "
+                <h1>Database Berhasil Diupdate!</h1>
+                <p><b>Hasil Migrate:</b></p>
+                <pre>$migrateOutput</pre>
+                <p><b>Hasil Seeder:</b></p>
+                <pre>$seedOutput</pre>
+            ";
+
+        } catch (\Exception $e) {
+            return " Gagal Update: " . $e->getMessage();
+        }
+    });
 
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

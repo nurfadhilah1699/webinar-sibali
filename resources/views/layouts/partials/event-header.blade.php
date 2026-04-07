@@ -15,38 +15,38 @@
                     </h1>
 
                     @if(isset($description))
-                    <p class="text-slate-400 text-lg md:text-xl max-w-lg leading-relaxed font-light border-l-4 border-white/10 pl-6">
-                        {{ $description }}
-                    </p>
+                        <p class="text-slate-400 text-lg md:text-xl max-w-lg leading-relaxed font-light border-l-4 border-white/10 pl-6">
+                            {{ $description }}
+                        </p>
                     @endif
 
                     @if(isset($buttons))
-                    <div class="flex flex-wrap items-center gap-4 pt-6">
-                        {!! $buttons !!}
-                    </div>
+                        <div class="flex flex-wrap items-center gap-4 pt-6">
+                            {!! $buttons !!}
+                        </div>
                     @endif
                 </div>
             </div>
 
             {{-- KANAN: LOGO DENGAN GLOW PUTIH --}}
             @if(isset($logo))
-            <div class="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end group">
-                <div class="relative">
-                    {{-- Aksen Lingkaran Putih/Silver di Belakang --}}
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-white/10 blur-[100px] rounded-full group-hover:bg-white/20 transition-all duration-700"></div>
-                    
-                    {{-- Ring Ornamen Tipis (Optional untuk kesan futuristik) --}}
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] border border-white/5 rounded-full animate-spin-slow"></div>
+                <div class="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end group">
+                    <div class="relative">
+                        {{-- Aksen Lingkaran Putih/Silver di Belakang --}}
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-white/10 blur-[100px] rounded-full group-hover:bg-white/20 transition-all duration-700"></div>
+                        
+                        {{-- Ring Ornamen Tipis (Optional untuk kesan futuristik) --}}
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] border border-white/5 rounded-full animate-spin-slow"></div>
 
-                    {{-- Image Logo --}}
-                    <img src="{{ asset('img/' . $logo) }}" 
-                         alt="Logo Event" 
-                         class="relative w-50 h-50 md:w-80 md:h-80 lg:w-[450px] lg:h-[450px] object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.2)] transition-all duration-500 group-hover:scale-105 group-hover:brightness-125"
-                         onerror="this.style.display='none'">
+                        {{-- Image Logo --}}
+                        <img src="{{ asset('img/' . $logo) }}" 
+                            alt="Logo Event" 
+                            class="relative w-50 h-50 md:w-80 md:h-80 lg:w-[450px] lg:h-[450px] object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.2)] transition-all duration-500 group-hover:scale-105 group-hover:brightness-125"
+                            onerror="this.style.display='none'">
+                    </div>
                 </div>
-            </div>
             @endif
-
+            
         </div>
     </div>
 
