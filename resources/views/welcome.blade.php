@@ -151,7 +151,11 @@
                             {{-- Label Status Dinamis --}}
                             <div class="absolute top-4 right-4">
                                 @if(!$event->is_active)
-                                    <span class="px-4 py-1.5 bg-slate-500 text-white text-[10px] font-black rounded-full uppercase">Selesai</span>
+                                    @if ($event->type == 'lcc')    
+                                        <span class="px-4 py-1.5 bg-slate-500 text-white text-[10px] font-black rounded-full uppercase">Dibatalkan</span>
+                                    @else
+                                        <span class="px-4 py-1.5 bg-slate-500 text-white text-[10px] font-black rounded-full uppercase">Selesai</span>
+                                    @endif
                                 @elseif($event->start_time > now())
                                     <span class="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black rounded-full uppercase">Mendatang</span>
                                 @else

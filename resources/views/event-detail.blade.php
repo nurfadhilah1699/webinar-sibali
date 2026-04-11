@@ -58,6 +58,72 @@
                             </div>
                         @endif
                     </div>
+                    
+                    {{-- TIM & PESERTA SECTION (Style: Modern Minimalist Profile) --}}
+                    @if($registration->event->type === 'lcc')
+                        <div class="mb-16 animate-fade-in">
+                            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                                <div>
+                                    <h2 class="text-[10px] font-black text-indigo-600 uppercase tracking-[0.4em] mb-2">Team Overview</h2>
+                                    <h3 class="text-2xl font-black text-slate-800 uppercase italic leading-none">Informasi Peserta LCC</h3>
+                                </div>
+                                <div class="h-[2px] flex-1 bg-slate-100 hidden md:block mb-1 mx-8"></div>
+                                <span class="px-4 py-1.5 bg-slate-800 text-white text-[9px] font-bold uppercase tracking-widest rounded-full">
+                                    {{ count($registration->details['members'] ?? []) }} Anggota Terdaftar
+                                </span>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-8">
+                                {{-- Bagian Atas: Branding Tim --}}
+                                <div class="relative p-1 bg-gradient-to-r from-indigo-500 to-red-500 rounded-[2.5rem]">
+                                    <div class="bg-white rounded-[2.4rem] p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                                        <div class="flex items-center gap-6">
+                                            <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center shadow-inner">
+                                                <i data-lucide="users-2" class="w-8 h-8"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 text-center md:text-left">Nama Tim Resmi</p>
+                                                <h4 class="text-3xl font-black text-slate-800 uppercase italic tracking-tighter text-center md:text-left">
+                                                    {{ $registration->team->team_name ?? 'Tanpa Nama Tim' }}
+                                                </h4>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex items-center gap-4 px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100 w-full md:w-auto">
+                                            <i data-lucide="school" class="w-5 h-5 text-indigo-500"></i>
+                                            <div class="flex flex-col">
+                                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-tight">Asal Sekolah</span>
+                                                <span class="text-sm font-bold text-slate-700 uppercase tracking-wide">
+                                                    {{ $registration->team->school_name ?? 'Sekolah tidak terdata' }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Bagian Bawah: Grid Anggota dengan Style Glassmorphism Ringan --}}
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                                    @if(isset($registration->details['members']) && is_array($registration->details['members']))
+                                        @foreach($registration->details['members'] as $index => $nama_peserta)
+                                            <div class="relative group">
+                                                <div class="p-6 bg-slate-50/50 border border-slate-200/60 rounded-[2rem] hover:bg-white hover:shadow-2xl hover:shadow-indigo-100 hover:-translate-y-1 transition-all duration-500">
+                                                    <div class="flex flex-col items-center text-center">
+                                                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">
+                                                            <span class="text-lg font-black italic">0{{ $loop->iteration }}</span>
+                                                        </div>
+                                                        <h5 class="font-bold text-slate-800 text-base mb-1">{{ $nama_peserta }}</h5>
+                                                        <span class="px-3 py-1 bg-white border border-slate-100 rounded-full text-[8px] font-black text-indigo-500 uppercase tracking-widest shadow-sm">
+                                                            {{ $index === 0 ? 'Ketua Tim' : 'Anggota Tim' }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
                     {{-- MAIN CONTENT (Verified) --}}
                     @if($registration->status === 'verified')
