@@ -25,7 +25,7 @@ class DashboardController extends Controller
 
         $approvedRegistrations = $myRegistrations->where('status', 'approved');
 
-        $hasLegacyData = !empty($user->payment_proof) || $user->is_verified;
+        $hasLegacyData = !empty($user->payment_proof) || !empty($user->package);
 
 
         // 5. Daftar Event yang Tersedia (untuk ditawarkan di dashboard jika belum daftar)
